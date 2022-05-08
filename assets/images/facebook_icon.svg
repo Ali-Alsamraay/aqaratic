@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="82.619" viewBox="0 0 77 82.619">
+    <g data-name="Buttons / Outline / Fab / Light">
+        <path data-name="Buttons / Shadow" style="fill:#7c6fe4;opacity:.6" d="M0 0h17v22.619H0z" transform="translate(30 30)"/>
+        <g data-name="Mask Copy" style="fill:#fff;stroke:#cae4f1;stroke-miterlimit:10" transform="translate(21 10.542)">
+            <rect width="34" height="36" rx="17" style="stroke:none"/>
+            <rect x=".5" y=".5" width="33" height="35" rx="16.5" style="fill:none"/>
+        </g>
+        <path d="M3.412 10.735V5.847h1.567L5.2 3.939H3.412V2.747c0-.536.168-.954.895-.954h.951V.065c-.223 0-.783-.06-1.4-.06a2.088 2.088 0 0 0-1.686.689 2.392 2.392 0 0 0-.605 1.815v1.43H0v1.908h1.566v4.888z" style="fill:#157ad8" transform="translate(35.54 23.289)" data-name="Icons / Icons Pack / Forward"/>
+    </g>
+</svg>

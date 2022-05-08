@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="199" height="192.254" viewBox="0 0 199 192.254">
+    <g data-name="Group 69045">
+        <path data-name="Path 59900" d="M365.915 217.153h-37.1v-6.746h37.1c9.3 0 16.864-10.594 16.864-23.61v-3.373H278.22v3.376c0 16.74-10.594 30.356-23.61 30.356S231 203.536 231 186.8V62h67.458v6.746h-60.712V186.8c0 13.016 7.565 23.61 16.864 23.61s16.864-10.594 16.864-23.61v-10.122h118.051V186.8c0 16.736-10.594 30.353-23.61 30.353z" transform="translate(-231 -24.898)" style="fill:#fff"/>
+        <path data-name="Rectangle 19723" transform="translate(24 185.254)" style="fill:#fff" d="M0 0h77v7H0z"/>
+        <path data-name="Rectangle 19724" transform="translate(138 121.254)" style="fill:#fff" d="M0 0h7v34H0z"/>
+        <path data-name="Rectangle 19725" transform="translate(74 37.254)" style="fill:#fff" d="M0 0h7v7H0z"/>
+        <path data-name="Rectangle 19726" transform="translate(57.339 86.993)" style="fill:#b78457" d="M0 0h6.746v31.057H0z"/>
+        <path data-name="Rectangle 19727" transform="translate(23.61 87.033)" style="fill:#b78457" d="M0 0h6.746v31.018H0z"/>
+        <path data-name="Rectangle 19728" transform="translate(13 114.254)" style="fill:#b78457" d="M0 0h61v7H0z"/>
+        <path data-name="Rectangle 19729" transform="translate(81 114.254)" style="fill:#fff" d="M0 0h7v7H0z"/>
+        <path data-name="Rectangle 19730" transform="translate(13 131.254)" style="fill:#fff" d="M0 0h108v7H0z"/>
+        <path data-name="Path 59901" d="M313.339 165.678a57.339 57.339 0 1 1 57.339-57.339 57.4 57.4 0 0 1-57.339 57.339zm0-107.932a50.593 50.593 0 1 0 50.593 50.593 50.651 50.651 0 0 0-50.593-50.593z" transform="translate(-171.678 -51)" style="fill:#fff"/>
+        <path data-name="Path 59904" d="m240.6 102.378-4.948-4.587 22.558-24.349A7.67 7.67 0 0 1 263.792 71h.024a7.642 7.642 0 0 1 5.579 2.435l22.375 24.106-4.941 4.59-22.38-24.105a.852.852 0 0 0-.634-.28.879.879 0 0 0-.651.28z" transform="translate(-219.954 -3.542)" style="fill:#b78457"/>
+        <path data-name="Path 59905" d="m342.428 130.932 20.8-23.013 12.525 13.852 30.762-31.53" style="fill:none;stroke:#b78457;stroke-width:5px" transform="translate(-231 -51)"/>
+    </g>
+</svg>

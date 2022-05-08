@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="77" height="82.619" viewBox="0 0 77 82.619">
+    <g data-name="Buttons / Outline / Fab / Light Copy">
+        <path data-name="Buttons / Shadow" style="fill:#7c6fe4;opacity:.6" d="M0 0h17v22.619H0z" transform="translate(30 30)"/>
+        <g data-name="Mask Copy" style="fill:#fff;stroke:#cae4f1;stroke-miterlimit:10" transform="translate(21 10.542)">
+            <rect width="34" height="36" rx="17" style="stroke:none"/>
+            <rect x=".5" y=".5" width="33" height="35" rx="16.5" style="fill:none"/>
+        </g>
+        <path d="M3.19 8.707A5.645 5.645 0 0 0 7.361 6.89a6.422 6.422 0 0 0 1.706-4.445v-.3a4.734 4.734 0 0 0 1.007-1.133 4.429 4.429 0 0 1-1.174.359A2.3 2.3 0 0 0 9.8.178a4.95 4.95 0 0 1-1.293.537A1.947 1.947 0 0 0 7 0a2.175 2.175 0 0 0-2.075 2.207 1.234 1.234 0 0 0 .056.477A5.68 5.68 0 0 1 .727.358a2.4 2.4 0 0 0-.28 1.133 2.421 2.421 0 0 0 .9 1.849 1.8 1.8 0 0 1-.951-.3 2.147 2.147 0 0 0 1.675 2.149 1.624 1.624 0 0 1-.56.06.9.9 0 0 1-.392-.06 2.141 2.141 0 0 0 1.959 1.55A4.064 4.064 0 0 1 .5 7.693a1.459 1.459 0 0 1-.5-.06 5.063 5.063 0 0 0 3.19 1.074" transform="translate(33.022 24.631)" style="fill:#55acee" data-name="Icons / Icons Pack / Forward"/>
+    </g>
+</svg>
