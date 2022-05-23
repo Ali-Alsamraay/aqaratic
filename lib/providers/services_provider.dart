@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
 
+import '../helper/constants.dart';
 import '../models/Service.dart';
 
 class ServicesProvider with ChangeNotifier {
@@ -13,7 +14,7 @@ class ServicesProvider with ChangeNotifier {
   Future<void> get_services_types() async {
     try {
       final url = Uri.parse(
-        'https://aqaratic.digitalfuture.sa/api/v1/mobile/form-service',
+        baseUrl + '/api/v1/mobile/form-service',
       );
       // Await the http get response, then decode the json-formatted response.
       final response = await http.get(
@@ -43,7 +44,7 @@ class ServicesProvider with ChangeNotifier {
   Future<String?> post_services(Map<String, dynamic> serviceData) async {
     try {
       final url = Uri.parse(
-        'https://aqaratic.digitalfuture.sa/api/v1/mobile/form-service',
+         baseUrl +'/api/v1/mobile/form-service',
       );
 
       final service = convert.jsonEncode(serviceData);
@@ -62,8 +63,7 @@ class ServicesProvider with ChangeNotifier {
       if (response.statusCode == 200 && responseJson['errors'] == null) {
         return "succeed_form";
       } else {
-        return "test";
-        // return responseJson['message'].toString();
+        return responseJson['message'].toString();
       }
     } catch (e) {
       rethrow;

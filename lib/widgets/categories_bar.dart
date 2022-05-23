@@ -21,8 +21,12 @@ class _CategoriesBarState extends State<CategoriesBar> {
     return Container(
       height: 15.0.h,
       width: 88.0.w,
-      margin: EdgeInsets.symmetric(horizontal: 2.0.w),
-      padding: EdgeInsets.symmetric(vertical: 1.0.h),
+      margin: EdgeInsets.symmetric(
+        horizontal: 3.0.w,
+      ),
+      padding: EdgeInsets.symmetric(
+        vertical: 1.0.h,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(
@@ -34,7 +38,6 @@ class _CategoriesBarState extends State<CategoriesBar> {
       child: Align(
         alignment: Alignment.center,
         child: ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: Provider.of<PropertiesProvider>(context, listen: false)
@@ -54,7 +57,7 @@ class _CategoriesBarState extends State<CategoriesBar> {
                   .selecteCategory(category_item['id']);
             },
             child: SizedBox(
-              width: 27.w,
+              width: 20.w,
               height: 10.0.h,
               child: LayoutBuilder(
                 builder: (context, constraints) => Container(
@@ -108,13 +111,21 @@ class CategoryItem extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(
-              Provider.of<PropertiesProvider>(context, listen: false)
-                  .property_types_items![index!]['icon_path'],
-              height: 8.0.w,
-              width: 8.0.w,
-              semanticsLabel: '',
-            ),
+            Provider.of<PropertiesProvider>(context, listen: false)
+                        .property_types_items![index!]['id'] ==
+                    -1
+                ? Icon(
+                    Icons.border_all_rounded,
+                    color: accentColorBrown,
+                    size: 22.0.sp,
+                  )
+                : SvgPicture.asset(
+                    Provider.of<PropertiesProvider>(context, listen: false)
+                        .property_types_items![index!]['icon_path'],
+                    height: 7.0.w,
+                    width: 7.0.w,
+                    semanticsLabel: '',
+                  ),
             Text(
               Provider.of<PropertiesProvider>(context, listen: false)
                   .property_types_items![index!]['title'],

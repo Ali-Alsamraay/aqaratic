@@ -8,17 +8,6 @@ import 'package:sizer/sizer.dart';
 import '../screens/unit_details_screen.dart';
 
 class UnitItem extends StatefulWidget {
-  // UnitItem({
-  //   Key? key,
-  //   required this.images,
-  //   required this.title,
-  //   required this.address,
-  //   required this.price,
-  // }) : super(key: key);
-  // final List<String?> images;
-  // final String? title;
-  // final String? address;
-  // final int? price;
 
   @override
   State<UnitItem> createState() => _UnitItemState();
@@ -39,8 +28,7 @@ class _UnitItemState extends State<UnitItem> {
           MaterialPageRoute(
             builder: (context) => UnitDetails(),
             settings: RouteSettings(
-              arguments:  propertyId,
-
+              arguments: propertyId,
             ),
           ),
         );
@@ -75,20 +63,31 @@ class _UnitItemState extends State<UnitItem> {
                           borderRadius: BorderRadius.circular(
                             10.0.sp,
                           ),
-                          child: value.thumbnail_image!.isNotEmpty
-                              ? FadeInImage.assetNetwork(
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  placeholder: imagePath + 'splash.png',
-                                  image: imageBaseUrl + value.thumbnail_image!,
+                          child: value.thumbnail_image == null
+                              ? Center(
+                                  child: Text("لا توجد صورة"),
                                 )
-                              : Image.asset(
-                                  imagePath + 'background.png',
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                ),
+                              : value.thumbnail_image!.isNotEmpty
+                                  ? FadeInImage.assetNetwork(
+                                      imageErrorBuilder:
+                                          (context, error, stackTrace) =>
+                                              Center(
+                                        child: Text("لا توجد صورة"),
+                                      ),
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                      placeholder: imagePath + 'splash.png',
+                                      image: baseUrl +
+                                          "/" +
+                                          value.thumbnail_image!,
+                                    )
+                                  : Image.asset(
+                                      imagePath + 'background.png',
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: double.infinity,
+                                    ),
                         ),
                       ),
                     ),

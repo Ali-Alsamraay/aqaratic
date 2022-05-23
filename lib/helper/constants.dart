@@ -7,11 +7,4 @@ const Color accentColorBlue = Color(0xff0c2757);
 const Color greyColor = Color.fromARGB(255, 201, 200, 200);
 const Color accentColorLightBlue = Color.fromARGB(255, 74, 176, 223);
 const Color backgroundColor = Color.fromRGBO(233, 235, 240, 1);
-
-String baseURL =
-    "https://api.aqaratic.com/v1"; //development'https://aqaratic.digitalfuture.sa/api/v1/mobile
-
-// String imageBaseUrl =
-//     "https://api.aqaratic.com/v1/files/download/"; //development
-
-String imageBaseUrl = "https://aqaratic.digitalfuture.sa/"; //development
+const String baseUrl = "https://aqaratic.digitalfuture.sa"; //development

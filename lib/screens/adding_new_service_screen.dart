@@ -3,9 +3,7 @@ import 'package:aqaratak/providers/services_provider.dart';
 import 'package:aqaratak/screens/service_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:sizer/sizer.dart';
-
 import '../helper/constants.dart';
 
 class AddingNewService extends StatelessWidget {
@@ -50,7 +48,7 @@ class AddingNewService extends StatelessWidget {
             ),
           ),
           Expanded(
-            flex: 4,
+            flex: 3,
             child: SizedBox(
               width: 80.0.w,
               child: Card(
@@ -61,9 +59,10 @@ class AddingNewService extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.center,
                   child: FutureBuilder(
-                    future:
-                        Provider.of<ServicesProvider>(context, listen: false)
-                            .get_services_types(),
+                    future: Provider.of<ServicesProvider>(
+                      context,
+                      listen: false,
+                    ).get_services_types(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return const Center(
@@ -71,7 +70,12 @@ class AddingNewService extends StatelessWidget {
                       } else if (snapshot.connectionState ==
                           ConnectionState.done) {
                         if (snapshot.hasError) {
-                          Text("There is an error");
+                          return Text(
+                            "حدث خطأ غير متوقع",
+                            style: TextStyle(
+                              fontSize: 14.0.sp,
+                            ),
+                          );
                         }
                         return Consumer<ServicesProvider>(
                           builder: (context, servicesProvider, child) =>
@@ -86,11 +90,11 @@ class AddingNewService extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            itemCount: 4,
+                            itemCount: servicesProvider.services!.length,
                           ),
                         );
                       }
-                      return Text("no data");
+                      return Text("لا توجد بيانات");
                     },
                   ),
                 ),
@@ -177,7 +181,7 @@ class ServiceTypeItem extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: accentColorBrown,
-                      fontWeight: FontWeight.w800,
+                      fontWeight: FontWeight.w500,
                       fontSize: 13.0.sp,
                     ),
                   ),

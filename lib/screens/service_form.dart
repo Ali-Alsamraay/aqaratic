@@ -1,11 +1,13 @@
 import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/models/Service.dart';
 import 'package:aqaratak/providers/services_provider.dart';
-import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../helper/Utils.dart';
 import '../models/FormValidator.dart';
 import 'package:sizer/sizer.dart';
+
+import '../widgets/Custom_TextField.dart';
 
 class ServiceForm extends StatefulWidget {
   final int? service_id;
@@ -83,6 +85,7 @@ class _ServiceFormState extends State<ServiceForm> {
             _serviceData.email = value!.trim();
           },
           label: "البريد الإلكتروني",
+          enabledBorderColor: accentColorBlue,
         ),
         SizedBox(
           height: 2.0.h,
@@ -97,6 +100,7 @@ class _ServiceFormState extends State<ServiceForm> {
             _serviceData.first_name = value!.trim();
           },
           label: "الإسم الأول",
+          enabledBorderColor: accentColorBlue,
         ),
         SizedBox(
           height: 2.0.h,
@@ -104,6 +108,7 @@ class _ServiceFormState extends State<ServiceForm> {
 
         // last name
         CustomTextField(
+          enabledBorderColor: accentColorBlue,
           onValidateFunc: (value) {
             return formValidator.validateTextField(value);
           },
@@ -118,6 +123,7 @@ class _ServiceFormState extends State<ServiceForm> {
 
         // phone number
         CustomTextField(
+          enabledBorderColor: accentColorBlue,
           onValidateFunc: (value) {
             return formValidator.validatePhoneNumber(value);
           },
@@ -132,6 +138,7 @@ class _ServiceFormState extends State<ServiceForm> {
 
         // details
         CustomTextField(
+          enabledBorderColor: accentColorBlue,
           onValidateFunc: (value) {
             return formValidator.validateTextField(value);
           },
@@ -139,7 +146,7 @@ class _ServiceFormState extends State<ServiceForm> {
             _serviceData.regarding_info = value!.trim();
           },
           label: "إضافة تفاصيل",
-          detailsField: true,
+          linesNumber: 5,
         ),
         SizedBox(
           height: 2.0.h,
@@ -182,95 +189,16 @@ class _ServiceFormState extends State<ServiceForm> {
         loading = false;
       });
       if (responseMsg == "succeed_form") {
-        await showPopUp(
+        await Utils().showPopUp(
+          context,
           "تمت إضافة البيانات بنجاح",
         );
         Navigator.of(context).pop();
       } else {
-        showPopUp("حدثت مشكلة ما", responseMsg.toString());
+        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
       }
     } else {
-      await showPopUp("إدخالات غير صالحة", "تأكد من بياناتك");
+      await Utils().showPopUp(context, "إدخالات غير صالحة", "تأكد من بياناتك");
     }
-  }
-
-  Future<void> showPopUp(String? title, [String? content]) async {
-    await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text(
-          title!,
-          textAlign: TextAlign.end,
-        ),
-        content: content == null
-            ? Icon(
-                Icons.done,
-                color: accentColorBrown,
-                size: 25.0.sp,
-              )
-            : Text(
-                content.toString(),
-                textAlign: TextAlign.end,
-              ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(
-              context,
-            ),
-            child: const Text(
-              'إلغاء',
-              style: TextStyle(
-                color: accentColorBrown,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    Key? key,
-    required this.onSaveFunc,
-    required this.onValidateFunc,
-    required this.label,
-    this.detailsField = false,
-  }) : super(key: key);
-  final Function(String?) onValidateFunc;
-  final void Function(String?)? onSaveFunc;
-  final String? label;
-  final bool? detailsField;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Directionality(
-        textDirection: TextDirection.rtl,
-        child: TextFormField(
-          keyboardType: TextInputType.text,
-          textDirection: TextDirection.rtl,
-          autofocus: true,
-          cursorColor: accentColorBrown,
-          maxLines: detailsField! ? 5 : 1,
-          decoration: InputDecoration(
-            focusColor: accentColorBrown,
-            hintText: label!,
-            contentPadding: EdgeInsets.symmetric(horizontal: 5.0.w),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(
-                15.0.sp,
-              ),
-            ),
-          ),
-          validator: (String? v) {
-            final errorMsg = onValidateFunc(v);
-            return errorMsg;
-          },
-          onSaved: (value) => onSaveFunc!(value),
-        ),
-      ),
-    );
   }
 }

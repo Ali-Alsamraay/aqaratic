@@ -3,7 +3,8 @@
    <application
         android:label="aqaratak" 
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -33,5 +34,9 @@
         <!-- <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA7hFegjTOWPDQB8v883B-au3ZDlYA1n1o"/> -->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyA7hFegjTOWPDQB8v883B-au3ZDlYA1n1o"/>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 </manifest>

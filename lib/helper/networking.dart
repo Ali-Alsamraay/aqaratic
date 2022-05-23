@@ -21,7 +21,7 @@ class NetworkHelper {
     String token = prefs.getString('token') ?? '';
     headers.addAll({'Authorization': 'Bearer $token'});
     http.Response response = await http.post(
-      Uri.parse(baseURL + endpoint),
+      Uri.parse(baseUrl + endpoint),
       headers: headers,
       body: jsonEncode(params),
     );
@@ -41,7 +41,7 @@ class NetworkHelper {
     String token = prefs.getString('token') ?? '';
     headers.addAll({'Authorization': 'Bearer $token'});
     http.Response response = await http.get(
-      Uri.parse(baseURL + endpoint).replace(queryParameters: params),
+      Uri.parse(baseUrl + endpoint).replace(queryParameters: params),
       headers: headers,
     );
     print(response.body);
@@ -59,7 +59,7 @@ class NetworkHelper {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = prefs.getString('token') ?? '';
     headers.addAll({HttpHeaders.authorizationHeader: 'Bearer $token'});
-    http.Response response = await http.patch(Uri.parse(baseURL + endpoint),
+    http.Response response = await http.patch(Uri.parse(baseUrl + endpoint),
         headers: {HttpHeaders.authorizationHeader: 'Bearer $token'},
         body: params);
     print(response.body);
@@ -89,7 +89,7 @@ class NetworkHelper {
       "fileToUpload":
           await MultipartFile.fromFile(file.path, filename: fileName),
     });
-    response = await Dio().post(baseURL + uploadFileEndpoint,
+    response = await Dio().post(baseUrl + uploadFileEndpoint,
         data: formData,
         options: Options(
           headers: headers,

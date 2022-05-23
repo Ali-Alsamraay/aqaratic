@@ -1,7 +1,5 @@
 import 'package:aqaratak/helper/endpoints.dart';
-import 'package:aqaratak/models/get_login_info/get_login_info_model.dart';
 import 'package:aqaratak/screens/main_screen.dart';
-import 'package:aqaratak/screens/register_mobile_screen.dart';
 import 'package:aqaratak/screens/registeration_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +24,7 @@ class _OtpScreenState extends State<OtpScreen> {
   bool isResendOtpDisabled = true;
   CountDownController countDownController = CountDownController();
   TextEditingController pinTextField = TextEditingController();
-  GetLoginInfoModel _getLoginInfoModel = GetLoginInfoModel();
+
 
   void initMethods() async {
     // SmsAutoFill().listenForCode;
@@ -170,30 +168,30 @@ class _OtpScreenState extends State<OtpScreen> {
         ));
   }
 
-  Future loginOtp(String otp) async {
-    Map<String, dynamic> requestBody = {"mobile": widget.mobile, "otp": otp};
-    NetworkHelper login = NetworkHelper(
-        endpoint: loginOtpEndpoint, params: requestBody, context: context);
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var dataMap = await login.postRequest();
-    if (dataMap != null) {
-      _getLoginInfoModel = GetLoginInfoModel.fromJson(dataMap);
-      String token = _getLoginInfoModel.tokens!.access!.token ?? '';
-      await prefs.setString('token', token);
-      if (_getLoginInfoModel.user!.regNumber == null ||
-          _getLoginInfoModel.user!.regNumber == "")
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => RegisterationScreen(
-                    userId: _getLoginInfoModel.user!.id ?? '')));
-      else
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => MainScreen()));
-      // print(_getRegisterInfo.user?.mobile);
-    }
-    setState(() {
-      showloader = false;
-    });
-  }
+  // Future loginOtp(String otp) async {
+  //   Map<String, dynamic> requestBody = {"mobile": widget.mobile, "otp": otp};
+  //   NetworkHelper login = NetworkHelper(
+  //       endpoint: loginOtpEndpoint, params: requestBody, context: context);
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   var dataMap = await login.postRequest();
+  //   if (dataMap != null) {
+  //     _getLoginInfoModel = GetLoginInfoModel.fromJson(dataMap);
+  //     String token = _getLoginInfoModel.tokens!.access!.token ?? '';
+  //     await prefs.setString('token', token);
+  //     if (_getLoginInfoModel.user!.regNumber == null ||
+  //         _getLoginInfoModel.user!.regNumber == "")
+  //       Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //               builder: (context) => RegisterationScreen(
+  //                   userId: _getLoginInfoModel.user!.id ?? '')));
+  //     else
+  //       Navigator.push(
+  //           context, MaterialPageRoute(builder: (context) => MainScreen()));
+  //     // print(_getRegisterInfo.user?.mobile);
+  //   }
+  //   setState(() {
+  //     showloader = false;
+  //   });
+  // }
 }

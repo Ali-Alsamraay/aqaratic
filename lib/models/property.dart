@@ -126,7 +126,11 @@ class Property with ChangeNotifier {
     this.status = json['status'];
     this.images = json['property_images'];
     this.property_type = json['property_type'];
-    this.images_urls = images!.map((item) => item['image'].toString()).toList();
+    this.images_urls = images == null
+        ? []
+        : images!.map((item) => item['image'].toString()).toList();
+
+    // if the below values are null, the location will be at ryadh.
     this.latitude = json['latitude'] == null
         ? 24.7136
         : double.parse(

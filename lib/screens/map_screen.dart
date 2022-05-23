@@ -1,6 +1,5 @@
-import 'package:aqaratak/widgets/search_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../helper/constants.dart';
 import '../providers/Properties_provider.dart';
 import 'package:sizer/sizer.dart';
+
+import 'package:google_maps_webservice/places.dart';
 
 class MapsScreen extends StatefulWidget {
   @override
@@ -17,15 +18,19 @@ class MapsScreen extends StatefulWidget {
 class _MapsScreenState extends State<MapsScreen> {
   @override
   void dispose() {
-    myMapController!.dispose();
+    if (myMapController != null) myMapController!.dispose();
     super.dispose();
   }
 
   GoogleMapController? myMapController;
   MapType? mapType = MapType.terrain;
   final LatLng _mainLocation = const LatLng(24.7136, 46.6753);
-  int? categoryId = 1;
+  int? categoryId = -1;
   CategoriesOnMap categoryOnMap = CategoriesOnMap();
+
+  GoogleMapsPlaces _places =
+      GoogleMapsPlaces(apiKey: "AIzaSyA7hFegjTOWPDQB8v883B-au3ZDlYA1n1o");
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,7 +43,14 @@ class _MapsScreenState extends State<MapsScreen> {
                   ? Icons.satellite_alt
                   : Icons.terrain,
             ),
-            onPressed: () {
+            onPressed: () async {
+              // Prediction? p = await PlacesAutocomplete.show(
+              //           context: context,
+              //           apiKey: kGoogleApiKey,
+              //           mode: Mode.overlay, // Mode.fullscreen
+              //           language: "fr",
+              //           components: [new Component(Component.country, "fr")]);
+
               categoryOnMap = CategoriesOnMap();
 
               if (mapType == MapType.terrain) {
@@ -56,7 +68,7 @@ class _MapsScreenState extends State<MapsScreen> {
           children: <Widget>[
             FutureBuilder(
               future: Provider.of<PropertiesProvider>(context, listen: false)
-                  .get_markers_on_map(categoryId),
+                  .get_markers_for_category_on_map(categoryId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -68,6 +80,9 @@ class _MapsScreenState extends State<MapsScreen> {
                       builder: (context, PropertiesProvider propertiesProvider,
                               child) =>
                           GoogleMap(
+                        mapToolbarEnabled: true,
+                        trafficEnabled: true,
+                        myLocationButtonEnabled: true,
                         initialCameraPosition: CameraPosition(
                           target: _mainLocation,
                           zoom: 3.5,
@@ -91,7 +106,7 @@ class _MapsScreenState extends State<MapsScreen> {
                 return Text("no data");
               },
             ),
-            categoryOnMap,
+            // categoryOnMap,
           ],
         ),
       ),
@@ -147,6 +162,7 @@ class _CategoriesOnMapState extends State<CategoriesOnMap> {
                       width: 2.0.w,
                     ),
                     Container(
+                      constraints: BoxConstraints(minHeight: 5.0.h),
                       child: Image.asset(
                         "assets/icons/filter_icon.png",
                         width: 8.0.w,
@@ -171,7 +187,7 @@ class _CategoriesOnMapState extends State<CategoriesOnMap> {
               ),
               Expanded(
                 child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
+                  clipBehavior: Clip.none,
                   shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemCount:
@@ -189,7 +205,9 @@ class _CategoriesOnMapState extends State<CategoriesOnMap> {
                       });
                       await Provider.of<PropertiesProvider>(context,
                               listen: false)
-                          .get_markers_on_map(category_item['id']);
+                          .get_markers_for_category_on_map(
+                        category_item['id'],
+                      );
                     },
                     child: Container(
                       child: CategoryOnMapItem(
@@ -301,13 +319,21 @@ class CategoryOnMapItem extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            SvgPicture.asset(
-              Provider.of<PropertiesProvider>(context, listen: false)
-                  .property_types_items![index!]['icon_path'],
-              height: 5.0.w,
-              width: 5.0.w,
-              semanticsLabel: '',
-            ),
+            Provider.of<PropertiesProvider>(context, listen: false)
+                        .property_types_items![index!]['id'] ==
+                    -1
+                ? Icon(
+                    Icons.border_all_rounded,
+                    color: accentColorBrown,
+                    size: 22.0.sp,
+                  )
+                : SvgPicture.asset(
+                    Provider.of<PropertiesProvider>(context, listen: false)
+                        .property_types_items![index!]['icon_path'],
+                    height: 7.0.w,
+                    width: 7.0.w,
+                    semanticsLabel: '',
+                  ),
             SizedBox(
               width: 1.5.w,
             ),

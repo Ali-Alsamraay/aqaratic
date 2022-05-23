@@ -1,24 +1,24 @@
+import 'package:aqaratak/providers/Auth_Provider.dart';
+import 'package:aqaratak/providers/Maps_Places_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
+import 'package:aqaratak/providers/State_Manager_Provider.dart';
 import 'package:aqaratak/providers/services_provider.dart';
-import 'package:aqaratak/screens/add_unit_screen.dart';
-import 'package:aqaratak/screens/contact_screen.dart';
+import 'package:aqaratak/screens/Register_screen.dart';
+import 'package:aqaratak/screens/creating_property_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
-import 'package:aqaratak/screens/intro_screen.dart';
+import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
-import 'package:aqaratak/screens/map_screen.dart';
 import 'package:aqaratak/screens/onBoarding_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:responsive_framework/responsive_framework.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  bool isLogged = prefs.getString('token') != null;
+  await WidgetsFlutterBinding.ensureInitialized();
+  final bool? isLogged = await AuthProvider().isCurrentUserLoggedIn();
   if (defaultTargetPlatform == TargetPlatform.android) {
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
   }
@@ -30,9 +30,18 @@ Future<void> main() async {
       ChangeNotifierProvider(
         create: (_) => ServicesProvider(),
       ),
+      ChangeNotifierProvider(
+        create: (_) => AuthProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => StateManagerProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => MapsPlacesProvider(),
+      ),
     ],
     child: MyApp(
-      isLogged: isLogged,
+      isLogged: isLogged!,
     ),
   ));
 }
@@ -47,10 +56,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     return Sizer(
       builder: (context, orientation, deviceType) => MaterialApp(
         routes: {
           MainScreen.screenName: (context) => MainScreen(),
+          HomeScreen.screenName: (context) => HomeScreen(),
+          CreatingPropertyScreen.screenName: (context) =>
+              CreatingPropertyScreen(),
+          LoginScreen.screenName: (context) => LoginScreen(),
+          RegisterScreen.screenName: (context) => RegisterScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
@@ -60,20 +78,7 @@ class MyApp extends StatelessWidget {
             elevation: 0.0,
           ),
         ),
-        // builder: (context, widget) => ResponsiveWrapper.builder(
-        //     BouncingScrollWrapper.builder(context, widget!),
-        //     maxWidth: 1200,
-        //     minWidth: 450,
-        //     defaultScale: true,
-        //     breakpoints: [
-        //       const ResponsiveBreakpoint.resize(450, name: MOBILE),
-        //       const ResponsiveBreakpoint.autoScale(800, name: TABLET),
-        //       const ResponsiveBreakpoint.autoScale(1000, name: TABLET),
-        //       const ResponsiveBreakpoint.autoScale(1200, name: DESKTOP),
-        //       const ResponsiveBreakpoint.autoScale(2460, name: "4K"),
-        //     ],
-        //     background: Container(color: const Color(0xff0c2757))),
-        home: isLogged ? MainScreen() : BoardingScreen(),
+        home: BoardingScreen(),
       ),
     );
   }

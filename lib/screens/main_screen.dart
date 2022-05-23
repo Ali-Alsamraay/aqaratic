@@ -2,6 +2,8 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/screens/adding_new_service_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
 import 'package:aqaratak/screens/map_screen.dart';
+import 'package:aqaratak/screens/profile_screen.dart';
+import 'package:aqaratak/screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
@@ -19,8 +21,8 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     Container(),
     AddingNewService(),
-    MapsScreen(),
-    Container(),
+    Test(),
+    ProfileScreen(),
   ];
 
   @override

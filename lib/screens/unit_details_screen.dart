@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:aqaratak/helper/constants.dart';
-import 'package:aqaratak/models/get_all_units_info/get_all_units_info_model.dart';
 import 'package:aqaratak/models/property.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +100,7 @@ class _UnitDetailsState extends State<UnitDetails> {
                           width: MediaQuery.of(context).size.width,
                           margin: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: Image.network(
-                            imageBaseUrl + selectedProperty.images_urls![index],
+                            baseUrl + selectedProperty.images_urls![index],
                             fit: BoxFit.cover,
                           ),
                         ),
