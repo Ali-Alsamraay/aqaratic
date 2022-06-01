@@ -368,13 +368,12 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
         loading = true;
       });
 
-     
       responseMsg =
           await Provider.of<PropertiesProvider>(context, listen: false)
               .createProperty(
         formData,
       );
-      
+
       setState(() {
         loading = false;
       });

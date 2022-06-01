@@ -4,10 +4,108 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
 
-class MapsPlacesProvider with ChangeNotifier {
-  Set<Marker> _nearestMarkers = {};
+import '../models/property.dart';
+import 'package:sizer/sizer.dart';
 
+class MapsProvider with ChangeNotifier {
+  Set<Marker> _nearestMarkers = {};
+  Set<Marker> _markers = new Set();
+  List<Property> _filteredPropertiesForMap = [];
+
+  Set<Marker> get markers => _markers;
   Set<Marker> get nearestMarkers => _nearestMarkers;
+  List<Property> get filteredPropertiesForMap => [..._filteredPropertiesForMap];
+
+
+
+  Future<void> get_all_markers_on_map(List<Property> _properties) async {
+    List<Marker>? allMarkers = await Future.wait<Marker>(
+      _properties.map((Property property) async {
+        String? markerPath = "assets/icons/aradi_marker.png";
+        if (property.property_type!['id'] == 1) {
+          markerPath = "assets/icons/aradi_marker.png";
+        } else if (property.property_type!['id'] == 3) {
+          markerPath = "assets/icons/amarat_marker.png";
+        } else if (property.property_type!['id'] == 4) {
+          markerPath = "assets/icons/villa_marker.png";
+        }
+
+        final BitmapDescriptor iconMarker =
+            await BitmapDescriptor.fromAssetImage(
+          ImageConfiguration(
+            size: Size(1.0.w, 2.0.h),
+          ),
+          markerPath,
+        );
+        return Marker(
+          // This marker id can be anything that uniquely identifies each marker.
+          markerId: MarkerId(property.id.toString()),
+          position: LatLng(
+            property.latitude!,
+            property.longitude!,
+          ),
+          infoWindow: InfoWindow(
+            title: property.title,
+            snippet: property.description,
+          ),
+          icon: iconMarker,
+        );
+      }).toSet(),
+    );
+    _markers = allMarkers.toSet();
+    notifyListeners();
+  }
+
+  Future<void> get_markers_for_category_on_map(int? categoryId,List<Property> _properties, ) async {
+    if (categoryId == -1) {
+      await get_all_markers_on_map(_properties);
+      return;
+    }
+    _filteredPropertiesForMap = _properties.where((element) {
+      return element.property_type!['id'] == categoryId;
+    }).toList();
+
+    String? markerPath = "assets/icons/aradi_marker.png";
+    if (categoryId == 1) {
+      markerPath = "assets/icons/aradi_marker.png";
+    } else if (categoryId == 3) {
+      markerPath = "assets/icons/amarat_marker.png";
+    } else if (categoryId == 4) {
+      markerPath = "assets/icons/villa_marker.png";
+    }
+
+    // final String iconMarkerUrl = 'your url';
+
+    // final http.Response request = await http.get(Uri.parse(iconMarkerUrl));
+    // final Uint8List bytes = request.bodyBytes;
+
+    // final BitmapDescriptor iconMarker = BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
+
+    final BitmapDescriptor iconMarker = await BitmapDescriptor.fromAssetImage(
+      ImageConfiguration(
+        size: Size(1.0.w, 2.0.h),
+      ),
+      markerPath,
+    );
+
+    _markers = _filteredPropertiesForMap.map((Property property) {
+      return Marker(
+        // This marker id can be anything that uniquely identifies each marker.
+        markerId: MarkerId(property.id.toString()),
+        position: LatLng(
+          property.latitude!,
+          property.longitude!,
+        ),
+        infoWindow: InfoWindow(
+          title: property.title,
+          snippet: property.description,
+        ),
+        icon: iconMarker,
+      );
+    }).toSet();
+
+    notifyListeners();
+  }
 
   Future<void> getNearestMarkersbyLocation(
     LatLng? location,

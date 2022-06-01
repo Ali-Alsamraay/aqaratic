@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -93,7 +94,13 @@ class _BoardingScreenState extends State<BoardingScreen> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         IconButton(
-                          onPressed: () {
+                          onPressed: () async {
+                            final SharedPreferences sharedPreferences =
+                                await SharedPreferences.getInstance();
+
+                            await sharedPreferences.setBool(
+                                "show-boarding", false);
+
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 builder: (context) => MainScreen(),

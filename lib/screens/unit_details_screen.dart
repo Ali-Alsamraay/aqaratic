@@ -24,6 +24,10 @@ class _UnitDetailsState extends State<UnitDetails> {
   // final Completer<GoogleMapController> _controller = Completer();
   var _kGooglePlex;
 
+  String? getImagesUrl(String url) {
+    return url.startsWith("/") ? url : "/" + url;
+  }
+
   @override
   void initState() {
     // // // TODO: implement initState
@@ -100,7 +104,10 @@ class _UnitDetailsState extends State<UnitDetails> {
                           width: MediaQuery.of(context).size.width,
                           margin: const EdgeInsets.symmetric(horizontal: 5.0),
                           child: Image.network(
-                            baseUrl + selectedProperty.images_urls![index],
+                            baseUrl +
+                                getImagesUrl(selectedProperty
+                                    .images_urls![index]
+                                    .toString())!,
                             fit: BoxFit.cover,
                           ),
                         ),

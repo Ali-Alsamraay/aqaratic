@@ -216,6 +216,7 @@ class Utils {
       default:
         return 'unknown';
     }
+    
   }
 
   String? convertFileToBase64(String? filePath) {

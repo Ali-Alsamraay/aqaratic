@@ -21,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeScreen(),
     Container(),
     AddingNewService(),
-    Test(),
+    MapsScreen(),
     ProfileScreen(),
   ];
 

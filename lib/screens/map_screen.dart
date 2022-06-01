@@ -1,5 +1,8 @@
+import 'dart:async';
+import 'dart:developer';
+
+import 'package:aqaratak/providers/Maps_Provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -7,8 +10,6 @@ import 'package:provider/provider.dart';
 import '../helper/constants.dart';
 import '../providers/Properties_provider.dart';
 import 'package:sizer/sizer.dart';
-
-import 'package:google_maps_webservice/places.dart';
 
 class MapsScreen extends StatefulWidget {
   @override
@@ -22,14 +23,46 @@ class _MapsScreenState extends State<MapsScreen> {
     super.dispose();
   }
 
+  bool? loading = true;
+  bool? isThereError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await Provider.of<MapsProvider>(
+          context,
+          listen: false,
+        ).get_markers_for_category_on_map(
+          categoryId,
+          Provider.of<PropertiesProvider>(
+            context,
+            listen: false,
+          ).properties,
+        );
+        setState(() {
+          loading = false;
+          isThereError = false;
+        });
+      } catch (e) {
+        setState(() {
+          loading = false;
+          isThereError = true;
+        });
+      }
+    });
+  }
+
   GoogleMapController? myMapController;
+  Completer<GoogleMapController> _controller = Completer();
   MapType? mapType = MapType.terrain;
   final LatLng _mainLocation = const LatLng(24.7136, 46.6753);
   int? categoryId = -1;
   CategoriesOnMap categoryOnMap = CategoriesOnMap();
+  Map? map;
 
-  GoogleMapsPlaces _places =
-      GoogleMapsPlaces(apiKey: "AIzaSyA7hFegjTOWPDQB8v883B-au3ZDlYA1n1o");
+  GoogleMap? gm = null;
 
   @override
   Widget build(BuildContext context) {
@@ -44,14 +77,7 @@ class _MapsScreenState extends State<MapsScreen> {
                   : Icons.terrain,
             ),
             onPressed: () async {
-              // Prediction? p = await PlacesAutocomplete.show(
-              //           context: context,
-              //           apiKey: kGoogleApiKey,
-              //           mode: Mode.overlay, // Mode.fullscreen
-              //           language: "fr",
-              //           components: [new Component(Component.country, "fr")]);
-
-              categoryOnMap = CategoriesOnMap();
+              // categoryOnMap = CategoriesOnMap();
 
               if (mapType == MapType.terrain) {
                 setState(() {
@@ -67,8 +93,12 @@ class _MapsScreenState extends State<MapsScreen> {
           alignment: Alignment.topCenter,
           children: <Widget>[
             FutureBuilder(
-              future: Provider.of<PropertiesProvider>(context, listen: false)
-                  .get_markers_for_category_on_map(categoryId),
+              future: Provider.of<MapsProvider>(context, listen: false)
+                  .get_markers_for_category_on_map(
+                categoryId,
+                Provider.of<PropertiesProvider>(context, listen: false)
+                    .properties,
+              ),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -76,27 +106,30 @@ class _MapsScreenState extends State<MapsScreen> {
                   );
                 } else if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.error == null) {
-                    return Consumer<PropertiesProvider>(
-                      builder: (context, PropertiesProvider propertiesProvider,
-                              child) =>
-                          GoogleMap(
-                        mapToolbarEnabled: true,
-                        trafficEnabled: true,
-                        myLocationButtonEnabled: true,
-                        initialCameraPosition: CameraPosition(
-                          target: _mainLocation,
-                          zoom: 3.5,
-                        ),
-                        markers: propertiesProvider.markers,
-                        mapType: mapType!,
-                        onMapCreated: (GoogleMapController controller) {
-                          myMapController = controller;
-                        },
-                      ),
+                    return Consumer<MapsProvider>(
+                      builder: (context, MapsProvider mapsProvider, child) {
+                        gm = null;
+                        if (myMapController != null) myMapController!.dispose();
+                        gm = GoogleMap(
+                          mapToolbarEnabled: true,
+                          trafficEnabled: true,
+                          myLocationButtonEnabled: true,
+                          onMapCreated: (controller) {
+                            myMapController = controller;
+                            _controller.complete(controller);
+                          },
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(24.7136, 46.6753),
+                            zoom: 3.5,
+                          ),
+                          markers: mapsProvider.markers,
+                        );
+                        return gm!;
+                      },
                     );
                   }
                   if (snapshot.hasError) {
-                    Text("There is an error");
+                    return Text("There is an error");
                   } else {
                     return AlertDialog(
                       content: Text('State: ${snapshot.connectionState}'),
@@ -106,11 +139,142 @@ class _MapsScreenState extends State<MapsScreen> {
                 return Text("no data");
               },
             ),
-            // categoryOnMap,
+            categoryOnMap,
+
+            // loading!
+            //     ? Center(
+            //         child: CircularProgressIndicator.adaptive(),
+            //       )
+            //     : Container(
+            //         child: Align(
+            //           alignment: Alignment.topCenter,
+            //           child: Container(
+            //             margin: EdgeInsets.only(right: 5.0.w),
+            //             height: 25.0.h,
+            //             width: 100.0.w,
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               mainAxisAlignment: MainAxisAlignment.center,
+            //               children: [
+            //                 SizedBox(
+            //                   height: 3.0.h,
+            //                 ),
+            //                 Expanded(
+            //                   child: Column(
+            //                     mainAxisAlignment: MainAxisAlignment.center,
+            //                     children: [
+            //                       Text(
+            //                         "قائمة العقارات",
+            //                         style: TextStyle(
+            //                           color: accentColorBlue,
+            //                           fontSize: 17.0.sp,
+            //                           fontWeight: FontWeight.bold,
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            //                 Expanded(
+            //                   child: Row(
+            //                     children: [
+            //                       SearchBarOnMap(),
+            //                       SizedBox(
+            //                         width: 2.0.w,
+            //                       ),
+            //                       Container(
+            //                         constraints:
+            //                             BoxConstraints(minHeight: 5.0.h),
+            //                         child: Image.asset(
+            //                           "assets/icons/filter_icon.png",
+            //                           width: 8.0.w,
+            //                         ),
+            //                         padding: EdgeInsets.all(2.0.w),
+            //                         decoration: BoxDecoration(
+            //                           border: Border.all(
+            //                             width: 0.5.sp,
+            //                             color: accentColorBlue,
+            //                           ),
+            //                           color: Colors.white,
+            //                           borderRadius: BorderRadius.circular(
+            //                             10.0.sp,
+            //                           ),
+            //                         ),
+            //                       )
+            //                     ],
+            //                   ),
+            //                 ),
+            //                 SizedBox(
+            //                   height: 2.0.h,
+            //                 ),
+            //                 Expanded(
+            //                   child: ListView.builder(
+            //                     clipBehavior: Clip.none,
+            //                     shrinkWrap: true,
+            //                     scrollDirection: Axis.horizontal,
+            //                     itemCount: Provider.of<PropertiesProvider>(
+            //                             context,
+            //                             listen: false)
+            //                         .property_types_items!
+            //                         .length,
+            //                     itemBuilder: (context, index) =>
+            //                         GestureDetector(
+            //                       onTap: () async {
+            //                         final category_item =
+            //                             Provider.of<PropertiesProvider>(
+            //                           context,
+            //                           listen: false,
+            //                         ).property_types_items![index];
+            //                         // setState(() {
+            //                         //   widget.selectedIndex = index;
+            //                         // });
+            //                         await Provider.of<PropertiesProvider>(
+            //                           context,
+            //                           listen: false,
+            //                         ).get_markers_for_category_on_map(
+            //                           category_item['id'],
+            //                         );
+            //                       },
+            //                       child: Container(
+            //                         child: CategoryOnMapItem(
+            //                           index: index,
+            //                           selectedIndex: -1,
+            //                         ),
+            //                       ),
+            //                     ),
+            //                   ),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //       ),
           ],
         ),
       ),
     );
+  }
+}
+
+class Map extends StatelessWidget {
+  const Map({Key? key, this.markers}) : super(key: key);
+
+  final Set<Marker>? markers;
+
+  @override
+  Widget build(BuildContext context) {
+    return GoogleMap(
+      mapToolbarEnabled: true,
+      trafficEnabled: true,
+      myLocationButtonEnabled: true,
+      initialCameraPosition: CameraPosition(
+        target: LatLng(24.7136, 46.6753),
+        zoom: 3.5,
+      ),
+      markers: markers!,
+    );
+    // return Center(
+    //   child: Text(propertiesProvider.markers.length.toString()),
+    // );
   }
 }
 
@@ -203,17 +367,17 @@ class _CategoriesOnMapState extends State<CategoriesOnMap> {
                       setState(() {
                         widget.selectedIndex = index;
                       });
-                      await Provider.of<PropertiesProvider>(context,
-                              listen: false)
+                      log(category_item['id'].toString());
+                      await Provider.of<MapsProvider>(context, listen: false)
                           .get_markers_for_category_on_map(
                         category_item['id'],
+                        Provider.of<PropertiesProvider>(context, listen: false)
+                            .properties,
                       );
                     },
-                    child: Container(
-                      child: CategoryOnMapItem(
-                        index: index,
-                        selectedIndex: widget.selectedIndex,
-                      ),
+                    child: CategoryOnMapItem(
+                      index: index,
+                      selectedIndex: widget.selectedIndex,
                     ),
                   ),
                 ),

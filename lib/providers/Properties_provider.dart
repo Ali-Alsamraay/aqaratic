@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:aqaratak/providers/Auth_Provider.dart';
@@ -17,9 +18,9 @@ class PropertiesProvider with ChangeNotifier {
   List<Property> _properties = [];
   List<PropertyType> _propertyTypes = [];
   List<Property> _filteredProperties = [];
-  List<Property> _filteredPropertiesForMap = [];
+  
   List<PropertyField> _propertiesFields = [];
-  Set<Marker> _markers = new Set();
+  
   List<dynamic> _propertyTypes_Objects = [];
   List<dynamic>? _cities_Objects = [];
   List<dynamic>? _purposes_Objects = [];
@@ -32,9 +33,9 @@ class PropertiesProvider with ChangeNotifier {
   List<PropertyType> get propertyTypes => [..._propertyTypes];
   List<Property> get properties => [..._properties];
   List<Property> get filteredProperties => [..._filteredProperties];
-  List<Property> get filteredPropertiesForMap => [..._filteredPropertiesForMap];
+  
   List<PropertyField> get propertiesFields => [..._propertiesFields];
-  Set<Marker> get markers => _markers;
+  
   List<dynamic> get propertyTypes_Objects => [..._propertyTypes_Objects];
   List<dynamic> get cities_Objects => [..._cities_Objects!];
   List<dynamic> get purposes_Objects => [..._purposes_Objects!];
@@ -141,6 +142,7 @@ class PropertiesProvider with ChangeNotifier {
 
       final Map<String, dynamic> jsonResponse =
           convert.jsonDecode(response.body);
+
       if (response.statusCode == 200) {
         // get fields names
         final List<dynamic> responseJson = jsonResponse['websiteLang'] == null
@@ -210,8 +212,7 @@ class PropertiesProvider with ChangeNotifier {
       _filteredProperties = _properties;
       notifyListeners();
       return;
-    }
-    ;
+    } 
     // search about property..
     _filteredProperties = _properties
         .where(
@@ -236,93 +237,7 @@ class PropertiesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> get_all_markers_on_map() async {
-    List<Marker>? allMarkers = await Future.wait<Marker>(
-      _properties.map((Property property) async {
-        String? markerPath = "assets/icons/aradi_marker.png";
-        if (property.property_type!['id'] == 1) {
-          markerPath = "assets/icons/aradi_marker.png";
-        } else if (property.property_type!['id'] == 3) {
-          markerPath = "assets/icons/amarat_marker.png";
-        } else if (property.property_type!['id'] == 4) {
-          markerPath = "assets/icons/villa_marker.png";
-        }
-
-        final BitmapDescriptor iconMarker =
-            await BitmapDescriptor.fromAssetImage(
-          ImageConfiguration(
-            size: Size(1.0.w, 2.0.h),
-          ),
-          markerPath,
-        );
-        return Marker(
-          // This marker id can be anything that uniquely identifies each marker.
-          markerId: MarkerId(property.id.toString()),
-          position: LatLng(
-            property.latitude!,
-            property.longitude!,
-          ),
-          infoWindow: InfoWindow(
-            title: property.title,
-            snippet: property.description,
-          ),
-          icon: iconMarker,
-        );
-      }).toSet(),
-    );
-    _markers = allMarkers.toSet();
-    notifyListeners();
-  }
-
-  Future<void> get_markers_for_category_on_map(int? categoryId) async {
-    if (categoryId == -1) {
-      await get_all_markers_on_map();
-      return;
-    }
-    _filteredPropertiesForMap = _properties.where((element) {
-      return element.property_type!['id'] == categoryId;
-    }).toList();
-
-    String? markerPath = "assets/icons/aradi_marker.png";
-    if (categoryId == 1) {
-      markerPath = "assets/icons/aradi_marker.png";
-    } else if (categoryId == 3) {
-      markerPath = "assets/icons/amarat_marker.png";
-    } else if (categoryId == 4) {
-      markerPath = "assets/icons/villa_marker.png";
-    }
-
-    // final String iconMarkerUrl = 'your url';
-
-    // final http.Response request = await http.get(Uri.parse(iconMarkerUrl));
-    // final Uint8List bytes = request.bodyBytes;
-
-    // final BitmapDescriptor iconMarker = BitmapDescriptor.fromBytes(bytes.buffer.asUint8List());
-
-    final BitmapDescriptor iconMarker = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(
-        size: Size(1.0.w, 2.0.h),
-      ),
-      markerPath,
-    );
-
-    _markers = _filteredPropertiesForMap.map((Property property) {
-      return Marker(
-        // This marker id can be anything that uniquely identifies each marker.
-        markerId: MarkerId(property.id.toString()),
-        position: LatLng(
-          property.latitude!,
-          property.longitude!,
-        ),
-        infoWindow: InfoWindow(
-          title: property.title,
-          snippet: property.description,
-        ),
-        icon: iconMarker,
-      );
-    }).toSet();
-    notifyListeners();
-  }
+  
 
   Future<void> get_properties_with_categories() async {
     try {
@@ -344,20 +259,21 @@ class PropertiesProvider with ChangeNotifier {
             convert.jsonDecode(response.body);
 
         final List<dynamic> loadedPrprties = jsonResponse['data'];
-        final List<dynamic> loadedPrprtiesTypes = jsonResponse['data']['property_type'];
+        // final List<dynamic> loadedPrprtiesTypes =
+        //     jsonResponse['data']['property_type'];
         _properties = loadedPrprties.map((property) {
           final Property propertyData = Property.fromJson(
             property,
           );
           return propertyData;
         }).toList();
-        
-        _propertyTypes = loadedPrprtiesTypes.map((propertyType) {
-          final PropertyType propertyData = PropertyType.fromJson(
-            propertyType,
-          );
-          return propertyData;
-        }).toList();
+
+        // _propertyTypes = loadedPrprtiesTypes.map((propertyType) {
+        //   final PropertyType propertyData = PropertyType.fromJson(
+        //     propertyType,
+        //   );
+        //   return propertyData;
+        // }).toList();
 
         if (_filteredProperties.isEmpty) {
           selecteCategory(selectedCategoryId);
@@ -437,6 +353,7 @@ class PropertiesProvider with ChangeNotifier {
         );
 
         final responseJson = convert.jsonDecode(response.body);
+        // log(responseJson.toString());
         if (response.statusCode == 200) {
           formResponseErrorMsgs = [];
           return "posted";

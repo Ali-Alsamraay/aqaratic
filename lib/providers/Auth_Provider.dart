@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -39,6 +40,7 @@ class AuthProvider with ChangeNotifier {
 
       final Map<String, dynamic> userMap = jsonDecode(user!);
       currentUser = User.fromJson(userMap);
+
       notifyListeners();
       return currentUser;
     } catch (e) {

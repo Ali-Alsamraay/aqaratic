@@ -88,9 +88,11 @@ class _ImagePdfVideoFieldsState extends State<ImagePdfVideoFields> {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    stateManagerProvider.add_image_Block(ImageBlock(
-                      key: UniqueKey(),
-                    ));
+                    stateManagerProvider.add_image_Block(
+                      ImageBlock(
+                        key: UniqueKey(),
+                      ),
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.only(bottom: 2.0.h),
@@ -260,9 +262,15 @@ class FileOrImagePicker extends StatelessWidget {
                         .get_Property_Field_By_Lang_key(langKey!)!;
 
                     if (isListOfImages!)
-                      propertyField.values!.add(loadedImageBase64);
+                      propertyField.values!.add({
+                        "ext": utils.getBase64FileExtension(loadedImageBase64!),
+                        "base64": loadedImageBase64,
+                      });
                     else
-                      propertyField.value = loadedImageBase64;
+                      propertyField.value = {
+                        "ext": utils.getBase64FileExtension(loadedImageBase64!),
+                        "base64": loadedImageBase64,
+                      };
                   }
                 : () async {
                     if (await Permission.storage.isDenied) {
@@ -283,7 +291,10 @@ class FileOrImagePicker extends StatelessWidget {
                       base64FileContent = utils.convertFileToBase64(file!.path);
                       final PropertyField propertyField = propertiesProvider!
                           .get_Property_Field_By_Lang_key(langKey!)!;
-                      propertyField.value = base64FileContent;
+                      propertyField.value = {
+                        "ext": utils.getBase64FileExtension(base64FileContent!),
+                        "base64": base64FileContent,
+                      };
                     }
                   },
             child: Container(

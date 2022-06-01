@@ -1,5 +1,5 @@
 import 'package:aqaratak/providers/Auth_Provider.dart';
-import 'package:aqaratak/providers/Maps_Places_Provider.dart';
+import 'package:aqaratak/providers/Maps_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:aqaratak/providers/State_Manager_Provider.dart';
 import 'package:aqaratak/providers/services_provider.dart';
@@ -13,12 +13,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   await WidgetsFlutterBinding.ensureInitialized();
-  final bool? isLogged = await AuthProvider().isCurrentUserLoggedIn();
+  final SharedPreferences sharedPreferences =
+      await SharedPreferences.getInstance();
   if (defaultTargetPlatform == TargetPlatform.android) {
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
   }
@@ -37,11 +39,13 @@ Future<void> main() async {
         create: (_) => StateManagerProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => MapsPlacesProvider(),
+        create: (_) => MapsProvider(),
       ),
     ],
     child: MyApp(
-      isLogged: isLogged!,
+      showBoardingScreens: sharedPreferences.getBool("show-boarding") == null
+          ? true
+          : sharedPreferences.getBool("show-boarding")!,
     ),
   ));
 }
@@ -49,10 +53,10 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({
     Key? key,
-    required this.isLogged,
+    required this.showBoardingScreens,
   }) : super(key: key);
 
-  final bool isLogged;
+  final bool showBoardingScreens;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +82,7 @@ class MyApp extends StatelessWidget {
             elevation: 0.0,
           ),
         ),
-        home: BoardingScreen(),
+        home: showBoardingScreens ? BoardingScreen() : MainScreen(),
       ),
     );
   }
