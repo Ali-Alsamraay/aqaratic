@@ -19,7 +19,7 @@ class _CategoriesBarState extends State<CategoriesBar> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 15.0.h,
+      height: 17.0.h,
       width: 88.0.w,
       margin: EdgeInsets.symmetric(
         horizontal: 3.0.w,
@@ -91,51 +91,49 @@ class CategoryItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: 4.0.w,
-          vertical: 1.0.w,
+      padding: EdgeInsets.symmetric(
+        horizontal: 4.0.w,
+        vertical: 1.0.w,
+      ),
+      decoration: BoxDecoration(
+        color: selectedIndex == index ? greyColor.withOpacity(0.17) : null,
+        borderRadius: BorderRadius.circular(
+          10.0.sp,
         ),
-        decoration: BoxDecoration(
-          color: selectedIndex == index ? greyColor.withOpacity(0.17) : null,
-          borderRadius: BorderRadius.circular(
-            10.0.sp,
-          ),
-          border: selectedIndex == index
-              ? Border.all(
-                  width: 1.0.sp,
+        border: selectedIndex == index
+            ? Border.all(
+                width: 1.0.sp,
+                color: accentColorBrown,
+              )
+            : null,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Provider.of<PropertiesProvider>(context, listen: false)
+                      .property_types_items![index!]['id'] ==
+                  -1
+              ? Icon(
+                  Icons.border_all_rounded,
                   color: accentColorBrown,
+                  size: 22.0.sp,
                 )
-              : null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+              : SvgPicture.asset(
+                  Provider.of<PropertiesProvider>(context, listen: false)
+                      .property_types_items![index!]['icon_path'],
+                  height: 7.0.w,
+                  width: 7.0.w,
+                  semanticsLabel: '',
+                ),
+          Text(
             Provider.of<PropertiesProvider>(context, listen: false)
-                        .property_types_items![index!]['id'] ==
-                    -1
-                ? Icon(
-                    Icons.border_all_rounded,
-                    color: accentColorBrown,
-                    size: 22.0.sp,
-                  )
-                : SvgPicture.asset(
-                    Provider.of<PropertiesProvider>(context, listen: false)
-                        .property_types_items![index!]['icon_path'],
-                    height: 7.0.w,
-                    width: 7.0.w,
-                    semanticsLabel: '',
-                  ),
-            Text(
-              Provider.of<PropertiesProvider>(context, listen: false)
-                  .property_types_items![index!]['title'],
-              style: TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 11.0.sp,
-              ),
-            )
-          ],
-        ),
+                .property_types_items![index!]['title'],
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 11.0.sp,
+            ),
+          )
+        ],
       ),
     );
   }

@@ -1,11 +1,13 @@
 import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/screens/adding_new_service_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
-import 'package:aqaratak/screens/map_screen.dart';
+import 'package:aqaratak/screens/maps/map_screen.dart';
 import 'package:aqaratak/screens/profile_screen.dart';
 import 'package:aqaratak/screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+
+import 'filtration/filtration_screen.dart';
 
 class MainScreen extends StatefulWidget {
   static const String screenName = "main-screen";
@@ -19,7 +21,7 @@ class _MainScreenState extends State<MainScreen> {
   int navigationBarIndex = 0;
   List<Widget> tabScreens = [
     HomeScreen(),
-    Container(),
+    FiltrationScreen(),
     AddingNewService(),
     MapsScreen(),
     ProfileScreen(),

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../widgets/Title_Builder.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
   static const String screenName = "home-screen";
@@ -56,107 +58,105 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: CircularProgressIndicator.adaptive(),
                 );
               } else if (snapshot.connectionState == ConnectionState.done) {
-                // if (snapshot.hasError) {
-                //   return Center(
-                //     child: TitleBuilder(
-                //       title: "حدث خطأ غير متوقع",
-                //     ),
-                //   );
-                // }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: TitleBuilder(
+                      title: "حدث خطأ غير متوقع",
+                    ),
+                  );
+                }
                 return GestureDetector(
                   onTap: () {
                     FocusScope.of(context).requestFocus(FocusNode());
                   },
                   child: SafeArea(
                     child: Container(
-                      child: Container(
-                        color: Color(0xe8e8e8),
-                        width: 93.0.w,
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 25.0.h,
-                              child: HeaderTitle(),
-                            ),
-                            SizedBox(
-                              height: 1.0.h,
-                            ),
-                            SizedBox(
-                              height: 7.0.h,
-                              child: SearchBar(),
-                            ),
-                            SizedBox(
-                              height: 3.0.h,
-                            ),
-                            SizedBox(
-                              child: CategoriesBar(),
-                              height: 12.0.h,
-                            ),
-                            SizedBox(
-                              height: 2.0.h,
-                            ),
-                            SizedBox(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: 4.0.w,
-                                ),
-                                child: Align(
-                                  alignment: Alignment.topRight,
-                                  child: Text(
-                                    'أحدث العروض',
-                                    textAlign: TextAlign.end,
-                                    style: TextStyle(
-                                      fontSize: 10.0.sp,
-                                      color: Color.fromARGB(
-                                        176,
-                                        0,
-                                        0,
-                                        0,
-                                      ),
-                                      fontWeight: FontWeight.bold,
+                      color: Color(0xe8e8e8),
+                      width: 93.0.w,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 25.0.h,
+                            child: HeaderTitle(),
+                          ),
+                          SizedBox(
+                            height: 1.0.h,
+                          ),
+                          SizedBox(
+                            height: 7.0.h,
+                            child: SearchBar(),
+                          ),
+                          SizedBox(
+                            height: 3.0.h,
+                          ),
+                          SizedBox(
+                            child: CategoriesBar(),
+                            height: 15.0.h,
+                          ),
+                          SizedBox(
+                            height: 2.0.h,
+                          ),
+                          SizedBox(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 4.0.w,
+                              ),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Text(
+                                  'أحدث العروض',
+                                  textAlign: TextAlign.end,
+                                  style: TextStyle(
+                                    fontSize: 10.0.sp,
+                                    color: Color.fromARGB(
+                                      176,
+                                      0,
+                                      0,
+                                      0,
                                     ),
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
                             ),
-                            SizedBox(
-                              height: 1.5.h,
-                            ),
-                            Expanded(
-                              child: Consumer<PropertiesProvider>(
-                                builder: (
-                                  context,
-                                  propertiesProviderData,
-                                  child,
-                                ) =>
-                                    ListView.builder(
-                                  controller: scrollController!,
-                                  itemCount: propertiesProviderData
-                                      .filteredProperties.length,
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  UnitDetails()),
-                                        );
-                                      },
-                                      child: ChangeNotifierProvider<
-                                          Property>.value(
-                                        value: propertiesProviderData
-                                            .filteredProperties[index],
-                                        child: UnitItem(),
-                                      ),
-                                    );
-                                  },
-                                ),
+                          ),
+                          SizedBox(
+                            height: 1.5.h,
+                          ),
+                          Expanded(
+                            child: Consumer<PropertiesProvider>(
+                              builder: (
+                                context,
+                                propertiesProviderData,
+                                child,
+                              ) =>
+                                  ListView.builder(
+                                controller: scrollController!,
+                                itemCount: propertiesProviderData
+                                    .filteredProperties.length,
+                                scrollDirection: Axis.horizontal,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              UnitDetailsScreen(),
+                                        ),
+                                      );
+                                    },
+                                    child:
+                                        ChangeNotifierProvider<Property>.value(
+                                      value: propertiesProviderData
+                                          .filteredProperties[index],
+                                      child: UnitItem(),
+                                    ),
+                                  );
+                                },
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),

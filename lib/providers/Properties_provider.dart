@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'dart:convert' as convert;
 import '../helper/constants.dart';
 import '../models/Property_Field.dart';
@@ -18,9 +19,9 @@ class PropertiesProvider with ChangeNotifier {
   List<Property> _properties = [];
   List<PropertyType> _propertyTypes = [];
   List<Property> _filteredProperties = [];
-  
+
   List<PropertyField> _propertiesFields = [];
-  
+
   List<dynamic> _propertyTypes_Objects = [];
   List<dynamic>? _cities_Objects = [];
   List<dynamic>? _purposes_Objects = [];
@@ -33,9 +34,9 @@ class PropertiesProvider with ChangeNotifier {
   List<PropertyType> get propertyTypes => [..._propertyTypes];
   List<Property> get properties => [..._properties];
   List<Property> get filteredProperties => [..._filteredProperties];
-  
+
   List<PropertyField> get propertiesFields => [..._propertiesFields];
-  
+
   List<dynamic> get propertyTypes_Objects => [..._propertyTypes_Objects];
   List<dynamic> get cities_Objects => [..._cities_Objects!];
   List<dynamic> get purposes_Objects => [..._purposes_Objects!];
@@ -43,6 +44,9 @@ class PropertiesProvider with ChangeNotifier {
   List<dynamic> get nearest_locatoins_Objects =>
       [..._nearest_locatoins_Objects!];
   List<dynamic> get periods_Objects => [..._periods_Objects!];
+
+  SfRangeValues? priceRangeValues;
+  SfRangeValues? areaRangeValues;
 
   int? currentPage = 1;
   bool? getting_more_data = false;
@@ -83,6 +87,39 @@ class PropertiesProvider with ChangeNotifier {
     _propertyTypes = [];
     _purposes_Objects = [];
     _propertyTypes_Objects = [];
+  }
+
+  void setPriceRangeValues(SfRangeValues priceRangeValues) {
+    this.priceRangeValues = priceRangeValues;
+    notifyListeners();
+  }
+
+
+  void setAreaRangeValues(SfRangeValues areaRangeValues) {
+    this.areaRangeValues = areaRangeValues;
+    notifyListeners();
+  }
+
+  double getMaxPrice() {
+    //  find max price in properties
+    double maxPrice = 0;
+    for (var property in _properties) {
+      if (property.price! > maxPrice) {
+        maxPrice = property.price!;
+      }
+    }
+    return maxPrice;
+  }
+
+  double getMaxArea() {
+    //  find max area in properties
+    double maxArea = 0;
+    for (var property in _properties) {
+      if (property.area! > maxArea) {
+        maxArea = property.area!;
+      }
+    }
+    return maxArea;
   }
 
   Property? getPropertyById(int? id) {
@@ -212,7 +249,7 @@ class PropertiesProvider with ChangeNotifier {
       _filteredProperties = _properties;
       notifyListeners();
       return;
-    } 
+    }
     // search about property..
     _filteredProperties = _properties
         .where(
@@ -236,8 +273,6 @@ class PropertiesProvider with ChangeNotifier {
     }).toList();
     notifyListeners();
   }
-
-  
 
   Future<void> get_properties_with_categories() async {
     try {

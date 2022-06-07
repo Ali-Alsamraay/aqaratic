@@ -17,16 +17,12 @@ class HeaderTitle extends StatelessWidget {
             height: 3.0.h,
           ),
           Expanded(
-            child: Row(
-              children: [
-                Text(
-                  "الرئيسية",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 14.0.sp,
-                  ),
-                ),
-              ],
+            child: Text(
+              "الرئيسية",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.0.sp,
+              ),
             ),
           ),
           SizedBox(
@@ -37,20 +33,24 @@ class HeaderTitle extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "كل ما تبحث",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0.sp,
+                Expanded(
+                  child: Text(
+                    "كل ما تبحث",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0.sp,
+                    ),
                   ),
                 ),
-                Text(
-                  "عنه في تطبيق واحد",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20.0.sp,
+                Expanded(
+                  child: Text(
+                    "عنه في تطبيق واحد",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0.sp,
+                    ),
                   ),
                 ),
               ],

@@ -26,7 +26,7 @@ class _UnitItemState extends State<UnitItem> {
         ).id;
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => UnitDetails(),
+            builder: (context) => UnitDetailsScreen(),
             settings: RouteSettings(
               arguments: propertyId,
             ),

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:aqaratak/screens/unit_details_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
@@ -11,14 +12,28 @@ class MapsProvider with ChangeNotifier {
   Set<Marker> _nearestMarkers = {};
   Set<Marker> _markers = new Set();
   List<Property> _filteredPropertiesForMap = [];
+  GoogleMapController? myMapController;
+  int navigationMapTabsIndex = 0;
+  int categoryOnMapIndex = 0;
 
   Set<Marker> get markers => _markers;
   Set<Marker> get nearestMarkers => _nearestMarkers;
   List<Property> get filteredPropertiesForMap => [..._filteredPropertiesForMap];
 
+  void setNavigationMapTabsIndex(int index) {
+    navigationMapTabsIndex = index;
+    notifyListeners();
+  }
 
+  void setCategoryOnMapIndex(int index) {
+    categoryOnMapIndex = index;
+    notifyListeners();
+  }
 
-  Future<void> get_all_markers_on_map(List<Property> _properties) async {
+  Future<void> get_all_markers_on_map(
+    List<Property> _properties,
+    BuildContext context,
+  ) async {
     List<Marker>? allMarkers = await Future.wait<Marker>(
       _properties.map((Property property) async {
         String? markerPath = "assets/icons/aradi_marker.png";
@@ -39,11 +54,22 @@ class MapsProvider with ChangeNotifier {
         );
         return Marker(
           // This marker id can be anything that uniquely identifies each marker.
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => UnitDetailsScreen(),
+                settings: RouteSettings(
+                  arguments: property.id,
+                ),
+              ),
+            );
+          },
           markerId: MarkerId(property.id.toString()),
           position: LatLng(
             property.latitude!,
             property.longitude!,
           ),
+          
           infoWindow: InfoWindow(
             title: property.title,
             snippet: property.description,
@@ -56,9 +82,25 @@ class MapsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> get_markers_for_category_on_map(int? categoryId,List<Property> _properties, ) async {
+  void setMapController(GoogleMapController controller) {
+    myMapController = controller;
+    notifyListeners();
+  }
+
+  void disposeMapController() {
+    if (myMapController != null) {
+      myMapController?.dispose();
+      notifyListeners();
+    }
+  }
+
+  Future<void> get_markers_for_category_on_map(
+    int? categoryId,
+    List<Property> _properties,
+    BuildContext context,
+  ) async {
     if (categoryId == -1) {
-      await get_all_markers_on_map(_properties);
+      await get_all_markers_on_map(_properties, context);
       return;
     }
     _filteredPropertiesForMap = _properties.where((element) {
@@ -92,6 +134,16 @@ class MapsProvider with ChangeNotifier {
       return Marker(
         // This marker id can be anything that uniquely identifies each marker.
         markerId: MarkerId(property.id.toString()),
+        onTap: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => UnitDetailsScreen(),
+              settings: RouteSettings(
+                arguments: property.id,
+              ),
+            ),
+          );
+        },
         position: LatLng(
           property.latitude!,
           property.longitude!,
@@ -123,7 +175,6 @@ class MapsProvider with ChangeNotifier {
       500,
       keyword: "cafe",
     );
-    log(_response.results.first.types.toString());
 
     _nearestMarkers = _response.results
         .map(

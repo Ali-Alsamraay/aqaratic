@@ -83,30 +83,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     shape: BoxShape.circle,
                                     color: accentColorBrown,
                                   ),
-                                  child:
-                                      //  !isCurrentUserLoggedIn! ||
-                                      //         !authProvider.currentUser!.image
-                                      //             .toString()
-                                      //             .toLowerCase()
-                                      //             .endsWith(".png") ||
-                                      //         !authProvider.currentUser!.image
-                                      //             .toString()
-                                      //             .toLowerCase()
-                                      //             .endsWith(".jpg") ||
-                                      //         !authProvider.currentUser!.image
-                                      //             .toString()
-                                      //             .toLowerCase()
-                                      //             .endsWith(".jpeg")
-                                      //     ? Center(
-                                      //         child: SvgPicture.asset(
-                                      //           'assets/images/person_icon.svg',
-                                      //           color: backgroundColor,
-                                      //           height: 10.0.w,
-                                      //           width: 10.0.w,
-                                      //         ),
-                                      //       )
-                                      //     :
-                                      authProvider
+                                  child: !isCurrentUserLoggedIn! ||
+                                          !authProvider.currentUser!.image
+                                              .toString()
+                                              .toLowerCase()
+                                              .endsWith(".png") ||
+                                          !authProvider.currentUser!.image
+                                              .toString()
+                                              .toLowerCase()
+                                              .endsWith(".jpg") ||
+                                          !authProvider.currentUser!.image
+                                              .toString()
+                                              .toLowerCase()
+                                              .endsWith(".jpeg")
+                                      ? Center(
+                                          child: SvgPicture.asset(
+                                            'assets/images/person_icon.svg',
+                                            color: backgroundColor,
+                                            height: 10.0.w,
+                                            width: 10.0.w,
+                                          ),
+                                        )
+                                      : authProvider
                                               .currentUser!.image!.isNotEmpty
                                           ? Image.network(
                                               authProvider.currentUser!.image,

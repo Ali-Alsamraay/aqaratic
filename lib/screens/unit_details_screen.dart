@@ -9,70 +9,20 @@ import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sizer/sizer.dart';
 
-class UnitDetails extends StatefulWidget {
+class UnitDetailsScreen extends StatefulWidget {
   // final Results unitInfo;
-  const UnitDetails({Key? key}) : super(key: key);
+  const UnitDetailsScreen({Key? key}) : super(key: key);
 
   @override
-  State<UnitDetails> createState() => _UnitDetailsState();
+  State<UnitDetailsScreen> createState() => _UnitDetailsScreenState();
 }
 
-class _UnitDetailsState extends State<UnitDetails> {
+class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
   int sliderIndex = 0;
-  // List<Marker> markerList = [];
-
-  // final Completer<GoogleMapController> _controller = Completer();
-  var _kGooglePlex;
 
   String? getImagesUrl(String url) {
     return url.startsWith("/") ? url : "/" + url;
   }
-
-  @override
-  void initState() {
-    // // // TODO: implement initState
-    // super.initState();
-    // final int? propertyId = ModalRoute.of(context)!.settings.arguments as int;
-    // final Property? selectedProperty =
-    //     Provider.of<PropertiesProvider>(context, listen: false)
-    //         .getPropertyById(propertyId);
-    // _kGooglePlex = CameraPosition(
-    //   target: LatLng(
-    //     selectedProperty!.latitude!,
-    //     selectedProperty.longitude!,
-    //   ),
-    //   zoom: 16,
-    // );
-    // setMarkers(selectedProperty.latitude!, selectedProperty.longitude!);
-  }
-
-//   setMarkers(double? latitude, double? longitude) {
-//     final marker2 = Marker(
-//       markerId: MarkerId('place_name'),
-//       position: LatLng(latitude!, longitude!),
-//       icon: BitmapDescriptor.defaultMarker,
-//       infoWindow: InfoWindow(
-//         title: 'فلتين في تنال المسك',
-//         snippet:
-//             """
-//           فلل  في حي تنال المسك
-// مساحه  كل  فله300 شماليات
-// درج داخلي + شقه
-// الدور الارضي
-// ملحق خارجي
-// مجلس + مقلط دورة مياة
-// طبخ وصاله ودورة مياه
-// الدور الاول غرف نوم
-// شارع 15 امام مرفق
-// البيع باذن الله مليون 500
-//                 """,
-//       ),
-//     );
-
-//     setState(() {
-//       markerList.addAll([marker2]);
-//     });
-//   }
 
   @override
   Widget build(BuildContext context) {
@@ -289,6 +239,33 @@ class _UnitDetailsState extends State<UnitDetails> {
                         padding: EdgeInsets.symmetric(
                           horizontal: 7.0.w,
                         ),
+                        child: Text("العنوان",
+                            style: TextStyle(
+                              color: Color(0xff0c2757),
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.w700,
+                              fontStyle: FontStyle.normal,
+                            )),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
+                        child: Text(
+                          selectedProperty.address ?? '',
+                          style: TextStyle(
+                            color: Color(0xff000000),
+                            fontSize: 12.0.sp,
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
                         child: Text("الوصف",
                             style: TextStyle(
                               color: Color(0xff0c2757),
@@ -310,44 +287,22 @@ class _UnitDetailsState extends State<UnitDetails> {
                             )),
                       ),
                       const Divider(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text("العنوان",
-                            style: TextStyle(
-                              color: Color(0xff0c2757),
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 7.0.w,
-                          ),
-                          child: Text(selectedProperty.address ?? '',
-                              style: TextStyle(
-                                color: Color(0xff000000),
-                                fontSize: 12.0.sp,
-                                fontWeight: FontWeight.w400,
-                                fontStyle: FontStyle.normal,
-                              ))),
-                      Center(
-                          // child: Container(
-                          //   width: 350,
-                          //   height: 250,
-                          //   child: GoogleMap(
-                          //     myLocationButtonEnabled: false,
-                          //     mapType: MapType.terrain,
-                          //     initialCameraPosition: _kGooglePlex,
-                          //     onMapCreated: (GoogleMapController controller) {
-                          //       _controller.complete(controller);
-                          //     },
-                          //     markers: markerList.map((e) => e).toSet(),
-                          //   ),
-                          // ),
-                          ),
+
+                      // Center(
+                      // child: Container(
+                      //   width: 350,
+                      //   height: 250,
+                      //   child: GoogleMap(
+                      //     myLocationButtonEnabled: false,
+                      //     mapType: MapType.terrain,
+                      //     initialCameraPosition: _kGooglePlex,
+                      //     onMapCreated: (GoogleMapController controller) {
+                      //       _controller.complete(controller);
+                      //     },
+                      //     markers: markerList.map((e) => e).toSet(),
+                      //   ),
+                      // ),
+                      // ),
                       SizedBox(
                         height: 2.0.h,
                       ),
