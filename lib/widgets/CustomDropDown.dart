@@ -8,13 +8,13 @@ class CustomDropDownMenu extends StatefulWidget {
   final String? title;
   final List<dynamic>? options;
   final String? langKey;
-  final bool? isListOfvalues;
+  final bool? isListOfValues;
 
   CustomDropDownMenu({
     this.title,
     this.options,
     this.langKey,
-    this.isListOfvalues = false,
+    this.isListOfValues = false,
   });
 
   @override
@@ -28,7 +28,7 @@ class _CustomDropDownMenuState extends State<CustomDropDownMenu> {
   Widget build(BuildContext context) {
     return PopupMenuButton(
       onSelected: (selectedValue) {
-        if (widget.isListOfvalues!)
+        if (widget.isListOfValues!)
           Provider.of<PropertiesProvider>(
             context,
             listen: false,

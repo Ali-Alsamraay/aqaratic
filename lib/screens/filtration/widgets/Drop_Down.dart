@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +8,14 @@ import "package:sizer/sizer.dart";
 
 class DropDownInFiltration extends StatefulWidget {
   final String? title;
-  final List<dynamic>? options;
+  final List<Map<String, dynamic>>? options;
+  final String? field_key;
 
   DropDownInFiltration({
     this.title,
     this.options,
+    required this.field_key,
+
   });
 
   @override
@@ -18,12 +23,21 @@ class DropDownInFiltration extends StatefulWidget {
 }
 
 class _DropDownInFiltrationState extends State<DropDownInFiltration> {
-  String? currentOption;
+  String? currentOptionTitle;
 
   @override
   Widget build(BuildContext context) {
+    final PropertiesProvider propertiesProvider =
+        Provider.of<PropertiesProvider>(
+      context,
+      listen: false,
+    );
     return PopupMenuButton(
-      onSelected: (selectedValue) {},
+      onSelected: (Map<String, dynamic> selectedValue) {
+        log(selectedValue.toString());
+        propertiesProvider.filtration_prams[widget.field_key!] =
+            selectedValue['id'].toString();
+      },
       color: accentColorBlue,
       child: Container(
         width: 90.0.w,
@@ -51,7 +65,9 @@ class _DropDownInFiltrationState extends State<DropDownInFiltration> {
               Expanded(
                 flex: 2,
                 child: Text(
-                  currentOption == null ? widget.title! : currentOption!,
+                  currentOptionTitle == null
+                      ? widget.title!
+                      : currentOptionTitle!,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     color: accentColorBlue,
@@ -87,7 +103,7 @@ class _DropDownInFiltrationState extends State<DropDownInFiltration> {
               value: widget.options![index],
               onTap: () {
                 setState(() {
-                  currentOption = widget.options![index];
+                  currentOptionTitle = widget.options![index]['title'];
                 });
               },
               child: Center(
@@ -97,13 +113,13 @@ class _DropDownInFiltrationState extends State<DropDownInFiltration> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.options![index]!,
+                        widget.options![index]['title'],
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 11.0.sp,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),

@@ -13,6 +13,7 @@ import '../models/User.dart';
 class AuthProvider with ChangeNotifier {
   User? currentUser;
   List<dynamic>? registerResponseErrorMsgs = [];
+  List<dynamic>? updateResponseErrorMsgs = [];
 
   Future<String?> getUserToken() async {
     try {
@@ -89,13 +90,12 @@ class AuthProvider with ChangeNotifier {
         );
         if (tokenStored) {
           currentUser = User.fromJsonWithCustom(responseJson["data"]);
-          var r = await sharedPreferences.setString(
+          await sharedPreferences.setString(
             'user',
             jsonEncode(
               currentUser,
             ),
           );
-          print(r);
           notifyListeners();
           return "logged_in";
         } else {
@@ -154,6 +154,61 @@ class AuthProvider with ChangeNotifier {
           registerResponseErrorMsgs = [];
           errors.forEach((key, value) {
             registerResponseErrorMsgs!.add(value.first);
+          });
+        }
+        return responseJson['message'].toString();
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String?> updateUser(
+    Map<String, dynamic> userData,
+  ) async {
+    try {
+      updateResponseErrorMsgs = [];
+      final String? token = await getUserToken();
+      if(token == null || token == "") return "not_logged_in";
+      final url = Uri.parse(
+        baseUrl + '/api/v1/mobile/user/profile/update',
+      );
+
+      final encodedUserData = convert.jsonEncode(userData);
+
+      // Await the http post response.
+      final response = await http.post(
+        url,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Accept": "application/json",
+          "Accept-Encoding": "gzip, deflate, br",
+          "Authorization": "Bearer $token",
+        },
+        body: encodedUserData,
+      );
+
+      final responseJson = convert.jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        updateResponseErrorMsgs = [];
+        final SharedPreferences sharedPreferences =
+            await SharedPreferences.getInstance();
+        currentUser = User.fromJsonWithCustom(responseJson["data"]);
+        await sharedPreferences.setString(
+          'user',
+          jsonEncode(
+            currentUser,
+          ),
+        );
+
+        return "updated";
+      } else {
+        if (responseJson['errors'] != null) {
+          Map<String, dynamic>? errors =
+              responseJson['errors'] as Map<String, dynamic>;
+          updateResponseErrorMsgs = [];
+          errors.forEach((key, value) {
+            updateResponseErrorMsgs!.add(value.first);
           });
         }
         return responseJson['message'].toString();

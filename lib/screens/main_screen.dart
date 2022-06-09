@@ -1,10 +1,12 @@
 import 'package:aqaratak/helper/constants.dart';
+import 'package:aqaratak/providers/favorite_properties_provider.dart';
 import 'package:aqaratak/screens/adding_new_service_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
 import 'package:aqaratak/screens/maps/map_screen.dart';
 import 'package:aqaratak/screens/profile_screen.dart';
 import 'package:aqaratak/screens/test.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
 import 'filtration/filtration_screen.dart';

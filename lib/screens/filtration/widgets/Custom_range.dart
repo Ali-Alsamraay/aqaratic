@@ -24,8 +24,6 @@ class CustomRangeSlider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final PropertiesProvider _propertiesProvider =
-        Provider.of<PropertiesProvider>(context);
     return Column(
       children: [
         Text(
@@ -36,16 +34,22 @@ class CustomRangeSlider extends StatelessWidget {
             color: accentColorBrown,
           ),
         ),
-        SfRangeSlider(
-          activeColor: accentColorBrown,
-          min: this.min,
-          max: this.max,
-          values:values,
-          showTicks: true,
-          showLabels: true,
-          enableTooltip: true,
-          minorTicksPerInterval: 1,
-          onChanged: onChanged,
+        SizedBox(
+          child: SfRangeSlider(
+            activeColor: accentColorBrown,
+            min: this.min == this.max || this.min > this.max
+                ? this.min - this.max
+                : this.min,
+            max: this.min == this.max || this.min > this.max
+                ? this.min - this.max + 1
+                : this.max,
+            values: values,
+            showTicks: true,
+            showLabels: true,
+            enableTooltip: true,
+            minorTicksPerInterval: 1,
+            onChanged: onChanged,
+          ),
         ),
       ],
     );

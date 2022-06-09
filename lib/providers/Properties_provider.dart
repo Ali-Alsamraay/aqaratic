@@ -1,10 +1,8 @@
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -13,12 +11,12 @@ import '../helper/constants.dart';
 import '../models/Property_Field.dart';
 import '../models/Property_Type.dart';
 import '../models/property.dart';
-import 'package:sizer/sizer.dart';
 
 class PropertiesProvider with ChangeNotifier {
   List<Property> _properties = [];
   List<PropertyType> _propertyTypes = [];
   List<Property> _filteredProperties = [];
+  List<Property> _filteredPropertiesWithPrams = [];
 
   List<PropertyField> _propertiesFields = [];
 
@@ -34,6 +32,8 @@ class PropertiesProvider with ChangeNotifier {
   List<PropertyType> get propertyTypes => [..._propertyTypes];
   List<Property> get properties => [..._properties];
   List<Property> get filteredProperties => [..._filteredProperties];
+  List<Property> get filteredPropertiesWithPrams =>
+      [..._filteredPropertiesWithPrams];
 
   List<PropertyField> get propertiesFields => [..._propertiesFields];
 
@@ -45,13 +45,33 @@ class PropertiesProvider with ChangeNotifier {
       [..._nearest_locatoins_Objects!];
   List<dynamic> get periods_Objects => [..._periods_Objects!];
 
-  SfRangeValues? priceRangeValues;
-  SfRangeValues? areaRangeValues;
+  SfRangeValues? priceRangeValues = SfRangeValues(0, 100);
+  SfRangeValues? areaRangeValues = SfRangeValues(0, 100);
 
   int? currentPage = 1;
   bool? getting_more_data = false;
   int? selectedCategoryId = -1;
   Property? propertyToBeUploaded = Property();
+
+  Map<String, dynamic> filtration_prams = {
+    "search": "",
+    "propertyTypeData": "",
+    "country": "",
+    "cityId": "",
+    "countryStats": "",
+    "construction_period": "",
+    "floors": "",
+    "rooms": "",
+    "aminity[]": [],
+    "kitchens": "",
+    "min_size": "",
+    "max_size": "",
+    "numberOfBedroom": "",
+    "min_price": "",
+    "max_price": "",
+    "propertyFor": "",
+    "method_type": "",
+  };
 
   final List<Map<String, dynamic>>? property_types_items = [
     {
@@ -89,15 +109,18 @@ class PropertiesProvider with ChangeNotifier {
     _propertyTypes_Objects = [];
   }
 
-  void setPriceRangeValues(SfRangeValues priceRangeValues) {
-    this.priceRangeValues = priceRangeValues;
-    notifyListeners();
+  void setPriceRangeValues(SfRangeValues value) {
+    if (priceRangeValues != null) {
+      priceRangeValues = value;
+      notifyListeners();
+    }
   }
 
-
-  void setAreaRangeValues(SfRangeValues areaRangeValues) {
-    this.areaRangeValues = areaRangeValues;
-    notifyListeners();
+  void setAreaRangeValues(SfRangeValues value) {
+    if (areaRangeValues != null) {
+      areaRangeValues = value;
+      notifyListeners();
+    }
   }
 
   double getMaxPrice() {
@@ -316,6 +339,60 @@ class PropertiesProvider with ChangeNotifier {
         }
       } else {
         _properties = [];
+      }
+      notifyListeners();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> get_all_properties_with_prams() async {
+    try {
+      String endPoint = '/api/v1/mobile/properties?page=1';
+      filtration_prams.forEach(
+        (key, value) {
+          if (value != null && value != "") {
+            if (value is List && value.isNotEmpty) {
+              value.forEach(
+                (element) {
+                  endPoint += '&$key=$element';
+                },
+              );
+            } else {
+              if (value is List) return;
+              endPoint += '&' + key.toString() + '=' + value.toString();
+            }
+          }
+        },
+      );
+      log(endPoint);
+
+      final url = Uri.parse(
+        baseUrl + endPoint,
+      );
+      // Await the http get response, then decode the json-formatted response.
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Accept": "application/json",
+          "Accept-Encoding": "gzip, deflate, br",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse =
+            convert.jsonDecode(response.body);
+
+        final List<dynamic> loadedPrprties = jsonResponse['data'];
+        _filteredPropertiesWithPrams = loadedPrprties.map((property) {
+          final Property propertyData = Property.fromJson(
+            property,
+          );
+          return propertyData;
+        }).toList();
+      } else {
+        _filteredPropertiesWithPrams = [];
       }
       notifyListeners();
     } catch (e) {

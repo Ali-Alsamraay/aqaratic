@@ -2,6 +2,8 @@ import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/Maps_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:aqaratak/providers/State_Manager_Provider.dart';
+import 'package:aqaratak/providers/favorite_properties_provider.dart';
+import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/providers/services_provider.dart';
 import 'package:aqaratak/screens/Register_screen.dart';
 import 'package:aqaratak/screens/creating_property_screen.dart';
@@ -16,6 +18,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:provider/provider.dart';
+
+import 'providers/filtration_provider.dart';
 
 Future<void> main() async {
   await WidgetsFlutterBinding.ensureInitialized();
@@ -40,6 +44,15 @@ Future<void> main() async {
       ),
       ChangeNotifierProvider(
         create: (_) => MapsProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => FavoritePropertiesProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => MainProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => FiltrationProvider(),
       ),
     ],
     child: MyApp(
