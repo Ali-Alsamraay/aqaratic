@@ -40,6 +40,7 @@ class Property with ChangeNotifier {
   List<String>? images_urls;
   double? latitude;
   double? longitude;
+  String? authorization_num_of_GA;
 
   Map? property_type;
 
@@ -84,6 +85,7 @@ class Property with ChangeNotifier {
     this.images_urls,
     this.latitude,
     this.longitude,
+    this.authorization_num_of_GA,
   });
 
   Property.fromJson(
@@ -141,5 +143,6 @@ class Property with ChangeNotifier {
         : double.parse(
             json['longitude'].toString(),
           );
+    this.authorization_num_of_GA  = json['authorization_num_of_GA'];
   }
 }

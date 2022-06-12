@@ -145,7 +145,39 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                 child: CircularProgressIndicator.adaptive(),
               )
             : showPropertiesList
-                ? AllPropertiesScreen()
+                ? Stack(
+                    children: [
+                      AllPropertiesScreen(),
+                      InkWell(
+                        onTap: () {
+                          setState(() {
+                            showPropertiesList = false;
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.symmetric(
+                              vertical: 3.0.h, horizontal: 3.0.w),
+                          constraints: BoxConstraints(minHeight: 5.0.h),
+                          child: Image.asset(
+                            "assets/icons/filter_icon.png",
+                            width: 8.0.w,
+                            color: Colors.white,
+                          ),
+                          padding: EdgeInsets.all(2.0.w),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              width: 1.5.sp,
+                              color: Colors.white,
+                            ),
+                            color: accentColorBlue,
+                            borderRadius: BorderRadius.circular(
+                              10.0.sp,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

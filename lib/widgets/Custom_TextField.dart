@@ -22,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.enabledBorderColor = Colors.white,
     this.errorBorderColor = accentColorBlue,
     this.initValue,
+    this.disable = false,
     this.focusNode,
   }) : super(key: key);
   final Function(String?) onValidateFunc;
@@ -41,6 +42,7 @@ class CustomTextField extends StatelessWidget {
   final Color? errorBorderColor;
   final dynamic initValue;
   final FocusNode? focusNode;
+  final bool? disable;
 
   bool? isThereError = false;
 
@@ -50,6 +52,7 @@ class CustomTextField extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: TextFormField(
+          enabled: !disable!,
           focusNode: focusNode,
           initialValue: initValue,
           style: textStyle,
@@ -86,6 +89,13 @@ class CustomTextField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(7.0.sp),
                     borderSide: BorderSide(
                       color: enabledBorderColor!,
+                      width: 0.8.sp,
+                    ),
+                  ),
+                  disabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(7.0.sp),
+                    borderSide: BorderSide(
+                      color: greyColor,
                       width: 0.8.sp,
                     ),
                   ),

@@ -11,6 +11,7 @@ import 'package:aqaratak/screens/home_screen.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:aqaratak/screens/onBoarding_screen.dart';
+import 'package:aqaratak/screens/update_user_profile_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -86,6 +87,8 @@ class MyApp extends StatelessWidget {
               CreatingPropertyScreen(),
           LoginScreen.screenName: (context) => LoginScreen(),
           RegisterScreen.screenName: (context) => RegisterScreen(),
+          UpdateUserProfileScreen.screenName: (context) =>
+              UpdateUserProfileScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

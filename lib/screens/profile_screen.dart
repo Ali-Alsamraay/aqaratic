@@ -2,6 +2,7 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
+import 'package:aqaratak/screens/update_user_profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -149,15 +150,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   color: accentColorBrown,
                                   fontWeight: FontWeight.w800,
                                   fontStyle: FontStyle.normal,
-                                  fontSize: 12.0.sp,
+                                  fontSize: 15.0.sp,
                                 ),
                               ),
                             ),
                           ),
                           SizedBox(
-                            height: 2.0.h,
+                            height: 1.0.h,
                           )
                         ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: 90.0.w,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final bool? isUserLoggedIn =
+                              await auth!.isCurrentUserLoggedIn();
+                          if (!isUserLoggedIn!) {
+                            Navigator.of(context).pushNamed(
+                              LoginScreen.screenName,
+                            );
+                            return;
+                          }
+                          Navigator.of(context).pushNamed(
+                            UpdateUserProfileScreen.screenName,
+                          );
+                        },
+                        child: Text(
+                          'تعديل الملف الشخصي',
+                          style: TextStyle(
+                            fontSize: 11.0.sp,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color(0xffb78457)),
+                          shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                        ),
                       ),
                     ),
                     SizedBox(

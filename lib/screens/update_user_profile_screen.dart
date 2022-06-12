@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
-
 import 'package:aqaratak/helper/Utils.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
+import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
@@ -18,19 +16,19 @@ import '../helper/constants.dart';
 import '../models/FormValidator.dart';
 import '../models/User.dart';
 import '../widgets/Custom_TextField.dart';
+import '../widgets/general_drop_down.dart';
 
-class RegisterScreen extends StatefulWidget {
-  RegisterScreen({Key? key}) : super(key: key);
-  static const String screenName = "register-screen";
+class UpdateUserProfileScreen extends StatefulWidget {
+  UpdateUserProfileScreen({Key? key}) : super(key: key);
+  static const String screenName = "update-user-profile-screen";
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<UpdateUserProfileScreen> createState() =>
+      _UpdateUserProfileScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
   TextEditingController mobileNumberController = TextEditingController();
-
-  final User _user = User();
 
   bool showLoader = false;
 
@@ -47,12 +45,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  bool isThereError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await Provider.of<AuthProvider>(
+          context,
+          listen: false,
+        ).getCachedUser();
+        await Provider.of<MainProvider>(
+          context,
+          listen: false,
+        ).get_main_properties();
+        setState(() {
+          showLoader = false;
+          isThereError = false;
+        });
+      } catch (e) {
+        setState(() {
+          showLoader = false;
+          isThereError = true;
+        });
+      }
+    });
+  }
+
+  final User toBeUploadedUser = User();
+
   final Utils utils = Utils();
   String? loadedImageBase64;
   Uint8List? image;
 
   @override
   Widget build(BuildContext context) {
+    final User? _user = Provider.of<AuthProvider>(
+      context,
+    ).currentUser;
     return Scaffold(
       floatingActionButton: showLoader
           ? null
@@ -98,7 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "تسجيل حساب جديد",
+                              "تعديل بياناتك",
                               textAlign: TextAlign.center,
                               style: GoogleFonts.cairo(
                                 textStyle: TextStyle(
@@ -160,19 +191,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             });
                                           },
                                           child: Container(
-                                            width: 25.0.w,
-                                            padding: EdgeInsets.all(20.0.sp),
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: backgroundColor,
-                                            ),
-                                            child: SvgPicture.asset(
-                                              'assets/images/person_icon.svg',
-                                              color: accentColorBlue,
-                                              height: 10.0.w,
-                                              width: 10.0.w,
-                                            ),
-                                          ),
+                                              width: 25.0.w,
+                                              padding: _user!.image == null ||
+                                                      _user.image == ""
+                                                  ? EdgeInsets.all(20.0.sp)
+                                                  : EdgeInsets.zero,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: backgroundColor,
+                                              ),
+                                              child: _user.image == null ||
+                                                      _user.image == ""
+                                                  ? SvgPicture.asset(
+                                                      'assets/images/person_icon.svg',
+                                                      color: accentColorBlue,
+                                                      height: 10.0.w,
+                                                      width: 10.0.w,
+                                                    )
+                                                  : Container(
+                                                      width: 25.0.w,
+                                                      height: 25.0.w,
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              _user.image!),
+                                                          fit: BoxFit.cover,
+                                                        ),
+                                                      ),
+                                                    )),
                                         ),
                                 ),
                                 SizedBox(
@@ -198,13 +245,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                           // user name
                           CustomTextField(
+                            initValue: _user!.name == null ? "" : _user.name,
                             textInputType: TextInputType.text,
                             onValidateFunc: (value) {
-                              return formValidator
-                                  .validateTextField(value!.trim());
+                              return null;
                             },
                             onSaveFunc: (value) {
-                              _user.name = value!.trim();
+                              toBeUploadedUser.name = value!.trim();
                             },
                             label: "إسم المستخدم",
                             hintTextColor: Colors.white,
@@ -214,16 +261,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           SizedBox(
                             height: 4.0.h,
                           ),
+
                           // email
                           CustomTextField(
+                            initValue: _user.email == null ? "" : _user.email,
                             textInputType: TextInputType.emailAddress,
                             onValidateFunc: (value) {
-                              return formValidator.validateEmail(value!.trim());
+                              return null;
                             },
                             onSaveFunc: (value) {
-                              _user.email = value!.trim();
+                              toBeUploadedUser.email = value!.trim();
                             },
-                            label: "البريد الإلكتروني",
+                            label: _user.email == null || _user.email == ""
+                                ? "البريد الإلكتروني"
+                                : _user.email,
+                            disable: true,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -237,23 +289,118 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             height: 4.0.h,
                           ),
 
-                          // password
+                          // authorization_number
                           CustomTextField(
-                            textInputType: TextInputType.visiblePassword,
+                            initValue: _user.authorization_number == null
+                                ? ""
+                                : _user.authorization_number,
+                            textInputType: TextInputType.text,
                             onValidateFunc: (value) {
-                              return formValidator
-                                  .validatePassword(value!.trim().toString());
+                              return null;
                             },
                             onSaveFunc: (value) {
-                              _user.password = value!.trim();
+                              toBeUploadedUser.authorization_number =
+                                  value!.trim();
                             },
-                            label: "الرقم السري",
+                            label: _user.authorization_number == null ||
+                                    _user.authorization_number == ""
+                                ? "رقم الترخيص"
+                                : _user.authorization_number,
                             hintTextColor: Colors.white,
-                            errorBorderColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
-                            passwordField: true,
+                            errorBorderColor: Colors.white,
                             icon: Icon(
-                              Icons.key,
+                              Icons.email,
+                              size: 21.0.sp,
+                              color: const Color(0xffb78457),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4.0.h,
+                          ),
+
+                          // general_authority_no
+                          CustomTextField(
+                            initValue: _user.general_authority_no == null
+                                ? ""
+                                : _user.general_authority_no,
+                            textInputType: TextInputType.text,
+                            onValidateFunc: (value) {
+                              return null;
+                            },
+                            onSaveFunc: (value) {
+                              toBeUploadedUser.general_authority_no =
+                                  value!.trim();
+                            },
+                            label: _user.general_authority_no == null ||
+                                    _user.general_authority_no == ""
+                                ? "رقم التفويض العام"
+                                : _user.general_authority_no,
+                            hintTextColor: Colors.white,
+                            textStyle: TextStyle(color: Colors.white),
+                            errorBorderColor: Colors.white,
+                            icon: Icon(
+                              Icons.email,
+                              size: 21.0.sp,
+                              color: const Color(0xffb78457),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4.0.h,
+                          ),
+
+                          // commercial_register
+                          CustomTextField(
+                            initValue: _user.commercial_register == null
+                                ? ""
+                                : _user.commercial_register,
+                            textInputType: TextInputType.text,
+                            onValidateFunc: (value) {
+                              return null;
+                            },
+                            onSaveFunc: (value) {
+                              toBeUploadedUser.commercial_register =
+                                  value!.trim();
+                            },
+                            label: _user.commercial_register == null ||
+                                    _user.commercial_register == ""
+                                ? "السجل التجاري"
+                                : _user.commercial_register,
+                            hintTextColor: Colors.white,
+                            textStyle: TextStyle(color: Colors.white),
+                            errorBorderColor: Colors.white,
+                            icon: Icon(
+                              Icons.email,
+                              size: 21.0.sp,
+                              color: const Color(0xffb78457),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 4.0.h,
+                          ),
+
+                          // classification_number
+                          CustomTextField(
+                            initValue: _user.classification_number == null
+                                ? ""
+                                : _user.classification_number,
+                            textInputType: TextInputType.text,
+                            onValidateFunc: (value) {
+                              return null;
+                            },
+                            onSaveFunc: (value) {
+                              toBeUploadedUser.classification_number =
+                                  value!.trim();
+                            },
+                            label: _user.classification_number == null ||
+                                    _user.classification_number == ""
+                                ? "رقم التصنيف"
+                                : _user.classification_number,
+                            hintTextColor: Colors.white,
+                            textStyle: TextStyle(color: Colors.white),
+                            errorBorderColor: Colors.white,
+                            icon: Icon(
+                              Icons.email,
                               size: 21.0.sp,
                               color: const Color(0xffb78457),
                             ),
@@ -264,13 +411,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           // phone
                           CustomTextField(
+                            initValue: _user.phone == null ? "" : _user.phone,
                             textInputType: TextInputType.phone,
                             onValidateFunc: (value) {
-                              return formValidator
-                                  .validatePhoneNumber(value!.trim());
+                              return null;
                             },
                             onSaveFunc: (value) {
-                              _user.phone = value!.trim();
+                              toBeUploadedUser.phone = value!.trim();
                             },
                             label: "رقم الهاتف",
                             hintTextColor: Colors.white,
@@ -283,7 +430,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             ),
                           ),
                           SizedBox(
-                            height: 7.0.h,
+                            height: 4.0.h,
+                          ),
+
+                          // registration_type
+                          GeneralDropDownMenu(
+                            title: "نوع التسجيل",
+                            options: Provider.of<MainProvider>(
+                              context,
+                              listen: false,
+                            ).main_properties['registrations_type'],
+                            onSelected: (value) {
+                              toBeUploadedUser.registration_type = value['id'];
+                            },
+                          ),
+                          SizedBox(
+                            height: 4.0.h,
                           ),
 
                           SizedBox(
@@ -292,7 +454,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: ElevatedButton(
                               onPressed: _register,
                               child: Text(
-                                'تسجيل',
+                                'تعديل',
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                   fontWeight: FontWeight.bold,
@@ -309,42 +471,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                SizedBox(
-                                  height: 3.0.h,
-                                ),
-                                Text(
-                                  "بالفعل لديك حساب..؟",
-                                  style: GoogleFonts.cairo(
-                                      textStyle: TextStyle(
-                                    color: Color(0xfffefeff),
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FontStyle.normal,
-                                    fontSize: 10.0.sp,
-                                  )),
-                                ),
-                                TextButton(
-                                  child: Text(
-                                    'تسجيل الدخول',
-                                    style: GoogleFonts.cairo(
-                                        textStyle: TextStyle(
-                                      color: Color(0xfffefeff),
-                                      fontWeight: FontWeight.w600,
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 12.0.sp,
-                                    )),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.of(context)
-                                        .pushNamed(LoginScreen.screenName);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
+
                           SizedBox(
                             height: 8.0.h,
                           ),
@@ -362,40 +489,48 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   _register() async {
+    final AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
+    final bool? isLoggedIn = await authProvider.isCurrentUserLoggedIn();
+    if (!isLoggedIn!) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => LoginScreen(),
+        ),
+      );
+      return;
+    }
     if (_formKey!.currentState!.validate()) {
-      if (loadedImageBase64 == null) {
-        await utils.showPopUp(
-            context, "صورة الملف الشخصي مطلوبة", "تأكد من بياناتك");
-        return;
+      if (loadedImageBase64 != null) {
+        toBeUploadedUser.image = {
+          "ext": utils.getBase64FileExtension(loadedImageBase64!),
+          "base64": loadedImageBase64,
+        };
       }
-
       _formKey!.currentState!.save();
-      _user.image = {
-        "ext": utils.getBase64FileExtension(loadedImageBase64!),
-        "base64": loadedImageBase64,
-      };
 
       setState(() {
         showLoader = true;
       });
 
       final String? responseMsg =
-          await Provider.of<AuthProvider>(context, listen: false).register(
-        _user.toJson(),
+          await Provider.of<AuthProvider>(context, listen: false).updateUser(
+        toBeUploadedUser.toJson(),
       );
       setState(() {
         showLoader = false;
       });
-      if (responseMsg == "registered") {
+      if (responseMsg == "updated") {
         Navigator.of(context).pushReplacementNamed(MainScreen.screenName);
       } else if (Provider.of<AuthProvider>(context, listen: false)
-          .registerResponseErrorMsgs!
+          .updateResponseErrorMsgs!
           .isNotEmpty) {
         Utils().showPopUpWithMultiLinesError(
           context,
           responseMsg.toString(),
           Provider.of<AuthProvider>(context, listen: false)
-              .registerResponseErrorMsgs,
+              .updateResponseErrorMsgs,
         );
       } else {
         Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());

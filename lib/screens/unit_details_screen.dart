@@ -3,11 +3,12 @@ import 'package:aqaratak/models/property.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 class UnitDetailsScreen extends StatefulWidget {
   // final Results unitInfo;
@@ -22,6 +23,15 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
 
   String? getImagesUrl(String url) {
     return url.startsWith("/") ? url : "/" + url;
+  }
+
+  Future<void> shareLink(String title, String description, String image) async {
+    await FlutterShare.share(
+      title: title,
+      text: description,
+      linkUrl: image,
+      chooserTitle: 'عقاراتـك',
+    );
   }
 
   @override
@@ -117,6 +127,22 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                       color: Colors.grey,
                     ),
                   ),
+                  actions: [
+                    RawMaterialButton(
+                      elevation: 0.0,
+                      onPressed: () => shareLink(
+                          selectedProperty.title!,
+                          selectedProperty.description!,
+                          baseUrl + selectedProperty.thumbnail_image!),
+                      fillColor: Colors.white,
+                      padding: const EdgeInsets.only(right: 10),
+                      shape: const CircleBorder(),
+                      child: const Icon(
+                        Icons.share,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
                   backgroundColor:
                       Colors.transparent, //You can make this transparent
                   elevation: 0.0, //No shadow
@@ -365,6 +391,37 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                                   )),
                             ],
                           ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              "رقم التفويض",
+                              style: TextStyle(
+                                color: Color(0xff0c2757),
+                                fontSize: 12.0.sp,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
+                            Text(
+                              selectedProperty.authorization_num_of_GA ??
+                                  'لا يوجد',
+                              style: TextStyle(
+                                color: Color(0xff0c2757),
+                                fontSize: 10.0.sp,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       SizedBox(

@@ -26,7 +26,7 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool?>? isCurrentUserLoggedIn() async {
+  Future<bool>? isCurrentUserLoggedIn() async {
     final SharedPreferences? sharedPreferences =
         await SharedPreferences.getInstance();
     return sharedPreferences!.getString("token") != "" &&
@@ -41,7 +41,6 @@ class AuthProvider with ChangeNotifier {
 
       final Map<String, dynamic> userMap = jsonDecode(user!);
       currentUser = User.fromJson(userMap);
-
       notifyListeners();
       return currentUser;
     } catch (e) {
@@ -89,7 +88,8 @@ class AuthProvider with ChangeNotifier {
           userData['password'],
         );
         if (tokenStored) {
-          currentUser = User.fromJsonWithCustom(responseJson["data"]);
+          currentUser = User.fromJsonWithCustom(responseJson["data"],
+              token: responseJson["_token"]);
           await sharedPreferences.setString(
             'user',
             jsonEncode(
@@ -169,7 +169,7 @@ class AuthProvider with ChangeNotifier {
     try {
       updateResponseErrorMsgs = [];
       final String? token = await getUserToken();
-      if(token == null || token == "") return "not_logged_in";
+      if (token == null || token == "") return "not_logged_in";
       final url = Uri.parse(
         baseUrl + '/api/v1/mobile/user/profile/update',
       );
@@ -191,16 +191,12 @@ class AuthProvider with ChangeNotifier {
       final responseJson = convert.jsonDecode(response.body);
       if (response.statusCode == 200) {
         updateResponseErrorMsgs = [];
-        final SharedPreferences sharedPreferences =
-            await SharedPreferences.getInstance();
-        currentUser = User.fromJsonWithCustom(responseJson["data"]);
-        await sharedPreferences.setString(
-          'user',
-          jsonEncode(
-            currentUser,
-          ),
+        await login(
+          {
+            "email": userData['email'],
+            "password": userData['password'],
+          },
         );
-
         return "updated";
       } else {
         if (responseJson['errors'] != null) {
