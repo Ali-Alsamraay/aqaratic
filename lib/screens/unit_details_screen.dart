@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sizer/sizer.dart';
-import 'package:http/http.dart' as http;
 
 class UnitDetailsScreen extends StatefulWidget {
   // final Results unitInfo;

@@ -49,6 +49,7 @@ class PropertiesProvider with ChangeNotifier {
   SfRangeValues? areaRangeValues = SfRangeValues(0, 100);
 
   int? currentPage = 1;
+  int? currentPageForFiltration = 1;
   bool? getting_more_data = false;
   int? selectedCategoryId = -1;
   Property? propertyToBeUploaded = Property();
@@ -315,6 +316,28 @@ class PropertiesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void clear_filtration_prams() {
+    _filtration_prams = {
+      "search": "",
+      "propertyTypeData": "",
+      "country": "",
+      "cityId": "",
+      "countryStats": "",
+      "construction_period": "",
+      "floors": "",
+      "rooms": "",
+      "aminity[]": [],
+      "kitchens": "",
+      "min_size": "",
+      "max_size": "",
+      "numberOfBedroom": "",
+      "min_price": "",
+      "max_price": "",
+      "propertyFor": "",
+    };
+    notifyListeners();
+  }
+
   Future<void> get_properties_with_categories() async {
     try {
       final url = Uri.parse(
@@ -418,6 +441,75 @@ class PropertiesProvider with ChangeNotifier {
     }
   }
 
+  Future<void> get_more_properties_with_prams() async {
+    try {
+      log("message");
+      // if (getting_more_data!) return;
+      currentPageForFiltration = currentPageForFiltration! + 1;
+      String endPoint = '/api/v1/mobile/properties?page=' +
+          currentPageForFiltration.toString();
+      filtration_prams.forEach(
+        (key, value) {
+          if (value != null && value != "") {
+            if (value is List && value.isNotEmpty) {
+              value.forEach(
+                (element) {
+                  endPoint += '&$key=$element';
+                },
+              );
+            } else {
+              if (value is List) return;
+              endPoint += '&' + key.toString() + '=' + value.toString();
+            }
+          }
+        },
+      );
+      log(endPoint);
+
+      final url = Uri.parse(
+        baseUrl + endPoint,
+      );
+      // Await the http get response, then decode the json-formatted response.
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Accept": "application/json",
+          "Accept-Encoding": "gzip, deflate, br",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> jsonResponse =
+            convert.jsonDecode(response.body);
+
+        final List<dynamic> loadedPrprties = jsonResponse['data'];
+        if (loadedPrprties.isEmpty) {
+          currentPageForFiltration = currentPageForFiltration! - 1;
+          return;
+        }
+        _filteredPropertiesWithPrams.addAll(loadedPrprties.map((property) {
+          final Property propertyData = Property.fromJson(
+            property,
+          );
+          return propertyData;
+        }).toList());
+      } else {
+        getting_more_data = false;
+        _filteredPropertiesWithPrams = [];
+      }
+      notifyListeners();
+    } catch (e) {
+      getting_more_data = false;
+      rethrow;
+    }
+  }
+
+  void gettingMoreData(bool getMoreData) {
+    getting_more_data = getMoreData;
+    notifyListeners();
+  }
+
   Future<void> get_more_properties_with_categories() async {
     try {
       currentPage = currentPage! + 1;
@@ -451,9 +543,13 @@ class PropertiesProvider with ChangeNotifier {
             return propertyData;
           }).toList(),
         );
+        
         selectCategory(selectedCategoryId);
-      } else {}
+      } else {
+        getting_more_data = false;
+      }
     } catch (e) {
+      getting_more_data = false;
       rethrow;
     }
   }
