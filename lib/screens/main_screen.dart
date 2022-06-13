@@ -34,23 +34,29 @@ class _MainScreenState extends State<MainScreen> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: SafeArea(
-        child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          extendBody: true,
-          extendBodyBehindAppBar: true,
-          backgroundColor: backgroundColor,
-          body: Container(
-            width: 100.0.w,
-            height: 100.0.h,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/home_background.png'),
-                fit: BoxFit.fill,
+        child: GestureDetector(
+          onTap: () {
+            if (FocusManager.instance.primaryFocus!.hasFocus)
+              FocusManager.instance.primaryFocus!.unfocus();
+          },
+          child: Scaffold(
+            resizeToAvoidBottomInset: false,
+            extendBody: true,
+            extendBodyBehindAppBar: true,
+            backgroundColor: backgroundColor,
+            body: Container(
+              width: 100.0.w,
+              height: 100.0.h,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/home_background.png'),
+                  fit: BoxFit.fill,
+                ),
               ),
+              child: tabScreens[navigationBarIndex],
             ),
-            child: tabScreens[navigationBarIndex],
+            bottomNavigationBar: _bottomBar(),
           ),
-          bottomNavigationBar: _bottomBar(),
         ),
       ),
     );

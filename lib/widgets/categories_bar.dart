@@ -54,7 +54,7 @@ class _CategoriesBarState extends State<CategoriesBar> {
                 selectedIndex = index;
               });
               Provider.of<PropertiesProvider>(context, listen: false)
-                  .selecteCategory(category_item['id']);
+                  .selectCategory(category_item['id']);
             },
             child: SizedBox(
               width: 20.w,

@@ -240,31 +240,6 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                         padding: EdgeInsets.symmetric(
                           horizontal: 7.0.w,
                         ),
-                        child: Text("رقم الترخيص",
-                            style: TextStyle(
-                              color: Color(0xff0c2757),
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text('11223344',
-                            style: TextStyle(
-                              color: Color(0xff000000),
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
                         child: Text("العنوان",
                             style: TextStyle(
                               color: Color(0xff0c2757),
@@ -292,13 +267,73 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                         padding: EdgeInsets.symmetric(
                           horizontal: 7.0.w,
                         ),
-                        child: Text("الوصف",
+                        child: Text("رقم الترخيص",
                             style: TextStyle(
                               color: Color(0xff0c2757),
                               fontSize: 12.0.sp,
                               fontWeight: FontWeight.w700,
                               fontStyle: FontStyle.normal,
                             )),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
+                        child: Text('11223344',
+                            style: TextStyle(
+                              color: Color(0xff000000),
+                              fontSize: 12.0.sp,
+                              fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.normal,
+                            )),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              "رقم التفويض",
+                              style: TextStyle(
+                                color: Color(0xff0c2757),
+                                fontSize: 12.0.sp,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
+                            Text(
+                              selectedProperty.authorization_num_of_GA ??
+                                  'لا يوجد',
+                              style: TextStyle(
+                                color: Color(0xff0c2757),
+                                fontSize: 10.0.sp,
+                                fontWeight: FontWeight.w600,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 2.0.h,
+                      ),
+                      Divider(),
+
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
+                        child: Text(
+                          "الوصف",
+                          style: TextStyle(
+                            color: Color(0xff0c2757),
+                            fontSize: 12.0.sp,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.normal,
+                          ),
+                        ),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -333,16 +368,19 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                         height: 2.0.h,
                       ),
                       Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 7.0.w,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                        ),
+                        child: Text(
+                          "المميزات",
+                          style: TextStyle(
+                            color: Color(0xff0c2757),
+                            fontSize: 12.0.sp,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.normal,
                           ),
-                          child: Text("المميزات",
-                              style: TextStyle(
-                                color: Color(0xff0c2757),
-                                fontSize: 12.0.sp,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.normal,
-                              ))),
+                        ),
+                      ),
                       Container(
                         width: double.infinity,
                         height: 60,
@@ -366,10 +404,11 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                                   )),
                               const VerticalDivider(),
                               SvgPicture.asset(
-                                  'assets/images/security_icon.svg',
-                                  color: accentColorBrown,
-                                  height: 25.0,
-                                  width: 25.0),
+                                'assets/images/security_icon.svg',
+                                color: accentColorBrown,
+                                height: 25.0,
+                                width: 25.0,
+                              ),
                               Text("آمن",
                                   style: TextStyle(
                                     color: Color(0xff000000),
@@ -396,37 +435,6 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                       SizedBox(
                         height: 2.0.h,
                       ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "رقم التفويض",
-                              style: TextStyle(
-                                color: Color(0xff0c2757),
-                                fontSize: 12.0.sp,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.normal,
-                              ),
-                            ),
-                            Text(
-                              selectedProperty.authorization_num_of_GA ??
-                                  'لا يوجد',
-                              style: TextStyle(
-                                color: Color(0xff0c2757),
-                                fontSize: 10.0.sp,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.normal,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 2.0.h,
-                      )
                     ],
                   ),
                 ),

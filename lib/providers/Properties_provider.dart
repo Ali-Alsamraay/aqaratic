@@ -53,7 +53,7 @@ class PropertiesProvider with ChangeNotifier {
   int? selectedCategoryId = -1;
   Property? propertyToBeUploaded = Property();
 
-  Map<String, dynamic> filtration_prams = {
+  Map<String, dynamic> _filtration_prams = {
     "search": "",
     "propertyTypeData": "",
     "country": "",
@@ -72,6 +72,24 @@ class PropertiesProvider with ChangeNotifier {
     "propertyFor": "",
     "method_type": "",
   };
+
+  Map<String, dynamic> get filtration_prams => {..._filtration_prams};
+
+  void set_filtration_prams(String updated_filtration_pram, String key) {
+    _filtration_prams[key] = updated_filtration_pram;
+    notifyListeners();
+  }
+
+  Map<String, dynamic> get_amenities_by_property_type(
+    List<dynamic> property_types,
+    String property_type_id,
+    String amenities_key_name,
+  ) {
+    final Map<String, dynamic> property = property_types.firstWhere(
+        (element) => element['id'].toString() == property_type_id,
+        orElse: () => null);
+    return property != null ? property[amenities_key_name] : {};
+  }
 
   final List<Map<String, dynamic>>? property_types_items = [
     {
@@ -284,7 +302,7 @@ class PropertiesProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void selecteCategory(int? id) {
+  void selectCategory(int? id) {
     // select filtered properties..
     if (id == -1) {
       _filteredProperties = _properties;
@@ -334,7 +352,7 @@ class PropertiesProvider with ChangeNotifier {
         // }).toList();
 
         if (_filteredProperties.isEmpty) {
-          selecteCategory(selectedCategoryId);
+          selectCategory(selectedCategoryId);
           return;
         }
       } else {
@@ -433,7 +451,7 @@ class PropertiesProvider with ChangeNotifier {
             return propertyData;
           }).toList(),
         );
-        selecteCategory(selectedCategoryId);
+        selectCategory(selectedCategoryId);
       } else {}
     } catch (e) {
       rethrow;

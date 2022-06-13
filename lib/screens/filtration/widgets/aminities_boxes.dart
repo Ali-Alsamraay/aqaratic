@@ -12,27 +12,36 @@ class AmenitiesBoxes extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final MainProvider mainProvider =
-        Provider.of<MainProvider>(context, listen: false);
-    final dynamic aminities =
-        mainProvider.main_properties['property_aminities'];
-    return Container(
-      child: Column(
-        children: [
-          SizedBox(
-            height: 2.0.h,
-          ),
-          ...aminities.entries.map((entry) {
-            final String id = entry.key;
-            final String value = entry.value;
-            return CheckItem(
-              title: value.toString(),
-              id: id.toString(),
-            );
-          }),
-        ],
-      ),
+    final MainProvider mainProvider = Provider.of<MainProvider>(
+      context,
     );
+    final PropertiesProvider propertiesProvider =
+        Provider.of<PropertiesProvider>(
+      context,
+    );
+    return Container(
+        child: Column(
+      children: [
+        SizedBox(
+          height: 2.0.h,
+        ),
+        ...propertiesProvider
+            .get_amenities_by_property_type(
+              mainProvider.main_properties['propertyTypes'].toList(),
+              propertiesProvider.filtration_prams['propertyTypeData'],
+              "properties_type_active_ammonites_label",
+            )
+            .entries
+            .map((entry) {
+          final String id = entry.key;
+          final String value = entry.value;
+          return CheckItem(
+            title: value.toString(),
+            id: id.toString(),
+          );
+        }),
+      ],
+    ));
   }
 }
 

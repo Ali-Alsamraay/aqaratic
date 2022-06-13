@@ -39,7 +39,6 @@ class _FoodieMapState extends State<FoodieMap> {
         final p = await _getGeoLocationPosition();
         await _retrieveNearbyRestaurants(
             LatLng(_currentLocation!.altitude, _currentLocation!.longitude));
-        log(_markers.length.toString());
       } catch (e) {}
     });
   }

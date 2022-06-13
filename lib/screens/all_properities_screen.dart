@@ -5,7 +5,6 @@ import 'package:sizer/sizer.dart';
 
 import '../models/property.dart';
 import '../providers/Properties_provider.dart';
-import '../widgets/Title_Builder.dart';
 import '../widgets/Unit_Item.dart';
 
 class AllPropertiesScreen extends StatelessWidget {
@@ -20,8 +19,8 @@ class AllPropertiesScreen extends StatelessWidget {
         builder: (
           context,
           propertiesProviderData,
-          child,
-        ) =>
+          child, 
+        ) => 
             ListView.builder(
           itemCount: propertiesProviderData.filteredPropertiesWithPrams.length,
           scrollDirection: Axis.vertical,

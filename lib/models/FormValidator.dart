@@ -13,7 +13,7 @@ class FormValidator {
     }
     // else if (value.length < 8) {
     //   return "Password must minimum eight characters";
-    // } else if (!regExp.hasMatch(value)) {
+    // } else if (!regExp.hasMatch(value)) { 
     //   return "Password at least one uppercase letter, one lowercase letter and one number";
     // }
     return null;
