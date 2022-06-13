@@ -41,7 +41,8 @@ class Property with ChangeNotifier {
   double? latitude;
   double? longitude;
   String? authorization_num_of_GA;
-
+  List<dynamic>? property_aminities;
+  List<dynamic>? property_nearest_locations;
   Map? property_type;
 
   Property({
@@ -86,6 +87,8 @@ class Property with ChangeNotifier {
     this.latitude,
     this.longitude,
     this.authorization_num_of_GA,
+    this.property_aminities,
+    this.property_nearest_locations,
   });
 
   Property.fromJson(
@@ -128,6 +131,8 @@ class Property with ChangeNotifier {
     this.status = json['status'];
     this.images = json['property_images'];
     this.property_type = json['property_type'];
+    this.property_aminities = json['property_aminities'];
+    this.property_nearest_locations = json['property_nearest_locations'];
     this.images_urls = images == null
         ? []
         : images!.map((item) => item['image'].toString()).toList();
@@ -143,6 +148,6 @@ class Property with ChangeNotifier {
         : double.parse(
             json['longitude'].toString(),
           );
-    this.authorization_num_of_GA  = json['authorization_num_of_GA'];
+    this.authorization_num_of_GA = json['authorization_num_of_GA'];
   }
 }

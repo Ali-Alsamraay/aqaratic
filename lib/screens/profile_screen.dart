@@ -1,14 +1,23 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
+import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:aqaratak/screens/update_user_profile_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'creating_property_screen.dart';
+import 'package:dio/dio.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -29,6 +38,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           context,
           listen: false,
         ).isCurrentUserLoggedIn();
+        await Provider.of<MainProvider>(context, listen: false)
+            .get_contracts_file();
         setState(() {
           loading = false;
         });
@@ -231,6 +242,130 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     SizedBox(
                       height: 5.0.h,
+                    ),
+                    Consumer<AuthProvider>(
+                      builder: (context, value, child) => _ProfileButton(
+                        onTab: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return Container(
+                                child: Dialog(
+                                  backgroundColor: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        BorderRadius.circular(10.0.sp),
+                                  ),
+                                  child: SizedBox(
+                                    width: 90.0.w,
+                                    height: 50.0.h,
+                                    child: Center(
+                                      child: Container(
+                                        padding: EdgeInsets.symmetric(
+                                          vertical: 2.0.h,
+                                        ),
+                                        child: ListView.builder(
+                                          itemBuilder: (context, index) =>
+                                              GestureDetector(
+                                            onTap: () async {
+                                              final String url =
+                                                  Provider.of<MainProvider>(
+                                                              context,
+                                                              listen: false)
+                                                          .contracts_file[index]
+                                                      ['contract_file'];
+
+                                              try {
+                                                if (await canLaunchUrl(
+                                                  Uri(
+                                                    scheme: 'https',
+                                                    host:
+                                                        'aqaratic.digitalfuture.sa',
+                                                    path: url.substring(
+                                                        baseUrl.length),
+                                                  ),
+                                                )) {
+                                                  await launchUrl(
+                                                    Uri(
+                                                      scheme: 'https',
+                                                      host:
+                                                          "aqaratic.digitalfuture.sa",
+                                                      path: url.substring(
+                                                          baseUrl.length),
+                                                    ),
+                                                    mode: LaunchMode
+                                                        .externalApplication,
+                                                  );
+                                                }
+                                              } catch (e) {
+                                                print(e);
+                                              }
+                                            },
+                                            child: Container(
+                                              margin: EdgeInsets.symmetric(
+                                                horizontal: 5.0.w,
+                                                vertical: 1.0.h,
+                                              ),
+                                              child: Container(
+                                                padding: EdgeInsets.symmetric(
+                                                  horizontal: 2.0.w,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0.sp),
+                                                  color: accentColorBrown
+                                                      .withOpacity(0.05),
+                                                  border: Border.all(
+                                                    width: 0.5.sp,
+                                                    color: accentColorBrown,
+                                                  ),
+                                                ),
+                                                child: Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                      vertical: 2.0.h),
+                                                  child: Text(
+                                                    Provider.of<MainProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .contracts_file[index]
+                                                            ['title_ar']
+                                                        .toString(),
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: TextStyle(
+                                                      color: accentColorBrown,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 12.0.sp,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          itemCount: Provider.of<MainProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .contracts_file
+                                              .length,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        icon: Icons.arrow_forward_ios,
+                        iconPath: null,
+                        title: "نماذج العقود",
+                      ),
                     ),
                     Consumer<AuthProvider>(
                       builder: (context, value, child) => _ProfileButton(

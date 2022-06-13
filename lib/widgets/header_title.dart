@@ -14,22 +14,9 @@ class HeaderTitle extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 3.0.h,
+            height: 2.0.h,
           ),
           Expanded(
-            child: Text(
-              "الرئيسية",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 14.0.sp,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: 5.0.h,
-          ),
-          Expanded(
-            flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -55,6 +42,9 @@ class HeaderTitle extends StatelessWidget {
                 ),
               ],
             ),
+          ),
+          SizedBox(
+            height: 2.0.h,
           ),
         ],
       ),

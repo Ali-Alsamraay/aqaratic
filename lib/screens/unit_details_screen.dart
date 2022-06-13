@@ -1,10 +1,12 @@
 import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/models/property.dart';
+import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:sizer/sizer.dart';
@@ -35,6 +37,10 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final AuthProvider authProvider = Provider.of<AuthProvider>(
+      context,
+      listen: false,
+    );
     final int? propertyId = ModalRoute.of(context)!.settings.arguments as int;
 
     final Property? selectedProperty =
@@ -179,260 +185,350 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                         ),
                       ),
                       const Divider(),
-                      Container(
-                        width: double.infinity,
-                        height: 60,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 7.0.w,
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 2.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SvgPicture.asset(
-                                'assets/images/area_icon.svg',
-                                color: accentColorBrown,
-                                height: 30.0,
-                                width: 30.0,
-                              ),
-                              Text('${selectedProperty.area ?? 0}',
-                                  style: TextStyle(
-                                    color: Color(0xff000000),
-                                    fontSize: 12.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal,
-                                  )),
-                              const VerticalDivider(),
-                              SvgPicture.asset('assets/images/bath_icon.svg',
-                                  color: accentColorBrown,
-                                  height: 30.0,
-                                  width: 30.0),
-                              Text("0",
-                                  style: TextStyle(
-                                    color: Color(0xff000000),
-                                    fontSize: 12.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal,
-                                  )),
-                              const VerticalDivider(),
-                              SvgPicture.asset(
-                                'assets/images/rooms_icon.svg',
-                                color: accentColorBrown,
-                                height: 30.0,
-                                width: 30.0,
-                              ),
-                              Text(
-                                '${selectedProperty.number_of_room ?? 0}',
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "التفاصيل و المميزات",
                                 style: TextStyle(
-                                  color: Color(0xff000000),
-                                  fontSize: 12.0.sp,
-                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
                                   fontStyle: FontStyle.normal,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
-                      const Divider(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text("العنوان",
-                            style: TextStyle(
-                              color: Color(0xff0c2757),
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.normal,
-                            )),
+                      Field(
+                        title: "العنوان",
+                        value: selectedProperty.address ?? "لا يوجد",
+                      ),
+                      Field(
+                        title: "رقم الترخيص",
+                        value: authProvider.currentUser == null
+                            ? "لا يوجد"
+                            : authProvider.currentUser!.authorization_number ??
+                                "لا يوجد",
+                      ),
+                      Field(
+                        title: "رقم التفويض",
+                        value: selectedProperty.authorization_num_of_GA ??
+                            "لا يوجد",
+                      ),
+                      Field(
+                        title: "نوع العقار :",
+                        value:
+                            selectedProperty.property_type!['slug']!.toString(),
+                      ),
+                      Field(
+                        title: "المساحة :",
+                        value: selectedProperty.area!.toString(),
+                      ),
+                      Field(
+                        title: "غرف النوم :",
+                        value: selectedProperty.number_of_bedroom!.toString(),
+                      ),
+                      Field(
+                        title: "دروات المياه :",
+                        value: selectedProperty.number_of_bathroom!.toString(),
+                      ),
+                      Field(
+                        title: "الغرف :",
+                        value: selectedProperty.number_of_room!.toString(),
+                      ),
+                      Field(
+                        title: "الوحدات :",
+                        value: selectedProperty.number_of_unit!.toString(),
+                      ),
+                      Field(
+                        title: "الطوابق :",
+                        value: selectedProperty.number_of_floor!.toString(),
+                      ),
+                      Field(
+                        title: "المطابخ :",
+                        value: selectedProperty.number_of_kitchen!.toString(),
+                      ),
+                      Field(
+                        title: "مكان وقوف السيارات :",
+                        value: selectedProperty.number_of_parking!.toString(),
+                      ),
+                      Field(
+                        title: "الوصف",
+                        value: selectedProperty.description ?? "لا يوجد",
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: 7.0.w,
+                          vertical: 2.0.h,
                         ),
-                        child: Text(
-                          selectedProperty.address ?? '',
-                          style: TextStyle(
-                            color: Color(0xff000000),
-                            fontSize: 12.0.sp,
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
                           ),
-                        ),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text("رقم الترخيص",
-                            style: TextStyle(
-                              color: Color(0xff0c2757),
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text('11223344',
-                            style: TextStyle(
-                              color: Color(0xff000000),
-                              fontSize: 12.0.sp,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ),
-                      const Divider(),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              "رقم التفويض",
-                              style: TextStyle(
-                                color: Color(0xff0c2757),
-                                fontSize: 12.0.sp,
-                                fontWeight: FontWeight.w700,
-                                fontStyle: FontStyle.normal,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "وسائل الراحة",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
                               ),
                             ),
-                            Text(
-                              selectedProperty.authorization_num_of_GA ??
-                                  'لا يوجد',
-                              style: TextStyle(
-                                color: Color(0xff0c2757),
-                                fontSize: 10.0.sp,
-                                fontWeight: FontWeight.w600,
-                                fontStyle: FontStyle.normal,
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
                       SizedBox(
-                        height: 2.0.h,
-                      ),
-                      Divider(),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text(
-                          "الوصف",
-                          style: TextStyle(
-                            color: Color(0xff0c2757),
-                            fontSize: 12.0.sp,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.normal,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text(selectedProperty.description ?? '',
-                            style: TextStyle(
-                              color: Color(0xff000000),
-                              fontSize: 10.0.sp,
-                              fontWeight: FontWeight.w400,
-                              fontStyle: FontStyle.normal,
-                            )),
-                      ),
-                      const Divider(),
-
-                      // Center(
-                      // child: Container(
-                      //   width: 350,
-                      //   height: 250,
-                      //   child: GoogleMap(
-                      //     myLocationButtonEnabled: false,
-                      //     mapType: MapType.terrain,
-                      //     initialCameraPosition: _kGooglePlex,
-                      //     onMapCreated: (GoogleMapController controller) {
-                      //       _controller.complete(controller);
-                      //     },
-                      //     markers: markerList.map((e) => e).toSet(),
-                      //   ),
-                      // ),
-                      // ),
-                      SizedBox(
-                        height: 2.0.h,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 7.0.w,
-                        ),
-                        child: Text(
-                          "المميزات",
-                          style: TextStyle(
-                            color: Color(0xff0c2757),
-                            fontSize: 12.0.sp,
-                            fontWeight: FontWeight.w700,
-                            fontStyle: FontStyle.normal,
-                          ),
-                        ),
-                      ),
-                      Container(
                         width: double.infinity,
-                        height: 60,
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 4.0.w,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              SvgPicture.asset('assets/images/pool_icon.svg',
-                                  color: accentColorBrown,
-                                  height: 25.0,
-                                  width: 25.0),
-                              Text("حمام سباحة",
-                                  style: TextStyle(
-                                    color: Color(0xff000000),
-                                    fontSize: 10.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal,
-                                  )),
-                              const VerticalDivider(),
-                              SvgPicture.asset(
-                                'assets/images/security_icon.svg',
-                                color: accentColorBrown,
-                                height: 25.0,
-                                width: 25.0,
+                        height: 8.0.h,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+                          child: ListView.builder(
+                            clipBehavior: Clip.none,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) => Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 3.0.w,
                               ),
-                              Text("آمن",
-                                  style: TextStyle(
-                                    color: Color(0xff000000),
-                                    fontSize: 10.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal,
-                                  )),
-                              const VerticalDivider(),
-                              SvgPicture.asset('assets/images/car_icon.svg',
-                                  color: accentColorBrown,
-                                  height: 25.0,
-                                  width: 25.0),
-                              Text("موقف سيارات",
-                                  style: TextStyle(
-                                    color: Color(0xff000000),
-                                    fontSize: 10.0.sp,
-                                    fontWeight: FontWeight.w400,
-                                    fontStyle: FontStyle.normal,
-                                  )),
-                            ],
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 3.0.w,
+                                vertical: 1.0.h,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0.sp),
+                                color: accentColorBlue,
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: accentColorBrown,
+                                    ),
+                                    child: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 2.0.w,
+                                  ),
+                                  Text(
+                                    selectedProperty.property_aminities![index]
+                                            ['aminity']['aminity']
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 3.0.w,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            itemCount:
+                                selectedProperty.property_aminities!.length,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 2.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "الخريطة",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Center(
+                        child: Container(
+                          width: 70.0.w,
+                          height: 50.0.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: GoogleMap(
+                            myLocationButtonEnabled: false,
+                            mapType: MapType.terrain,
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                selectedProperty.latitude!,
+                                selectedProperty.longitude!,
+                              ),
+                              zoom: 12,
+                            ),
+                            onMapCreated: (GoogleMapController controller) {},
+                            markers: {
+                              Marker(
+                                markerId: MarkerId(
+                                  selectedProperty.id.toString(),
+                                ),
+                              ),
+                            },
                           ),
                         ),
                       ),
                       SizedBox(
-                        height: 2.0.h,
+                        height: 1.0.h,
+                      ),
+                      const Divider(),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 2.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "مواقع قريبة",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 8.0.h,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+                          child: ListView.builder(
+                            clipBehavior: Clip.none,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) => Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 3.0.w,
+                              ),
+                              margin: EdgeInsets.symmetric(
+                                horizontal: 3.0.w,
+                                vertical: 1.0.h,
+                              ),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0.sp),
+                                color: accentColorBlue,
+                              ),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    selectedProperty
+                                        .property_nearest_locations![index]
+                                            ['nearest_location']['location']
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 1.0.w,
+                                  ),
+                                  Text(
+                                    ":",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 2.0.w,
+                                  ),
+                                  Text(
+                                    selectedProperty
+                                        .property_nearest_locations![index]
+                                            ['distance']
+                                        .toString(),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 3.0.w,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            itemCount: selectedProperty
+                                .property_nearest_locations!.length,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 3.0.h,
                       ),
                     ],
                   ),
@@ -495,6 +591,48 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
           ]),
         ),
       ),
+    );
+  }
+}
+
+class Field extends StatelessWidget {
+  const Field({Key? key, required this.title, required this.value})
+      : super(key: key);
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 7.0.w,
+          ),
+          child: Text(title,
+              style: TextStyle(
+                color: Color(0xff0c2757),
+                fontSize: 12.0.sp,
+                fontWeight: FontWeight.w700,
+                fontStyle: FontStyle.normal,
+              )),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: 7.0.w,
+          ),
+          child: Text(
+            value,
+            style: TextStyle(
+              color: Color(0xff000000),
+              fontSize: 12.0.sp,
+              fontWeight: FontWeight.w400,
+              fontStyle: FontStyle.normal,
+            ),
+          ),
+        ),
+        const Divider(),
+      ]),
     );
   }
 }

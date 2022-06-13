@@ -30,6 +30,7 @@ class AmenitiesBoxes extends StatelessWidget {
               mainProvider.main_properties['propertyTypes'].toList(),
               propertiesProvider.filtration_prams['propertyTypeData'],
               "properties_type_active_ammonites_label",
+              mainProvider.main_properties['property_aminities'],
             )
             .entries
             .map((entry) {

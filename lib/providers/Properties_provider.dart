@@ -85,11 +85,13 @@ class PropertiesProvider with ChangeNotifier {
     List<dynamic> property_types,
     String property_type_id,
     String amenities_key_name,
+    Map<String, dynamic> all_amenities,
   ) {
-    final Map<String, dynamic> property = property_types.firstWhere(
+    final Map<String, dynamic>? property = property_types.firstWhere(
         (element) => element['id'].toString() == property_type_id,
         orElse: () => null);
-    return property != null ? property[amenities_key_name] : {};
+    if (property == null) return all_amenities;
+    return property[amenities_key_name];
   }
 
   final List<Map<String, dynamic>>? property_types_items = [
@@ -543,7 +545,7 @@ class PropertiesProvider with ChangeNotifier {
             return propertyData;
           }).toList(),
         );
-        
+
         selectCategory(selectedCategoryId);
       } else {
         getting_more_data = false;
