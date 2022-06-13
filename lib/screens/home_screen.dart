@@ -3,7 +3,6 @@ import 'package:aqaratak/models/property.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/screens/unit_details_screen.dart';
-import 'package:aqaratak/widgets/Main_Info_Fields.dart';
 import 'package:aqaratak/widgets/Unit_Item.dart';
 import 'package:aqaratak/widgets/categories_bar.dart';
 import 'package:aqaratak/widgets/header_title.dart';

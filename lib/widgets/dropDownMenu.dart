@@ -1,3 +1,4 @@
+import 'package:aqaratak/screens/web_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +46,48 @@ class DropDownMenu extends StatelessWidget {
   ) async {
     if (menuName == "contracts") {
       showContractPopUp(context);
+    }
+    if (menuName == "home") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar'),
+        ),
+      );
+    }
+    if (menuName == "properties") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/properties?page_type=list_view'),
+        ),
+      );
+    }
+    if (menuName == "services") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/user/form/service/1'),
+        ),
+      );
+    }
+    if (menuName == "pages") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/faq'),
+        ),
+      );
+    }
+    if (menuName == "prices_plan") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/pricing-plan'),
+        ),
+      );
+    }
+    if (menuName == "contact_us") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/contact-us'),
+        ),
+      );
     }
   }
 
