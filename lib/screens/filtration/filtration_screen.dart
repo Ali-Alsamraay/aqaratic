@@ -150,6 +150,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                       AllPropertiesScreen(),
                       InkWell(
                         onTap: () {
+                          _propertiesProvider.clear_filtration_prams();
                           setState(() {
                             showPropertiesList = false;
                           });
