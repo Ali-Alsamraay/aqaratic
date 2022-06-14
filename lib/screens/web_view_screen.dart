@@ -32,7 +32,7 @@ class WebViewScreenState extends State<WebViewScreen> {
             ),
             Positioned(
                 top: 20.0,
-                left: 20.0,
+                right: 20.0,
                 child: InkWell(
                   onTap: () {
                     Navigator.of(context).pop();
@@ -43,7 +43,7 @@ class WebViewScreenState extends State<WebViewScreen> {
                     decoration: BoxDecoration(
                         shape: BoxShape.circle, color: Colors.white),
                     child: Center(
-                      child: Icon(Icons.arrow_back_ios, color: Colors.grey),
+                      child: Icon(Icons.arrow_forward_ios_outlined, color: Colors.grey),
                     ),
                   ),
                 )),

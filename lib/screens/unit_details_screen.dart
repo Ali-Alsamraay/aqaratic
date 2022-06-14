@@ -2,8 +2,10 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/models/property.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
+import 'package:aqaratak/widgets/comment_widget_view.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_share/flutter_share.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -32,6 +34,129 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
       text: description,
       linkUrl: image,
       chooserTitle: 'عقاراتـك',
+    );
+  }
+
+  void showCommentPopUp(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return Container(
+          child: Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0.sp),
+            ),
+            child: SizedBox(
+              width: 90.0.w,
+              height: 45.0.h,
+              child: Center(
+                child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 2.0.h,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 6.0.w, vertical: 1.h),
+                      child: Column(
+                        children: [
+                          Text('اضافة تعليق جديد',
+                              style: TextStyle(
+                                color: accentColorBlue,
+                                fontSize: 15.0.sp,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                              )),
+                          SizedBox(height: 1.h),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: RatingBar.builder(
+                              initialRating: 3,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 25,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 3.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 1.h),
+                          Container(
+                            height: 160,
+                            decoration: BoxDecoration(
+                                borderRadius:
+                                BorderRadius.circular(
+                                    10),
+                                border: Border.all(
+                                    color:
+                                    accentColorBlue,
+                                    width: 2.0)),
+                            child: TextFormField(
+                              textAlign: TextAlign.right,
+                              keyboardType:
+                              TextInputType
+                                  .multiline,
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 11),
+                              decoration:
+                              const InputDecoration(
+                                hintText: "اكتب التعليق هنا",
+                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                                border:
+                                InputBorder.none,
+                              ),
+                              autofocus: false,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.0.h,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0.sp),
+                                color: accentColorBrown,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 7.0.w,
+                                  vertical: 0.5.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "اضافة التعليق",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -528,8 +653,86 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                         ),
                       ),
                       SizedBox(
-                        height: 3.0.h,
+                        height: 1.0.h,
                       ),
+                      const Divider(),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 0.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "المراجعات",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showCommentPopUp(context);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.0.w,
+                            vertical: 0.0.h,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 3.0.w, vertical: 2.0.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0.sp),
+                              color: accentColorBlue,
+                            ),
+                            child: Text(
+                              '+ اضافة تعليق جديد',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11.0.sp,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                          itemCount: 1,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return CommentWidgetView(
+                                name: 'امجد الخطيب',
+                                image:
+                                    'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg',
+                                date: 'Sep 2021 18',
+                                subject:
+                                    'هذا التعليق مبني على فكرة طرح المثال ليناسب مبدأعرض التعليقات داخل هذا التطبيق',
+                                rate: 4.0);
+                          })
                     ],
                   ),
                 ),
