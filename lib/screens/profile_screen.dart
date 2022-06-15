@@ -8,9 +8,12 @@ import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:aqaratak/screens/update_user_profile_screen.dart';
+import 'package:aqaratak/utils/translation/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +32,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool? isCurrentUserLoggedIn = false;
   bool? loading = false;
+  GetStorage box = GetStorage();
   @override
   void initState() {
     super.initState();
@@ -154,7 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(
                               isCurrentUserLoggedIn!
                                   ? authProvider.currentUser!.name!
-                                  : "Guest",
+                                  : "guest".tr,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.cairo(
                                 textStyle: TextStyle(
@@ -189,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                         },
                         child: Text(
-                          'تعديل الملف الشخصي',
+                          'edit_profile'.tr,
                           style: TextStyle(
                             fontSize: 11.0.sp,
                             fontWeight: FontWeight.bold,
@@ -225,7 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           );
                         },
                         child: Text(
-                          'أضف عقارك',
+                          'add_your_property'.tr,
                           style: TextStyle(
                             fontSize: 15.0.sp,
                             fontWeight: FontWeight.bold,
@@ -364,7 +368,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         icon: Icons.arrow_forward_ios,
                         iconPath: null,
-                        title: "نماذج العقود",
+                        title: "contract_forms".tr,
                       ),
                     ),
                     Consumer<AuthProvider>(
@@ -372,14 +376,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTab: () {},
                         icon: Icons.arrow_forward_ios,
                         iconPath: 'assets/images/requests_icon.svg',
-                        title: "طلباتي",
+                        title: "my_requests".tr,
                       ),
                     ),
                     Consumer<AuthProvider>(
                       builder: (context, value, child) => _ProfileButton(
                         icon: Icons.arrow_forward_ios,
                         iconPath: 'assets/images/ads_icon.svg',
-                        title: "إعلاناتي",
+                        title: "my_ads".tr,
                         onTab: () {},
                       ),
                     ),
@@ -387,7 +391,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       builder: (context, value, child) => _ProfileButton(
                         icon: Icons.arrow_forward_ios,
                         iconPath: 'assets/images/fav_icon.svg',
-                        title: "المفضلة",
+                        title: "favorite".tr,
                         onTab: () {},
                       ),
                     ),
@@ -395,17 +399,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       builder: (context, value, child) => _ProfileButton(
                         icon: Icons.arrow_forward_ios,
                         iconPath: 'assets/images/contact_icon.svg',
-                        title: "اتصل بنا",
+                        title: "contact_us".tr,
                         onTab: () {},
                       ),
                     ),
+
                     Consumer<AuthProvider>(
                       builder: (context, value, child) => _ProfileButton(
                         icon: Icons.arrow_forward_ios,
                         iconPath: 'assets/images/about_icon.svg',
-                        title: "من نحن",
+                        title: "who_are_we".tr,
                         onTab: () {},
                       ),
+                    ),
+                    _ProfileButton(
+                      icon: Icons.arrow_forward_ios,
+                      iconPath: 'assets/images/world-svgrepo-com.svg',
+                      title: "language".tr,
+                      onTab: () {
+                        if (LocalizationService()
+                            .getCurrentLocale() ==
+                            const Locale('en', 'US')) {
+                          LocalizationService()
+                              .changeLocale('Arabic');
+                          box.write('lng', 'Arabic');
+                        } else {
+                          LocalizationService()
+                              .changeLocale('English');
+                          box.write('lng', 'English');
+                        }
+                      },
                     ),
                     Consumer<AuthProvider>(
                       builder: (context, value, child) => _ProfileButton(
@@ -415,8 +438,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? Icons.login
                             : Icons.logout,
                         title: !isCurrentUserLoggedIn!
-                            ? "تسجيل الدخول"
-                            : "تسجيل الخروج",
+                            ? "sign_in".tr
+                            : "sign_out".tr,
                         onTab: () async {
                           if (!isCurrentUserLoggedIn!) {
                             Navigator.of(context)
@@ -495,6 +518,7 @@ class _ProfileButton extends StatelessWidget {
                             : Container()
                         : SvgPicture.asset(
                             iconPath!,
+                            color: accentColorBrown,
                             height: 5.0.w,
                             width: 5.0.w,
                           ),

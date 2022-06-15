@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:aqaratak/screens/unit_details_screen.dart';
 import 'package:aqaratak/widgets/Title_Builder.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -54,7 +55,7 @@ class _AllPropertiesScreenState extends State<AllPropertiesScreen> {
             propertiesProviderData.filteredPropertiesWithPrams.length == 0
                 ? Center(
                     child: TitleBuilder(
-                      title: 'لا توجد عقارات بهذه المواصفات',
+                      title: 'no_properties'.tr,
                     ),
                   )
                 : ListView.builder(

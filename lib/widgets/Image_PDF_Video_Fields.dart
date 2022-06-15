@@ -3,6 +3,7 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/models/Property_Field.dart';
 import 'package:aqaratak/widgets/Custom_TextField_Builder.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
@@ -249,15 +250,15 @@ class FileOrImagePicker extends StatelessWidget {
                     if (await Permission.storage.isDenied) {
                       await utils.showPopUp(
                         context,
-                        "يجب منح عقاراتك الوصول إلى الصور لرفع صورة",
-                        "لن تتمكن من رفع أي ملف إذا لم تقم بمنح الوصول",
+                        "permission_images".tr,
+                        "permission_images_error".tr,
                       );
                       final PermissionStatus permissionStatus =
                           await Permission.storage.request();
                       if (permissionStatus.isDenied) return;
                     }
                     final String? loadedImageBase64 = await utils
-                        .showPopUpAndPickImage(context, "إختيار الصورة");
+                        .showPopUpAndPickImage(context, "photo_selection".tr);
                     final PropertyField propertyField = propertiesProvider!
                         .get_Property_Field_By_Lang_key(langKey!)!;
 
@@ -276,8 +277,8 @@ class FileOrImagePicker extends StatelessWidget {
                     if (await Permission.storage.isDenied) {
                       await utils.showPopUp(
                         context,
-                        "يجب منح عقاراتك الوصول إلى الصور لرفع صورة",
-                        "لن تتمكن من رفع أي ملف إذا لم تقم بمنح الوصول",
+                        "permission_images".tr,
+                        "permission_images_error".tr,
                       );
                       final PermissionStatus permissionStatus =
                           await Permission.storage.request();

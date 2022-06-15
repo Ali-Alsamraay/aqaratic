@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:aqaratak/helper/Utils.dart';
@@ -9,6 +8,7 @@ import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -98,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "تسجيل حساب جديد",
+                              "register__new_account".tr,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.cairo(
                                 textStyle: TextStyle(
@@ -136,8 +136,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 .storage.isDenied) {
                                               await utils.showPopUp(
                                                 context,
-                                                "يجب منح عقاراتك الوصول إلى الصور لرفع صورة",
-                                                "لن تتمكن من رفع أي ملف إذا لم تقم بمنح الوصول",
+                                                "permission_images".tr,
+                                                "permission_images_error".tr,
                                               );
                                               final PermissionStatus
                                                   permissionStatus =
@@ -150,7 +150,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             loadedImageBase64 = await utils
                                                 .showPopUpAndPickImage(
                                               context,
-                                              "إختيار الصورة",
+                                              "photo_selection".tr,
                                             );
                                             if (loadedImageBase64 == null ||
                                                 loadedImageBase64 == "") return;
@@ -179,7 +179,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   height: 1.0.h,
                                 ),
                                 Text(
-                                  "صورة الملف الشخصي",
+                                  "profile_picture".tr,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.cairo(
                                     textStyle: TextStyle(
@@ -206,7 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onSaveFunc: (value) {
                               _user.name = value!.trim();
                             },
-                            label: "إسم المستخدم",
+                            label: "username".tr,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -223,7 +223,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onSaveFunc: (value) {
                               _user.email = value!.trim();
                             },
-                            label: "البريد الإلكتروني",
+                            label: "email".tr,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -247,7 +247,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onSaveFunc: (value) {
                               _user.password = value!.trim();
                             },
-                            label: "الرقم السري",
+                            label: "password".tr,
                             hintTextColor: Colors.white,
                             errorBorderColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
@@ -272,7 +272,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             onSaveFunc: (value) {
                               _user.phone = value!.trim();
                             },
-                            label: "رقم الهاتف",
+                            label: "phone_number".tr,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -292,7 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             child: ElevatedButton(
                               onPressed: _register,
                               child: Text(
-                                'تسجيل',
+                                'registration'.tr,
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                   fontWeight: FontWeight.bold,
@@ -317,7 +317,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                   height: 3.0.h,
                                 ),
                                 Text(
-                                  "بالفعل لديك حساب..؟",
+                                  "already_have_an_account".tr,
                                   style: GoogleFonts.cairo(
                                       textStyle: TextStyle(
                                     color: Color(0xfffefeff),
@@ -328,7 +328,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 ),
                                 TextButton(
                                   child: Text(
-                                    'تسجيل الدخول',
+                                    'sign_in'.tr,
                                     style: GoogleFonts.cairo(
                                         textStyle: TextStyle(
                                       color: Color(0xfffefeff),
@@ -365,7 +365,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey!.currentState!.validate()) {
       if (loadedImageBase64 == null) {
         await utils.showPopUp(
-            context, "صورة الملف الشخصي مطلوبة", "تأكد من بياناتك");
+            context, "profile_picture_is_required".tr, "verify_your_data".tr);
         return;
       }
 
@@ -398,10 +398,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               .registerResponseErrorMsgs,
         );
       } else {
-        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+        Utils()
+            .showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } else {
-      await Utils().showPopUp(context, "إدخالات غير صالحة", "تأكد من بياناتك");
+      await Utils()
+          .showPopUp(context, "invalid_entries".tr, "verify_your_data".tr);
     }
   }
 }

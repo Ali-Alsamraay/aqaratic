@@ -7,6 +7,7 @@ import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -129,7 +130,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "تعديل بياناتك",
+                              "edit_data".tr,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.cairo(
                                 textStyle: TextStyle(
@@ -167,8 +168,8 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                                                 .storage.isDenied) {
                                               await utils.showPopUp(
                                                 context,
-                                                "يجب منح عقاراتك الوصول إلى الصور لرفع صورة",
-                                                "لن تتمكن من رفع أي ملف إذا لم تقم بمنح الوصول",
+                                                "permission_images".tr,
+                                                "permission_images_error".tr,
                                               );
                                               final PermissionStatus
                                                   permissionStatus =
@@ -181,7 +182,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                                             loadedImageBase64 = await utils
                                                 .showPopUpAndPickImage(
                                               context,
-                                              "إختيار الصورة",
+                                              "photo_selection".tr,
                                             );
                                             if (loadedImageBase64 == null ||
                                                 loadedImageBase64 == "") return;
@@ -226,7 +227,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                                   height: 1.0.h,
                                 ),
                                 Text(
-                                  "صورة الملف الشخصي",
+                                  "profile_picture".tr,
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.cairo(
                                     textStyle: TextStyle(
@@ -253,7 +254,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             onSaveFunc: (value) {
                               toBeUploadedUser.name = value!.trim();
                             },
-                            label: "إسم المستخدم",
+                            label: "username".tr,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -273,7 +274,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                               toBeUploadedUser.email = value!.trim();
                             },
                             label: _user.email == null || _user.email == ""
-                                ? "البريد الإلكتروني"
+                                ? "email".tr
                                 : _user.email,
                             disable: true,
                             hintTextColor: Colors.white,
@@ -304,7 +305,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             },
                             label: _user.authorization_number == null ||
                                     _user.authorization_number == ""
-                                ? "رقم الترخيص"
+                                ? "license_number".tr
                                 : _user.authorization_number,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
@@ -334,7 +335,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             },
                             label: _user.general_authority_no == null ||
                                     _user.general_authority_no == ""
-                                ? "رقم التفويض العام"
+                                ? "general_authorization_number".tr
                                 : _user.general_authority_no,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
@@ -364,7 +365,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             },
                             label: _user.commercial_register == null ||
                                     _user.commercial_register == ""
-                                ? "السجل التجاري"
+                                ? "commercial_Register".tr
                                 : _user.commercial_register,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
@@ -394,7 +395,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             },
                             label: _user.classification_number == null ||
                                     _user.classification_number == ""
-                                ? "رقم التصنيف"
+                                ? "classification_number".tr
                                 : _user.classification_number,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
@@ -419,7 +420,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             onSaveFunc: (value) {
                               toBeUploadedUser.phone = value!.trim();
                             },
-                            label: "رقم الهاتف",
+                            label: "phone_number".tr,
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -435,7 +436,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
 
                           // registration_type
                           GeneralDropDownMenu(
-                            title: "نوع التسجيل",
+                            title: "registration_type".tr,
                             options: Provider.of<MainProvider>(
                               context,
                               listen: false,
@@ -454,7 +455,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                             child: ElevatedButton(
                               onPressed: _register,
                               child: Text(
-                                'تعديل',
+                                'edit'.tr,
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                   fontWeight: FontWeight.bold,
@@ -533,10 +534,10 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
               .updateResponseErrorMsgs,
         );
       } else {
-        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+        Utils().showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } else {
-      await Utils().showPopUp(context, "إدخالات غير صالحة", "تأكد من بياناتك");
+      await Utils().showPopUp(context, "invalid_entries".tr, "verify_your_data".tr);
     }
   }
 }

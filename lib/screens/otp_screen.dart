@@ -1,15 +1,9 @@
-import 'package:aqaratak/helper/endpoints.dart';
-import 'package:aqaratak/screens/main_screen.dart';
-import 'package:aqaratak/screens/registeration_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:sms_autofill/sms_autofill.dart';
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
-
-import '../helper/networking.dart';
 
 class OtpScreen extends StatefulWidget {
   final String? mobile;
@@ -59,7 +53,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         height: 200,
                       ),
                       Text(
-                        "التحقق من الدخول",
+                        "entry_verification".tr,
                         style: GoogleFonts.cairo(
                           textStyle: const TextStyle(
                               color: Colors.white,
@@ -72,7 +66,7 @@ class _OtpScreenState extends State<OtpScreen> {
                         height: 20,
                       ),
                       Text(
-                        "رمز التحقق المكون من 4 أرقام",
+                        "digit_verification_code".tr,
                         style: GoogleFonts.cairo(
                           textStyle: const TextStyle(
                               color: Color(0xffb78457),
@@ -116,7 +110,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       ),
                       RichText(
                         text: TextSpan(
-                            text: 'إعادة إرسال الكود',
+                            text: 'resend_code'.tr,
                             style: const TextStyle(
                                 fontSize: 12,
                                 decoration: TextDecoration.underline,

@@ -4,6 +4,7 @@ import 'package:aqaratak/screens/filtration/widgets/Drop_Down.dart';
 import 'package:aqaratak/screens/filtration/widgets/aminities_boxes.dart';
 import 'package:aqaratak/widgets/Custom_TextField.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../helper/constants.dart';
@@ -206,7 +207,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                               ),
                             ),
                             child: Text(
-                              "خيارات البحث",
+                              "search_options".tr,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15.0.sp,
@@ -250,7 +251,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                             }
                                           },
                                           onValidateFunc: (value) {},
-                                          label: "كلمات مفتاحية",
+                                          label: "keywords".tr,
                                           enabledBorderColor: accentColorBrown,
                                         ),
                                         SizedBox(
@@ -267,7 +268,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                             }
                                           },
                                           onValidateFunc: (value) {},
-                                          label: "االمساحة الأدنى",
+                                          label: "minimum_space".tr,
                                           enabledBorderColor: accentColorBrown,
                                         ),
                                         SizedBox(
@@ -284,7 +285,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                             }
                                           },
                                           onValidateFunc: (value) {},
-                                          label: "المساحة الأعلى",
+                                          label: "max_space".tr,
                                           enabledBorderColor: accentColorBrown,
                                         ),
                                         SizedBox(
@@ -301,7 +302,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                             }
                                           },
                                           onValidateFunc: (value) {},
-                                          label: "السعر الأدنى",
+                                          label: "lowest_price".tr,
                                           enabledBorderColor: accentColorBrown,
                                         ),
                                         SizedBox(
@@ -318,7 +319,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                             }
                                           },
                                           onValidateFunc: (value) {},
-                                          label: "السعر الأعلى",
+                                          label: "highest_price".tr,
                                           enabledBorderColor: accentColorBrown,
                                         ),
                                         // Consumer<PropertiesProvider>(
@@ -365,73 +366,73 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                           height: 5.0.h,
                                         ),
                                         DropDownInFiltration(
-                                          title: "الدولة",
+                                          title: "country".tr,
                                           options: getOptionsFromMap(
                                             "countries",
                                             _mainProvider,
-                                            "الدولة",
+                                            "country".tr,
                                           ),
                                           field_key: "country",
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "المدينة",
+                                          title: "city".tr,
                                           options: getOptionsFromMap(
                                             "cities",
                                             _mainProvider,
-                                            "المدينة",
+                                            "city".tr,
                                           ),
                                           field_key: "cityId",
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "المنطقة",
+                                          title: "region".tr,
                                           options: getOptionsFromMap(
                                             "states",
                                             _mainProvider,
-                                            "المنطقة",
+                                            "region".tr,
                                           ),
                                           field_key: "countryStats",
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "طريقة الدفع",
+                                          title: "payment_method".tr,
                                           options: getOptionsFromMap(
                                             "methods_types",
                                             _mainProvider,
-                                            "طريقة الدفع",
+                                            "payment_method".tr,
                                           ),
                                           field_key: "method_type",
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "الغرض من الصلاحية",
+                                          title: "purpose_of_validity".tr,
                                           options: getOptionsFromMap(
                                             "property_purposes",
                                             _mainProvider,
-                                            "الغرض من الصلاحية",
+                                            "purpose_of_validity".tr,
                                           ),
                                           field_key: "propertyFor",
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "نوع العقار",
+                                          title: "property_type".tr,
                                           options:
                                               get_Property_Options_From_Map(
                                             "propertyTypes",
                                             _mainProvider,
-                                            "نوع العقار",
+                                            "property_type".tr,
                                           ),
                                           field_key: "propertyTypeData",
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "الطوابق",
+                                          title: "floors".tr,
                                           options:
                                               get_Property_Options_with_index(
                                             "floors",
                                             _mainProvider,
-                                            "الطوابق",
+                                            "floors".tr,
                                           ),
                                           field_key: "floors",
                                           isEnabled: _propertiesProvider
@@ -441,11 +442,11 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "تنصيف العقار",
+                                          title: "property_classification".tr,
                                           options: getOptionsFromMap(
                                             "property_classifications",
                                             _mainProvider,
-                                            "تنصيف العقار",
+                                            "property_classification".tr,
                                           ),
                                           field_key: "classification_id",
                                           isEnabled: _propertiesProvider
@@ -455,11 +456,11 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "عمر العقار",
+                                          title: "property_age".tr,
                                           options: getOptionsFromMap(
                                             "constructions_period",
                                             _mainProvider,
-                                            "عمر العقار",
+                                            "property_age".tr,
                                           ),
                                           field_key: "construction_period",
                                           isEnabled: _propertiesProvider
@@ -469,12 +470,12 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "المطابخ",
+                                          title: "kitchens".tr,
                                           options:
                                               get_Property_Options_with_index(
                                             "kitchens",
                                             _mainProvider,
-                                            "المطابخ",
+                                            "kitchens".tr,
                                           ),
                                           field_key: "kitchens",
                                           isEnabled: _propertiesProvider
@@ -484,12 +485,12 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                         ),
 
                                         DropDownInFiltration(
-                                          title: "غرف النوم",
+                                          title: "bedrooms".tr,
                                           options:
                                               get_Property_Options_with_index(
                                             "bedrooms",
                                             _mainProvider,
-                                            "غرف النوم",
+                                            "bedrooms".tr,
                                           ),
                                           field_key: "numberOfBedroom",
                                           isEnabled: _propertiesProvider
@@ -499,7 +500,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                         ),
 
                                         TitleBuilder(
-                                          title: "مميزات العقار",
+                                          title: "property_features".tr,
                                         ),
                                         SizedBox(
                                           height: 3.0.h,
@@ -570,7 +571,7 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                           ),
                                           color: accentColorBrown,
                                           child: Text(
-                                            'بحث',
+                                            'search'.tr,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12.0.sp,

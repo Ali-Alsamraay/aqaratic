@@ -2,6 +2,7 @@ import 'package:aqaratak/models/Service.dart';
 import 'package:aqaratak/providers/services_provider.dart';
 import 'package:aqaratak/screens/service_form.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../helper/constants.dart';
@@ -37,7 +38,7 @@ class AddingNewService extends StatelessWidget {
                   ),
                 ),
                 child: Text(
-                  "إختر نوع الخدمة",
+                  "choose_type_service".tr,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 15.0.sp,
@@ -71,7 +72,7 @@ class AddingNewService extends StatelessWidget {
                           ConnectionState.done) {
                         if (snapshot.hasError) {
                           return Text(
-                            "حدث خطأ غير متوقع",
+                            "unexpected_error".tr,
                             style: TextStyle(
                               fontSize: 14.0.sp,
                             ),
@@ -94,7 +95,7 @@ class AddingNewService extends StatelessWidget {
                           ),
                         );
                       }
-                      return Text("لا توجد بيانات");
+                      return Text("no_data".tr);
                     },
                   ),
                 ),

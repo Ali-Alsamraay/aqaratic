@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_share/flutter_share.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -62,7 +62,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                           horizontal: 6.0.w, vertical: 1.h),
                       child: Column(
                         children: [
-                          Text('اضافة تعليق جديد',
+                          Text('add_new_comment'.tr,
                               style: TextStyle(
                                 color: accentColorBlue,
                                 fontSize: 15.0.sp,
@@ -110,8 +110,8 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                                   color: Colors.black,
                                   fontSize: 11),
                               decoration:
-                              const InputDecoration(
-                                hintText: "اكتب التعليق هنا",
+                               InputDecoration(
+                                hintText: "write_comment_here".tr,
                                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                 border:
                                 InputBorder.none,
@@ -137,7 +137,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                                 ),
                                 child: Center(
                                   child: Text(
-                                    "اضافة التعليق",
+                                    "add_comment".tr,
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 15.0.sp,
@@ -327,7 +327,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "التفاصيل و المميزات",
+                                "details_and_features".tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0.sp,
@@ -340,61 +340,61 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                         ),
                       ),
                       Field(
-                        title: "العنوان",
-                        value: selectedProperty.address ?? "لا يوجد",
+                        title: "address".tr,
+                        value: selectedProperty.address ?? "there_is_no".tr,
                       ),
                       Field(
-                        title: "رقم الترخيص",
+                        title: "license_number".tr,
                         value: authProvider.currentUser == null
-                            ? "لا يوجد"
+                            ? "there_is_no".tr
                             : authProvider.currentUser!.authorization_number ??
-                                "لا يوجد",
+                                "there_is_no".tr,
                       ),
                       Field(
-                        title: "رقم التفويض",
+                        title: "authorization_number".tr,
                         value: selectedProperty.authorization_num_of_GA ??
-                            "لا يوجد",
+                            "there_is_no".tr,
                       ),
                       Field(
-                        title: "نوع العقار :",
+                        title: "property_type".tr,
                         value:
                             selectedProperty.property_type!['slug']!.toString(),
                       ),
                       Field(
-                        title: "المساحة :",
+                        title: "space".tr,
                         value: selectedProperty.area!.toString(),
                       ),
                       Field(
-                        title: "غرف النوم :",
+                        title: "bedrooms".tr,
                         value: selectedProperty.number_of_bedroom!.toString(),
                       ),
                       Field(
-                        title: "دروات المياه :",
+                        title: "bathrooms".tr,
                         value: selectedProperty.number_of_bathroom!.toString(),
                       ),
                       Field(
-                        title: "الغرف :",
+                        title: "rooms".tr,
                         value: selectedProperty.number_of_room!.toString(),
                       ),
                       Field(
-                        title: "الوحدات :",
+                        title: "units".tr,
                         value: selectedProperty.number_of_unit!.toString(),
                       ),
                       Field(
-                        title: "الطوابق :",
+                        title: "floors".tr,
                         value: selectedProperty.number_of_floor!.toString(),
                       ),
                       Field(
-                        title: "المطابخ :",
+                        title: "kitchens".tr,
                         value: selectedProperty.number_of_kitchen!.toString(),
                       ),
                       Field(
-                        title: "مكان وقوف السيارات :",
+                        title: "parking_place".tr,
                         value: selectedProperty.number_of_parking!.toString(),
                       ),
                       Field(
-                        title: "الوصف",
-                        value: selectedProperty.description ?? "لا يوجد",
+                        title: "description".tr,
+                        value: selectedProperty.description ?? "there_is_no".tr,
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -413,7 +413,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "وسائل الراحة",
+                                "means_of_comfort".tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0.sp,
@@ -500,7 +500,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "الخريطة",
+                                "map".tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0.sp,
@@ -565,7 +565,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "مواقع قريبة",
+                                "nearby_locations".tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0.sp,
@@ -676,7 +676,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                "المراجعات",
+                                "reviews".tr,
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15.0.sp,
@@ -708,7 +708,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                               color: accentColorBlue,
                             ),
                             child: Text(
-                              '+ اضافة تعليق جديد',
+                              'add_new_comment_plus'.tr,
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 11.0.sp,
@@ -778,8 +778,8 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                           borderRadius: BorderRadius.circular(5.0.sp),
                         ),
                         fillColor: accentColorBrown,
-                        child: const Text(
-                          'أطلب',
+                        child: Text(
+                          'request'.tr,
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -873,7 +873,7 @@ class UserInfo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "معلومات صاحب الخدمة",
+                          "service_owner_information".tr,
                           style: TextStyle(
                             color: accentColorBlue,
                             fontSize: 15.0.sp,
@@ -888,7 +888,7 @@ class UserInfo extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           children: [
                             Text(
-                              ":الإسم",
+                              "name_form".tr,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 fontSize: 12.0.sp,
@@ -910,7 +910,7 @@ class UserInfo extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           children: [
                             Text(
-                              ":الإيميل",
+                              "email_form",
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 fontSize: 12.0.sp,
@@ -932,7 +932,7 @@ class UserInfo extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           children: [
                             Text(
-                              ":رقم الهاتف",
+                              "phone_number_form".tr,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 fontSize: 12.0.sp,
@@ -960,8 +960,8 @@ class UserInfo extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5.0.sp),
                           ),
                           fillColor: accentColorBrown,
-                          child: const Text(
-                            'تواصل',
+                          child:  Text(
+                            'communication'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

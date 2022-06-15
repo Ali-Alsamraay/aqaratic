@@ -1,6 +1,6 @@
-import 'package:aqaratak/screens/web_view_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import "package:sizer/sizer.dart";
 import 'package:url_launcher/url_launcher.dart';
@@ -11,31 +11,31 @@ import '../providers/main_provider.dart';
 class DropDownMenu extends StatelessWidget {
   final List<Map<String, dynamic>> _dropDownButtons = [
     {
-      "text": "صفحة رئيسية",
+      "text": "home_page".tr,
       "value": "home",
     },
     {
-      "text": "نماذج العقود",
+      "text": "contract_forms".tr,
       "value": "contracts",
     },
     {
-      "text": "العقارات",
+      "text": "properties".tr,
       "value": "properties",
     },
     {
-      "text": "الخدمات",
+      "text": "services".tr,
       "value": "services",
     },
     {
-      "text": "خطة الأسعار",
+      "text": "prices_plan".tr,
       "value": "prices_plan",
     },
     {
-      "text": "الصفحات",
+      "text": "pages".tr,
       "value": "pages",
     },
     {
-      "text": "تواصل معنا",
+      "text": "contact_us".tr,
       "value": "contact_us",
     },
   ];
@@ -48,46 +48,46 @@ class DropDownMenu extends StatelessWidget {
       showContractPopUp(context);
     }
     if (menuName == "home") {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar'),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar'),
+      //   ),
+      // );
     }
     if (menuName == "properties") {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/properties?page_type=list_view'),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/properties?page_type=list_view'),
+      //   ),
+      // );
     }
     if (menuName == "services") {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/user/form/service/1'),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/user/form/service/1'),
+      //   ),
+      // );
     }
     if (menuName == "pages") {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/faq'),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/faq'),
+      //   ),
+      // );
     }
     if (menuName == "prices_plan") {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/pricing-plan'),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/pricing-plan'),
+      //   ),
+      // );
     }
     if (menuName == "contact_us") {
-      Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/contact-us'),
-        ),
-      );
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/contact-us'),
+      //   ),
+      // );
     }
   }
 
@@ -190,7 +190,7 @@ class DropDownMenu extends StatelessWidget {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("لا يمكن فتح العقد"),
+                              content: Text("contract_cannot_be_opened".tr),
                               duration: Duration(milliseconds: 800),
                             ),
                           );

@@ -5,6 +5,7 @@ import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/screens/Register_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
@@ -109,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "تسجيل الدخول",
+                              "sign_in".tr,
                               textAlign: TextAlign.center,
                               style: GoogleFonts.cairo(
                                   textStyle: TextStyle(
@@ -171,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             initValue: value.currentUser == null
                                                 ? null
                                                 : value.currentUser!.phone,
-                                            label: "رقم الهاتف",
+                                            label: "phone_number".tr,
                                             hintTextColor: Colors.white,
                                             textStyle:
                                                 TextStyle(color: Colors.white),
@@ -194,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           onSaveFunc: (value) {
                                             _user.email = value!.trim();
                                           },
-                                          label: "البريد الإلكتروني",
+                                          label: "email".tr,
                                           hintTextColor: Colors.white,
                                           textStyle:
                                               TextStyle(color: Colors.white),
@@ -222,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             onSaveFunc: (value) {
                               _user.password = value!.trim();
                             },
-                            label: "الرقم السري",
+                            label: "password".tr,
                             hintTextColor: Colors.white,
                             errorBorderColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
@@ -243,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: ElevatedButton(
                               onPressed: _login,
                               child: Text(
-                                'تسجيل الدخول',
+                                'sign_in'.tr,
                                 style: TextStyle(
                                   fontSize: 15.0.sp,
                                   fontWeight: FontWeight.bold,
@@ -264,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             height: 7.0.h,
                             child: TextButton(
                               child: Text(
-                                "تسجيل",
+                                "registration".tr,
                                 style: GoogleFonts.cairo(
                                     textStyle: TextStyle(
                                   color: Color(0xfffefeff),
@@ -315,10 +316,10 @@ class _LoginScreenState extends State<LoginScreen> {
       if (responseMsg == "logged_in") {
         Navigator.of(context).pushReplacementNamed(MainScreen.screenName);
       } else {
-        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+        Utils().showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } else {
-      await Utils().showPopUp(context, "إدخالات غير صالحة", "تأكد من بياناتك");
+      await Utils().showPopUp(context, "invalid_entries".tr, "verify_your_data".tr);
     }
   }
 }

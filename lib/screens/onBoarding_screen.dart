@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:sizer/sizer.dart';
@@ -15,18 +16,18 @@ class _BoardingScreenState extends State<BoardingScreen> {
   int currentPage = 0;
   List<Map<String, String>> splashData = [
     {
-      "title": "بحث احترافي",
-      "text": "هناك حقيقة مثبتة منذ زمن طويل وهي ان المحتوى المقروء لصفحة ما",
+      "title": "professional_search".tr,
+      "text": "professional_search_subject".tr,
       "image": "assets/images/boarding_1.png"
     },
     {
-      "title": "اعلن عن عقارك",
-      "text": "هناك حقيقة مثبتة منذ زمن طويل وهي ان المحتوى المقروء لصفحة ما",
+      "title": "advertise_your_property".tr,
+      "text": "advertise_your_property_subject".tr,
       "image": "assets/images/boarding_2.png"
     },
     {
-      "title": "خدمات عقارية",
-      "text": "هناك حقيقة مثبتة منذ زمن طويل وهي ان المحتوى المقروء لصفحة ما",
+      "title": "real_estate_services".tr,
+      "text": "real_estate_services_subject".tr,
       "image": "assets/images/boarding_3.png"
     },
   ];

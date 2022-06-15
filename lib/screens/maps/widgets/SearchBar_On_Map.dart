@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -51,7 +52,7 @@ class SearchBarOnMap extends StatelessWidget {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: 'عما تبحث',
+                  hintText: 'what_looking_for'.tr,
                   hintStyle: TextStyle(
                     color: Color(0xffb3bbcb),
                     fontSize: 17.0.sp,
