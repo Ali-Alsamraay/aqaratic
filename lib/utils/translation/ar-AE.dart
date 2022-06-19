@@ -140,4 +140,6 @@ const Map<String, String> arAE = {
   'searching_for': 'البحث عن',
   'no_picture': 'لا توجد صورة',
   'language': 'اللغـة',
+  'engineering_plans': 'المخططات الهندسية',
+
 };

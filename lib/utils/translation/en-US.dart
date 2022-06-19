@@ -142,4 +142,5 @@ const Map<String, String> enUS = {
   'searching_for': 'searching for',
   'no_picture': 'There\'s no picture',
   'language': 'Language',
+  'engineering_plans': 'Engineering plans',
 };

@@ -428,6 +428,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               .changeLocale('English');
                           box.write('lng', 'English');
                         }
+                        Get.offAll(()=> MainScreen());
                       },
                     ),
                     Consumer<AuthProvider>(

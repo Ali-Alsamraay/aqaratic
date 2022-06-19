@@ -1,3 +1,4 @@
+import 'package:aqaratak/screens/all_properities_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -55,11 +56,11 @@ class DropDownMenu extends StatelessWidget {
       // );
     }
     if (menuName == "properties") {
-      // Navigator.of(context).push(
-      //   MaterialPageRoute(
-      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/properties?page_type=list_view'),
-      //   ),
-      // );
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => AllPropertiesScreen(fromHome: true),
+        ),
+      );
     }
     if (menuName == "services") {
       // Navigator.of(context).push(

@@ -19,6 +19,7 @@ import '../widgets/google_map_details_Fields.dart';
 
 class CreatingPropertyScreen extends StatefulWidget {
   static const String screenName = "Creating-Property-Screen";
+
   CreatingPropertyScreen({Key? key}) : super(key: key);
 
   @override
@@ -398,7 +399,8 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
               .formResponseErrorMsgs,
         );
       } else {
-        Utils().showPopUp(context, "problem_happened".tr, responseMsg.toString());
+        Utils()
+            .showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } catch (e) {
       setState(() {

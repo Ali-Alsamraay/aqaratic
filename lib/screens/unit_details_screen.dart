@@ -1,7 +1,12 @@
 import 'package:aqaratak/helper/constants.dart';
+import 'package:aqaratak/models/FormValidator.dart';
 import 'package:aqaratak/models/property.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
+import 'package:aqaratak/providers/State_Manager_Provider.dart';
+import 'package:aqaratak/widgets/Custom_TextField.dart';
+import 'package:aqaratak/widgets/Custom_TextField_Builder.dart';
+import 'package:aqaratak/widgets/Image_PDF_Video_Fields.dart';
 import 'package:aqaratak/widgets/comment_widget_view.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -94,27 +99,19 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                           Container(
                             height: 160,
                             decoration: BoxDecoration(
-                                borderRadius:
-                                BorderRadius.circular(
-                                    10),
+                                borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                    color:
-                                    accentColorBlue,
-                                    width: 2.0)),
+                                    color: accentColorBlue, width: 2.0)),
                             child: TextFormField(
                               textAlign: TextAlign.right,
-                              keyboardType:
-                              TextInputType
-                                  .multiline,
+                              keyboardType: TextInputType.multiline,
                               style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 11),
-                              decoration:
-                               InputDecoration(
+                                  color: Colors.black, fontSize: 11),
+                              decoration: InputDecoration(
                                 hintText: "write_comment_here".tr,
-                                contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                                border:
-                                InputBorder.none,
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                border: InputBorder.none,
                               ),
                               autofocus: false,
                             ),
@@ -171,6 +168,12 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
     final Property? selectedProperty =
         Provider.of<PropertiesProvider>(context, listen: false)
             .getPropertyById(propertyId);
+
+    final StateManagerProvider stateManagerProvider =
+    Provider.of<StateManagerProvider>(
+      context,
+      listen: false,
+    );
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -676,6 +679,114 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                             child: Center(
                               child: Text(
+                                "engineering_plans".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        stateManagerProvider.add_image_Block(
+                                          ImageBlock(
+                                            key: UniqueKey(),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            bottom: 1.0.h, top: 1.0.h),
+                                        height: 7.0.h,
+                                        decoration: BoxDecoration(
+                                          color: accentColorBlue,
+                                          borderRadius: BorderRadius.circular(
+                                            15.0.sp,
+                                          ),
+                                          border: Border.all(
+                                            width: 1.sp,
+                                            color: accentColorBrown,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 2.0.w,
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: CustomTextField(
+                                      onValidateFunc: (value) {},
+                                      onSaveFunc: (value) {},
+                                      label: 'engineering_plans'.tr,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Consumer<StateManagerProvider>(
+                                builder: (context, value, child) => Column(
+                                  children: [
+                                    ...List.generate(
+                                      value.imagesBlocks.length,
+                                          (index) {
+                                        value.imagesBlocks[index].index = index;
+
+                                        return value.imagesBlocks[index];
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 0.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
                                 "reviews".tr,
                                 style: TextStyle(
                                   color: Colors.white,
@@ -960,7 +1071,7 @@ class UserInfo extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5.0.sp),
                           ),
                           fillColor: accentColorBrown,
-                          child:  Text(
+                          child: Text(
                             'communication'.tr,
                             style: TextStyle(
                               color: Colors.white,

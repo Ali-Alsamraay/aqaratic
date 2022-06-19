@@ -8,7 +8,10 @@ import '../../../providers/Properties_provider.dart';
 import 'Categories_On_Map.dart';
 
 class MapTab extends StatefulWidget {
-  MapTab({Key? key, required this.categoryId,}) : super(key: key);
+  MapTab({
+    Key? key,
+    required this.categoryId,
+  }) : super(key: key);
   final int? categoryId;
 
   @override
@@ -93,3 +96,4 @@ class _MapTabState extends State<MapTab> {
     );
   }
 }
+
