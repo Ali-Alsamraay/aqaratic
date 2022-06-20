@@ -1,14 +1,17 @@
+import 'dart:developer';
+
 import 'package:aqaratak/helper/constants.dart';
-import 'package:aqaratak/providers/favorite_properties_provider.dart';
+import 'package:aqaratak/main.dart';
+import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/screens/adding_new_service_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
 import 'package:aqaratak/screens/maps/map_screen.dart';
 import 'package:aqaratak/screens/profile_screen.dart';
-import 'package:aqaratak/screens/test.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
+import '../providers/Properties_provider.dart';
 import 'filtration/filtration_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -21,6 +24,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int navigationBarIndex = 0;
+  bool isLoading = false;
   List<Widget> tabScreens = [
     HomeScreen(),
     FiltrationScreen(),
@@ -28,6 +32,30 @@ class _MainScreenState extends State<MainScreen> {
     MapsScreen(),
     ProfileScreen(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        final MainProvider mainProvider =
+            Provider.of<MainProvider>(context, listen: false);
+        if (!mainProvider.is_main_properties_loaded) {
+          setState(() {
+            isLoading = true;
+          });
+          await mainProvider.get_main_properties();
+          setState(() {
+            isLoading = false;
+          });
+        }
+      } catch (e) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +81,11 @@ class _MainScreenState extends State<MainScreen> {
                   fit: BoxFit.fill,
                 ),
               ),
-              child: tabScreens[navigationBarIndex],
+              child: isLoading
+                  ? Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    )
+                  : tabScreens[navigationBarIndex],
             ),
             bottomNavigationBar: _bottomBar(),
           ),

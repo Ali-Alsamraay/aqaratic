@@ -3,7 +3,6 @@ import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import 'package:sizer/sizer.dart';
 
 class CategoriesBar extends StatefulWidget {
@@ -24,9 +23,7 @@ class _CategoriesBarState extends State<CategoriesBar> {
       margin: EdgeInsets.symmetric(
         horizontal: 3.0.w,
       ),
-      padding: EdgeInsets.symmetric(
-        vertical: 1.0.h,
-      ),
+      padding: EdgeInsets.symmetric(vertical: 1.0.h, horizontal: 4.0.w),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(
@@ -57,7 +54,7 @@ class _CategoriesBarState extends State<CategoriesBar> {
                   .selectCategory(category_item['id']);
             },
             child: SizedBox(
-              width: 20.w,
+              width: 23.w,
               height: 10.0.h,
               child: LayoutBuilder(
                 builder: (context, constraints) => Container(

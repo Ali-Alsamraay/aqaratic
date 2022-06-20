@@ -1,14 +1,16 @@
+import 'dart:developer';
+
 import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/screens/all_properities_screen.dart';
 import 'package:aqaratak/screens/filtration/widgets/Drop_Down.dart';
-import 'package:aqaratak/screens/filtration/widgets/aminities_boxes.dart';
 import 'package:aqaratak/widgets/Custom_TextField.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import '../../helper/constants.dart';
+import '../../models/FormValidator.dart';
 import '../../providers/Properties_provider.dart';
-import '../../widgets/Title_Builder.dart';
 
 class FiltrationScreen extends StatefulWidget {
   FiltrationScreen({Key? key}) : super(key: key);
@@ -33,36 +35,24 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
           context,
           listen: false,
         );
-        final MainProvider mainProvider = Provider.of<MainProvider>(
-          context,
-          listen: false,
-        );
-
+        
+        propertiesProvider.clear_filtration_prams();
         await propertiesProvider.get_properties_with_categories();
-        await mainProvider.get_main_properties();
+  
 
-        // propertiesProvider.setPriceRangeValues(
-        //   SfRangeValues(
-        //     0,
-        //     propertiesProvider.getMaxPrice(),
-        //   ),
-        // );
-        // propertiesProvider.setAreaRangeValues(
-        //   SfRangeValues(
-        //     0,
-        //     propertiesProvider.getMaxArea(),
-        //   ),
-        // );
-        setState(() {
-          loading = false;
-        });
+        if (mounted)
+          setState(() {
+            loading = false;
+          });
       } catch (e) {
-        setState(() {
-          loading = false;
-        });
+        if (mounted)
+          setState(() {
+            loading = false;
+          });
       }
     });
   }
+
 
   @override
   void dispose() {
@@ -70,6 +60,57 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
       _key!.currentState!.dispose();
     }
     super.dispose();
+  }
+
+  List<Map<String, dynamic>> get_cities_from_state(
+    String state_id,
+    MainProvider mainProvider,
+    String title,
+  ) {
+    final List<dynamic> statesWithCities =
+        mainProvider.main_properties["states"];
+    final List<Map<String, dynamic>> cities = [];
+
+    statesWithCities.forEach((element) {
+      if (element["id"].toString() == state_id) {
+        element["cities"].forEach((element) {
+          final Map<String, dynamic> city = {
+            'id': element["id"],
+            'title': element["name"],
+          };
+          cities.add(city);
+        });
+        return;
+      }
+    });
+
+    cities.insert(0, {
+      "title": title,
+      "id": "",
+    });
+    return cities;
+  }
+
+  List<Map<String, dynamic>> get_states(
+    MainProvider mainProvider,
+    String title,
+  ) {
+    final List<dynamic> statesWithCities =
+        mainProvider.main_properties["states"];
+    final List<Map<String, dynamic>> states = [];
+
+    statesWithCities.forEach((element) {
+      final Map<String, dynamic> state = {
+        'id': element["id"],
+        'title': element["name"],
+      };
+      states.add(state);
+    });
+    states.insert(0, {
+      "title": title,
+      "id": "",
+    });
+    return states;
   }
 
   List<Map<String, dynamic>> getOptionsFromMap(
@@ -86,10 +127,13 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
       };
       options.add(option);
     });
-    options.insert(0, {
-      "title": title,
-      "id": "",
-    });
+    options.insert(
+      0,
+      {
+        "title": title,
+        "id": "",
+      },
+    );
     return options;
   }
 
@@ -169,17 +213,28 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                         },
                         child: Container(
                           margin: EdgeInsets.symmetric(
-                              vertical: 3.0.h, horizontal: 3.0.w),
-                          constraints: BoxConstraints(minHeight: 5.0.h),
+                            vertical: 3.0.h,
+                            horizontal: 3.0.w,
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            vertical: 1.0.h,
+                            horizontal: 1.0.w,
+                          ),
+                          constraints: BoxConstraints(
+                            minHeight: 7.0.h,
+                            minWidth: 5.0.w,
+                          ),
                           child: Image.asset(
                             "assets/icons/filter_icon.png",
-                            width: 8.0.w,
+                            width: 10.0.w,
                             color: Colors.white,
                           ),
-                          color: accentColorBlue,
-                          // borderRadius: BorderRadius.circular(
-                          //   10.0.sp,
-                          // ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              5.0.sp,
+                            ),
+                            color: accentColorBlue,
+                          ),
                         ),
                       ),
                     ],
@@ -245,124 +300,25 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                             if (value != null &&
                                                 value.isNotEmpty) {
                                               _propertiesProvider
-                                                      .filtration_prams[
-                                                  'search'] = value.trim();
+                                                  .set_filtration_prams(
+                                                value.trim(),
+                                                'search',
+                                              );
                                             }
                                           },
                                           onValidateFunc: (value) {},
                                           label: "كلمات مفتاحية",
-                                          enabledBorderColor: accentColorBrown,
+                                          enabledBorderColor: accentColorBlue,
+                                          focusedBorderColor: accentColorBlue,
                                         ),
                                         SizedBox(
                                           height: 3.0.h,
                                         ),
-                                        CustomTextField(
-                                          textInputType: TextInputType.number,
-                                          onSaveFunc: (value) {
-                                            if (value != null &&
-                                                value.isNotEmpty) {
-                                              _propertiesProvider
-                                                      .filtration_prams[
-                                                  'min_size'] = value.trim();
-                                            }
-                                          },
-                                          onValidateFunc: (value) {},
-                                          label: "االمساحة الأدنى",
-                                          enabledBorderColor: accentColorBrown,
+                                        maxMinPriceAndSizeFields(
+                                          _propertiesProvider,
                                         ),
                                         SizedBox(
                                           height: 3.0.h,
-                                        ),
-                                        CustomTextField(
-                                          textInputType: TextInputType.number,
-                                          onSaveFunc: (value) {
-                                            if (value != null &&
-                                                value.isNotEmpty) {
-                                              _propertiesProvider
-                                                      .filtration_prams[
-                                                  'max_size'] = value.trim();
-                                            }
-                                          },
-                                          onValidateFunc: (value) {},
-                                          label: "المساحة الأعلى",
-                                          enabledBorderColor: accentColorBrown,
-                                        ),
-                                        SizedBox(
-                                          height: 3.0.h,
-                                        ),
-                                        CustomTextField(
-                                          textInputType: TextInputType.number,
-                                          onSaveFunc: (value) {
-                                            if (value != null &&
-                                                value.isNotEmpty) {
-                                              _propertiesProvider
-                                                      .filtration_prams[
-                                                  'min_price'] = value.trim();
-                                            }
-                                          },
-                                          onValidateFunc: (value) {},
-                                          label: "السعر الأدنى",
-                                          enabledBorderColor: accentColorBrown,
-                                        ),
-                                        SizedBox(
-                                          height: 3.0.h,
-                                        ),
-                                        CustomTextField(
-                                          textInputType: TextInputType.number,
-                                          onSaveFunc: (value) {
-                                            if (value != null &&
-                                                value.isNotEmpty) {
-                                              _propertiesProvider
-                                                      .filtration_prams[
-                                                  'max_price'] = value.trim();
-                                            }
-                                          },
-                                          onValidateFunc: (value) {},
-                                          label: "السعر الأعلى",
-                                          enabledBorderColor: accentColorBrown,
-                                        ),
-                                        // Consumer<PropertiesProvider>(
-                                        //   builder: (context,
-                                        //           PropertiesProvider
-                                        //               propertiesProvider,
-                                        //           child) =>
-                                        //       CustomRangeSlider(
-                                        //     title: "السعر",
-                                        //     min: 0,
-                                        //     max: propertiesProvider.getMaxPrice(),
-                                        //     onChanged: (SfRangeValues value) {
-                                        //       propertiesProvider
-                                        //           .setPriceRangeValues(
-                                        //         value,
-                                        //       );
-                                        //     },
-                                        //     values: _propertiesProvider
-                                        //         .priceRangeValues!,
-                                        //   ),
-                                        // ),
-                                        // SizedBox(
-                                        //   height: 3.0.h,
-                                        // ),
-                                        // Consumer<PropertiesProvider>(
-                                        //   builder: (context,
-                                        //           PropertiesProvider
-                                        //               propertiesProvider,
-                                        //           child) =>
-                                        //       CustomRangeSlider(
-                                        //     title: "المساحة",
-                                        //     min: 0,
-                                        //     max: propertiesProvider.getMaxArea(),
-                                        //     onChanged: (SfRangeValues value) {
-                                        //       propertiesProvider.setAreaRangeValues(
-                                        //         value,
-                                        //       );
-                                        //     },
-                                        //     values: _propertiesProvider
-                                        //         .areaRangeValues!,
-                                        //   ),
-                                        // ),
-                                        SizedBox(
-                                          height: 5.0.h,
                                         ),
                                         DropDownInFiltration(
                                           title: "الدولة",
@@ -373,27 +329,25 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                           ),
                                           field_key: "country",
                                         ),
-
-                                        DropDownInFiltration(
-                                          title: "المدينة",
-                                          options: getOptionsFromMap(
-                                            "cities",
-                                            _mainProvider,
-                                            "المدينة",
-                                          ),
-                                          field_key: "cityId",
-                                        ),
-
                                         DropDownInFiltration(
                                           title: "المنطقة",
-                                          options: getOptionsFromMap(
-                                            "states",
+                                          options: get_states(
                                             _mainProvider,
                                             "المنطقة",
                                           ),
                                           field_key: "countryStats",
                                         ),
-
+                                        DropDownInFiltration(
+                                          title: "المدينة",
+                                          options: get_cities_from_state(
+                                            _propertiesProvider
+                                                    .filtration_prams[
+                                                'countryStats'],
+                                            _mainProvider,
+                                            "المدينة",
+                                          ),
+                                          field_key: "cityId",
+                                        ),
                                         DropDownInFiltration(
                                           title: "طريقة الدفع",
                                           options: getOptionsFromMap(
@@ -498,13 +452,140 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                               "1",
                                         ),
 
-                                        TitleBuilder(
-                                          title: "مميزات العقار",
+                                        // const AmenitiesBoxes(),
+                                        ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor:
+                                                MaterialStateProperty.all(
+                                                    accentColorBlue),
+                                            padding: MaterialStateProperty.all(
+                                              EdgeInsets.symmetric(
+                                                horizontal: 4.0.w,
+                                                vertical: 1.0.h,
+                                              ),
+                                            ),
+                                            shape: MaterialStateProperty.all<
+                                                RoundedRectangleBorder>(
+                                              RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  10.0.sp,
+                                                ),
+                                                side: BorderSide(
+                                                  color: accentColorBrown,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          onPressed: () async {
+                                            await showModalBottomSheet(
+                                              constraints: BoxConstraints(
+                                                minHeight: 50.0.h,
+                                              ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                  10.0.sp,
+                                                ),
+                                              ),
+                                              isScrollControlled:
+                                                  true, // required for min/max child size
+                                              context: context,
+
+                                              builder: (ctx) {
+                                                return Directionality(
+                                                  textDirection:
+                                                      TextDirection.rtl,
+                                                  child: MultiSelectBottomSheet(
+                                                    initialChildSize: 0.5,
+                                                    maxChildSize: 0.7,
+                                                    title: Text(
+                                                      "مميزات العقار",
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: accentColorBrown,
+                                                      ),
+                                                    ),
+                                                    listType:
+                                                        MultiSelectListType
+                                                            .CHIP,
+                                                    items: [
+                                                      ..._propertiesProvider
+                                                          .get_amenities_by_property_type(
+                                                            _mainProvider
+                                                                .main_properties[
+                                                                    'propertyTypes']
+                                                                .toList(),
+                                                            _propertiesProvider
+                                                                    .filtration_prams[
+                                                                'propertyTypeData'],
+                                                            "properties_type_active_ammonites_label",
+                                                            _mainProvider
+                                                                    .main_properties[
+                                                                'property_aminities'],
+                                                          )
+                                                          .entries
+                                                          .map(
+                                                            (entry) =>
+                                                                MultiSelectItem<
+                                                                    String>(
+                                                              entry.key
+                                                                  .toString(),
+                                                              entry.value
+                                                                  .toString(),
+                                                            ),
+                                                          ),
+                                                    ],
+
+                                                    initialValue: [],
+                                                    colorator: (value) =>
+                                                        accentColorBrown,
+                                                    onSelectionChanged: (
+                                                      List<dynamic>
+                                                          selectedValues,
+                                                    ) {
+                                                      _propertiesProvider
+                                                          .set_amenities_filtration_prams(
+                                                        selectedValues,
+                                                      );
+                                                    },
+                                                    itemsTextStyle: TextStyle(
+                                                      color: accentColorBlue,
+                                                    ),
+                                                    selectedItemsTextStyle:
+                                                        TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                    cancelText: Text(
+                                                      "إلغاء",
+                                                      style: TextStyle(
+                                                        color: accentColorBrown,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    confirmText: Text(
+                                                      "تم",
+                                                      style: TextStyle(
+                                                        color: accentColorBrown,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                          child: Text(
+                                            "اختر من ميزات العقار",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15.0.sp,
+                                            ),
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 3.0.h,
-                                        ),
-                                        const AmenitiesBoxes(),
                                         SizedBox(
                                           height: 4.0.h,
                                         ),
@@ -518,52 +599,31 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
                                               ? null
                                               : () async {
                                                   _key!.currentState!.save();
-                                                  setState(() {
-                                                    loading = true;
-                                                  });
-                                                  // // area range values
-                                                  // _propertiesProvider
-                                                  //             .filtration_prams[
-                                                  //         'min_size'] =
-                                                  //     _propertiesProvider
-                                                  //         .areaRangeValues!
-                                                  //         .start;
-                                                  // _propertiesProvider
-                                                  //             .filtration_prams[
-                                                  //         'max_size'] =
-                                                  //     _propertiesProvider
-                                                  //         .areaRangeValues!.end;
+                                                  if (mounted)
+                                                    setState(() {
+                                                      loading = true;
+                                                    });
+                                                  log(_propertiesProvider
+                                                      .filtration_prams
+                                                      .toString());
 
-                                                  // // price range values
-                                                  // _propertiesProvider
-                                                  //             .filtration_prams[
-                                                  //         'min_price'] =
-                                                  //     _propertiesProvider
-                                                  //         .priceRangeValues!
-                                                  //         .start;
-                                                  // _propertiesProvider
-                                                  //             .filtration_prams[
-                                                  //         'max_price'] =
-                                                  //     _propertiesProvider
-                                                  //         .priceRangeValues!
-                                                  //         .end;
                                                   await _propertiesProvider
                                                       .get_all_properties_with_prams();
-
-                                                  setState(() {
-                                                    loading = false;
-                                                    showPropertiesList = true;
-                                                    // _priceRangeValues =
-                                                    //     SfRangeValues(
-                                                    //         0,
-                                                    //         _propertiesProvider
-                                                    //             .getMaxPrice());
-                                                    // _areaRangeValues =
-                                                    //     SfRangeValues(
-                                                    //         0,
-                                                    //         _propertiesProvider
-                                                    //             .getMaxArea());
-                                                  });
+                                                  if (mounted)
+                                                    setState(() {
+                                                      loading = false;
+                                                      showPropertiesList = true;
+                                                      // _priceRangeValues =
+                                                      //     SfRangeValues(
+                                                      //         0,
+                                                      //         _propertiesProvider
+                                                      //             .getMaxPrice());
+                                                      // _areaRangeValues =
+                                                      //     SfRangeValues(
+                                                      //         0,
+                                                      //         _propertiesProvider
+                                                      //             .getMaxArea());
+                                                    });
                                                 },
                                           padding: EdgeInsets.all(
                                             7.0.sp,
@@ -598,4 +658,183 @@ class _FiltrationScreenState extends State<FiltrationScreen> {
       ),
     );
   }
+
+  Widget maxMinPriceAndSizeFields(PropertiesProvider _propertiesProvider) =>
+      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 6.0.w,
+                ),
+                child: Text(
+                  "المساحة الأدنى",
+                  style: TextStyle(
+                    fontSize: 10.0.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: CustomTextField(
+                textInputType: TextInputType.number,
+                onSaveFunc: (value) {
+                  _propertiesProvider.set_filtration_prams(
+                    value!.trim(),
+                    "min_size",
+                  );
+                },
+                onValidateFunc: (value) {
+                  return FormValidator().validateNumber(value);
+                },
+                label: "المساحة الأدنى",
+                enabledBorderColor: accentColorBlue,
+                focusedBorderColor: accentColorBlue,
+                textStyle: TextStyle(color: accentColorBlue),
+                hintTextColor: accentColorBlue,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 3.0.h,
+        ),
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 6.0.w,
+                ),
+                child: Text(
+                  "المساحة الأعلى",
+                  style: TextStyle(
+                    fontSize: 10.0.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: CustomTextField(
+                textInputType: TextInputType.number,
+                onSaveFunc: (value) {
+                  _propertiesProvider.set_filtration_prams(
+                    value!.trim(),
+                    "max_size",
+                  );
+                },
+                onValidateFunc: (value) {
+                  return FormValidator().validateNumber(value);
+                },
+                label: "المساحة الأعلى",
+                enabledBorderColor: accentColorBlue,
+                focusedBorderColor: accentColorBlue,
+                textStyle: TextStyle(color: accentColorBlue),
+                hintTextColor: accentColorBlue,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 3.0.h,
+        ),
+        Divider(
+          height: 2.0.sp,
+          color: greyColor,
+        ),
+        SizedBox(
+          height: 3.0.h,
+        ),
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 6.0.w,
+                ),
+                child: Text(
+                  "السعر الأدنى",
+                  style: TextStyle(
+                    fontSize: 10.0.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: CustomTextField(
+                textInputType: TextInputType.number,
+                onSaveFunc: (value) {
+                  _propertiesProvider.set_filtration_prams(
+                    value!.trim(),
+                    "min_price",
+                  );
+                },
+                onValidateFunc: (value) {
+                  return FormValidator().validateNumber(value);
+                },
+                label: "السعر الأدنى",
+                enabledBorderColor: accentColorBlue,
+                focusedBorderColor: accentColorBlue,
+                textStyle: TextStyle(color: accentColorBlue),
+                hintTextColor: accentColorBlue,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 3.0.h,
+        ),
+        Row(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 6.0.w,
+                ),
+                child: Text(
+                  "السعر الأعلى",
+                  style: TextStyle(
+                    fontSize: 10.0.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: CustomTextField(
+                textInputType: TextInputType.number,
+                onSaveFunc: (value) {
+                  _propertiesProvider.set_filtration_prams(
+                    value!.trim(),
+                    "max_price",
+                  );
+                },
+                onValidateFunc: (value) {
+                  return FormValidator().validateNumber(value);
+                },
+                label: "السعر الأعلى",
+                enabledBorderColor: accentColorBlue,
+                focusedBorderColor: accentColorBlue,
+                textStyle: TextStyle(color: accentColorBlue),
+                hintTextColor: accentColorBlue,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 3.0.h,
+        ),
+      ]);
 }

@@ -56,19 +56,17 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
           context,
           listen: false,
         ).getCachedUser();
-        await Provider.of<MainProvider>(
-          context,
-          listen: false,
-        ).get_main_properties();
-        setState(() {
-          showLoader = false;
-          isThereError = false;
-        });
+        if (mounted)
+          setState(() {
+            showLoader = false;
+            isThereError = false;
+          });
       } catch (e) {
-        setState(() {
-          showLoader = false;
-          isThereError = true;
-        });
+        if (mounted)
+          setState(() {
+            showLoader = false;
+            isThereError = true;
+          });
       }
     });
   }
@@ -85,6 +83,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
       context,
     ).currentUser;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: showLoader
           ? null
           : FloatingActionButton(
@@ -302,10 +301,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                               toBeUploadedUser.authorization_number =
                                   value!.trim();
                             },
-                            label: _user.authorization_number == null ||
-                                    _user.authorization_number == ""
-                                ? "رقم الترخيص"
-                                : _user.authorization_number,
+                            label: "رقم الترخيص",
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -332,10 +328,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                               toBeUploadedUser.general_authority_no =
                                   value!.trim();
                             },
-                            label: _user.general_authority_no == null ||
-                                    _user.general_authority_no == ""
-                                ? "رقم التفويض العام"
-                                : _user.general_authority_no,
+                            label: "رقم التفويض العام",
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -362,10 +355,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                               toBeUploadedUser.commercial_register =
                                   value!.trim();
                             },
-                            label: _user.commercial_register == null ||
-                                    _user.commercial_register == ""
-                                ? "السجل التجاري"
-                                : _user.commercial_register,
+                            label: "السجل التجاري",
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -392,10 +382,7 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                               toBeUploadedUser.classification_number =
                                   value!.trim();
                             },
-                            label: _user.classification_number == null ||
-                                    _user.classification_number == ""
-                                ? "رقم التصنيف"
-                                : _user.classification_number,
+                            label: "رقم التصنيف",
                             hintTextColor: Colors.white,
                             textStyle: TextStyle(color: Colors.white),
                             errorBorderColor: Colors.white,
@@ -473,7 +460,8 @@ class _UpdateUserProfileScreenState extends State<UpdateUserProfileScreen> {
                           ),
 
                           SizedBox(
-                            height: 8.0.h,
+                            height: 8.0.h +
+                                MediaQuery.of(context).viewInsets.bottom,
                           ),
                         ],
                       ),

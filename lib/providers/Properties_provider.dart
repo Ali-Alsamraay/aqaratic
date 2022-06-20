@@ -16,6 +16,7 @@ class PropertiesProvider with ChangeNotifier {
   List<Property> _properties = [];
   List<PropertyType> _propertyTypes = [];
   List<Property> _filteredProperties = [];
+  List<Property> _featuredProperties = [];
   List<Property> _filteredPropertiesWithPrams = [];
 
   List<PropertyField> _propertiesFields = [];
@@ -24,7 +25,7 @@ class PropertiesProvider with ChangeNotifier {
   List<dynamic>? _cities_Objects = [];
   List<dynamic>? _purposes_Objects = [];
   List<dynamic>? _aminities_Objects = [];
-  List<dynamic>? _nearest_locatoins_Objects = [];
+  List<dynamic>? _nearest_locations_Objects = [];
   List<dynamic>? _periods_Objects = [];
   String? formInitErrorMsg = null;
   List<dynamic>? formResponseErrorMsgs = [];
@@ -32,6 +33,7 @@ class PropertiesProvider with ChangeNotifier {
   List<PropertyType> get propertyTypes => [..._propertyTypes];
   List<Property> get properties => [..._properties];
   List<Property> get filteredProperties => [..._filteredProperties];
+  List<Property> get featuredProperties => [..._featuredProperties];
   List<Property> get filteredPropertiesWithPrams =>
       [..._filteredPropertiesWithPrams];
 
@@ -41,8 +43,8 @@ class PropertiesProvider with ChangeNotifier {
   List<dynamic> get cities_Objects => [..._cities_Objects!];
   List<dynamic> get purposes_Objects => [..._purposes_Objects!];
   List<dynamic> get aminities_Objects => [..._aminities_Objects!];
-  List<dynamic> get nearest_locatoins_Objects =>
-      [..._nearest_locatoins_Objects!];
+  List<dynamic> get nearest_locations_Objects =>
+      [..._nearest_locations_Objects!];
   List<dynamic> get periods_Objects => [..._periods_Objects!];
 
   SfRangeValues? priceRangeValues = SfRangeValues(0, 100);
@@ -81,6 +83,13 @@ class PropertiesProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void set_amenities_filtration_prams(
+    List<dynamic> updated_amenities,
+  ) {
+    _filtration_prams["aminity[]"] = [...updated_amenities];
+    notifyListeners();
+  }
+
   Map<String, dynamic> get_amenities_by_property_type(
     List<dynamic> property_types,
     String property_type_id,
@@ -92,6 +101,24 @@ class PropertiesProvider with ChangeNotifier {
         orElse: () => null);
     if (property == null) return all_amenities;
     return property[amenities_key_name];
+  }
+
+  Map<String, dynamic> get_selected_amenity_names(
+    Map<String, dynamic> all_amenities,
+  ) {
+    final Map<String, dynamic>? amenities = {};
+    all_amenities.forEach(
+      (key, value) {
+        if (_filtration_prams["aminity[]"].toList().contains(key)) {
+          amenities!.addAll(
+            {
+              key: value,
+            },
+          );
+        }
+      },
+    );
+    return amenities!;
   }
 
   final List<Map<String, dynamic>>? property_types_items = [
@@ -118,12 +145,18 @@ class PropertiesProvider with ChangeNotifier {
       "slug": "villa",
       "icon_path": "assets/images/villa_icon.svg",
     },
+    {
+      "id": 19,
+      "title": "شقق",
+      "slug": "villa",
+      "icon_path": "assets/images/building_icon.svg",
+    },
   ];
 
   void cleare_form_data() {
     _aminities_Objects = [];
     _cities_Objects = [];
-    _nearest_locatoins_Objects = [];
+    _nearest_locations_Objects = [];
     _propertiesFields = [];
     _propertyTypes = [];
     _purposes_Objects = [];
@@ -237,12 +270,13 @@ class PropertiesProvider with ChangeNotifier {
         }).toList();
 
         // get_properties_types..
-        final List<dynamic> loadedPrprties =
+        final List<dynamic> loadedProperties =
             jsonResponse['propertyTypes'] == null
                 ? []
                 : jsonResponse['propertyTypes'];
-        _propertyTypes_Objects = loadedPrprties;
-        _propertyTypes = loadedPrprties.map((propertyTypeData) {
+
+        _propertyTypes_Objects = loadedProperties;
+        _propertyTypes = loadedProperties.map((propertyTypeData) {
           PropertyType propertyType = PropertyType.fromJson(propertyTypeData);
           return propertyType;
         }).toList();
@@ -259,8 +293,8 @@ class PropertiesProvider with ChangeNotifier {
         _purposes_Objects =
             jsonResponse['purposes'] == null ? [] : jsonResponse['purposes'];
 
-        // get nearest locatoins Objects...
-        _nearest_locatoins_Objects = jsonResponse['nearest_locatoins'] == null
+        // get nearest locations Objects...
+        _nearest_locations_Objects = jsonResponse['nearest_locatoins'] == null
             ? []
             : jsonResponse['nearest_locatoins'];
 
@@ -273,7 +307,7 @@ class PropertiesProvider with ChangeNotifier {
             _cities_Objects!.isEmpty &&
             _aminities_Objects!.isEmpty &&
             _purposes_Objects!.isEmpty &&
-            _nearest_locatoins_Objects!.isEmpty &&
+            _nearest_locations_Objects!.isEmpty &&
             _periods_Objects!.isEmpty) {
           formInitErrorMsg = jsonResponse['messege'];
         } else {
@@ -359,22 +393,17 @@ class PropertiesProvider with ChangeNotifier {
         final Map<String, dynamic> jsonResponse =
             convert.jsonDecode(response.body);
 
-        final List<dynamic> loadedPrprties = jsonResponse['data'];
-        // final List<dynamic> loadedPrprtiesTypes =
-        //     jsonResponse['data']['property_type'];
-        _properties = loadedPrprties.map((property) {
+        final List<Property> _loaded_featured_properties = [];
+        final List<dynamic> loadedProperties = jsonResponse['data'];
+
+        _properties = loadedProperties.map((property) {
           final Property propertyData = Property.fromJson(
             property,
           );
+          _loaded_featured_properties.add(propertyData);
           return propertyData;
         }).toList();
-
-        // _propertyTypes = loadedPrprtiesTypes.map((propertyType) {
-        //   final PropertyType propertyData = PropertyType.fromJson(
-        //     propertyType,
-        //   );
-        //   return propertyData;
-        // }).toList();
+        _featuredProperties = _loaded_featured_properties;
 
         if (_filteredProperties.isEmpty) {
           selectCategory(selectedCategoryId);
@@ -445,8 +474,9 @@ class PropertiesProvider with ChangeNotifier {
 
   Future<void> get_more_properties_with_prams() async {
     try {
-      log("message");
-      // if (getting_more_data!) return;
+      log("getting more properties");
+      if (getting_more_data!) return;
+      getting_more_data = true;
       currentPageForFiltration = currentPageForFiltration! + 1;
       String endPoint = '/api/v1/mobile/properties?page=' +
           currentPageForFiltration.toString();
@@ -496,6 +526,7 @@ class PropertiesProvider with ChangeNotifier {
           );
           return propertyData;
         }).toList());
+        getting_more_data = false;
       } else {
         getting_more_data = false;
         _filteredPropertiesWithPrams = [];
@@ -542,6 +573,8 @@ class PropertiesProvider with ChangeNotifier {
         _properties.addAll(
           loadedPrprties.map((property) {
             final Property propertyData = Property.fromJson(property);
+            if (propertyData.is_featured == 1)
+              _featuredProperties.add(propertyData);
             return propertyData;
           }).toList(),
         );
@@ -598,6 +631,73 @@ class PropertiesProvider with ChangeNotifier {
         }
       }
       return "unAuthenticated";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String?> sendMessage(
+    Map<String, dynamic> data,
+    String propertyId,
+  ) async {
+    try {
+      final String? token = await AuthProvider().getUserToken();
+      if (token != null && token != "") {
+        final url = Uri.parse(
+          baseUrl + '/api/v1/mobile/properties/interested/$propertyId',
+        );
+
+        final String? requestData = convert.jsonEncode(data);
+        // Await the http post response.
+        final response = await http.post(
+          url,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json",
+            "Authorization": "bearer " + token,
+            "Connection": "keep-alive",
+          },
+          body: requestData,
+        );
+
+        final responseJson = convert.jsonDecode(response.body);
+        if (response.statusCode == 200) {
+          log(responseJson.toString());
+          return "posted";
+        } else {
+          return responseJson['message'];
+        }
+      }
+      return "unAuthenticated";
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<String?> getInitMessage(
+    int propertyId,
+  ) async {
+    try {
+      final url = Uri.parse(
+        baseUrl + '/api/v1/mobile/properties/i-interested-msg/$propertyId',
+      );
+
+      // Await the http post response.
+      final response = await http.get(
+        url,
+        headers: {
+          "Content-Type": "application/json; charset=utf-8",
+          "Accept": "application/json",
+          "Connection": "keep-alive",
+        },
+      );
+
+      final responseJson = convert.jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return responseJson['i_interested_msg_ar'];
+      } else {
+        return responseJson['message'];
+      }
     } catch (e) {
       rethrow;
     }

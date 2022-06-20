@@ -23,6 +23,7 @@ class CustomTextField extends StatelessWidget {
     this.errorBorderColor = accentColorBlue,
     this.initValue,
     this.disable = false,
+    this.scrollPadding,
     this.focusNode,
   }) : super(key: key);
   final Function(String?) onValidateFunc;
@@ -43,6 +44,7 @@ class CustomTextField extends StatelessWidget {
   final dynamic initValue;
   final FocusNode? focusNode;
   final bool? disable;
+  final EdgeInsets? scrollPadding;
 
   bool? isThereError = false;
 
@@ -52,13 +54,14 @@ class CustomTextField extends StatelessWidget {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: TextFormField(
+          scrollPadding:
+              scrollPadding == null ? EdgeInsets.all(0) : scrollPadding!,
           enabled: !disable!,
           focusNode: focusNode,
           initialValue: initValue,
           style: textStyle,
           keyboardType: textInputType,
           textDirection: TextDirection.rtl,
-          autofocus: true,
           obscureText: passwordField!,
           cursorColor: accentColorBrown,
           maxLines: linesNumber!,

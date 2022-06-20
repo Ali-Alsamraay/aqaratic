@@ -13,7 +13,7 @@ class FormValidator {
     }
     // else if (value.length < 8) {
     //   return "Password must minimum eight characters";
-    // } else if (!regExp.hasMatch(value)) { 
+    // } else if (!regExp.hasMatch(value)) {
     //   return "Password at least one uppercase letter, one lowercase letter and one number";
     // }
     return null;
@@ -47,6 +47,15 @@ class FormValidator {
       return "هذا الحقل مطلوب";
     } else if (!regExp.hasMatch(value)) {
       return "رقم الهاتف غير صالح";
+    }
+    return null;
+  }
+
+  dynamic validateNumber(String? value) {
+    String pattern = r'(^[0-9]*$)';
+    RegExp regExp = new RegExp(pattern);
+    if (!regExp.hasMatch(value!.trim())) {
+      return "الرجاء ادخال رقم صحيح";
     }
     return null;
   }

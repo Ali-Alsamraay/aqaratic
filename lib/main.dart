@@ -1,15 +1,18 @@
 import 'package:aqaratak/providers/Auth_Provider.dart';
+import 'package:aqaratak/providers/Blogs_provider.dart';
 import 'package:aqaratak/providers/Maps_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:aqaratak/providers/State_Manager_Provider.dart';
-import 'package:aqaratak/providers/favorite_properties_provider.dart';
+import 'package:aqaratak/providers/favorite_provider.dart';
 import 'package:aqaratak/providers/main_provider.dart';
 import 'package:aqaratak/providers/services_provider.dart';
 import 'package:aqaratak/screens/Register_screen.dart';
+import 'package:aqaratak/screens/blogs_screen.dart';
 import 'package:aqaratak/screens/creating_property_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
+import 'package:aqaratak/screens/my_orders_screen.dart';
 import 'package:aqaratak/screens/onBoarding_screen.dart';
 import 'package:aqaratak/screens/update_user_profile_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -47,13 +50,16 @@ Future<void> main() async {
         create: (_) => MapsProvider(),
       ),
       ChangeNotifierProvider(
-        create: (_) => FavoritePropertiesProvider(),
+        create: (_) => FavoritesProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => MainProvider(),
       ),
       ChangeNotifierProvider(
         create: (_) => FiltrationProvider(),
+      ),
+      ChangeNotifierProvider(
+        create: (_) => BlogsProvider(),
       ),
     ],
     child: MyApp(
@@ -89,6 +95,8 @@ class MyApp extends StatelessWidget {
           RegisterScreen.screenName: (context) => RegisterScreen(),
           UpdateUserProfileScreen.screenName: (context) =>
               UpdateUserProfileScreen(),
+          BlogsScreen.screenName: (context) => BlogsScreen(),
+          MyOrdersScreen.screenName: (context) => MyOrdersScreen(),
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

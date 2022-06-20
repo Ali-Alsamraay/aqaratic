@@ -10,11 +10,13 @@ import '../helper/Utils.dart';
 import '../helper/constants.dart';
 import 'package:sizer/sizer.dart';
 import '../models/FormValidator.dart';
+import '../widgets/Favorite_settings_builder.dart';
 import '../widgets/Image_PDF_Video_Fields.dart';
 import '../widgets/Main_Info_Fields.dart';
 import '../widgets/Nearest_locations_Fields.dart';
 import '../widgets/Others_Info_Fields.dart';
 import '../widgets/google_map_details_Fields.dart';
+import 'main_screen.dart';
 
 class CreatingPropertyScreen extends StatefulWidget {
   static const String screenName = "Creating-Property-Screen";
@@ -86,10 +88,13 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
                 child: Icon(
                   Icons.arrow_back,
                 ),
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: ()  {
+                  Navigator.pop(context);
+
+                },
               ),
         floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-        resizeToAvoidBottomInset: true,
+        resizeToAvoidBottomInset: false,
         extendBody: true,
         extendBodyBehindAppBar: true,
         backgroundColor: backgroundColor.withOpacity(0.2),
@@ -237,7 +242,12 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
                                         ),
                                         SizedBox(
                                           height: 4.0.h,
-                                        )
+                                        ),
+                                        SizedBox(
+                                          height: MediaQuery.of(context)
+                                              .viewInsets
+                                              .bottom,
+                                        ),
                                       ],
                                     ),
                             )),

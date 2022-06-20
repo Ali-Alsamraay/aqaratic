@@ -151,3 +151,4 @@ class Property with ChangeNotifier {
     this.authorization_num_of_GA = json['authorization_num_of_GA'];
   }
 }
+ 

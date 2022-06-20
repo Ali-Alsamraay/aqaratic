@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:aqaratak/screens/unit_details_screen.dart';
 import 'package:aqaratak/widgets/Title_Builder.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +17,7 @@ class AllPropertiesScreen extends StatefulWidget {
 
 class _AllPropertiesScreenState extends State<AllPropertiesScreen> {
   final ScrollController? filtrationScrollController = ScrollController();
-  bool isCalled = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,15 +25,10 @@ class _AllPropertiesScreenState extends State<AllPropertiesScreen> {
         Provider.of<PropertiesProvider>(context, listen: false);
 
     filtrationScrollController!.addListener(() {
-      if (isCalled) return;
-      isCalled = true;
-      log("message v2");
       if (filtrationScrollController!.position.pixels >=
-          filtrationScrollController!.position.maxScrollExtent) {
-        // propertiesProvider.gettingMoreData(true);
+              filtrationScrollController!.position.maxScrollExtent &&
+          !propertiesProvider.getting_more_data!) {
         propertiesProvider.get_more_properties_with_prams();
-        isCalled = false;
-        // propertiesProvider.gettingMoreData(false);
       }
     });
   }

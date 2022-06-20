@@ -1,3 +1,6 @@
+import 'package:aqaratak/screens/blogs_screen.dart';
+import 'package:aqaratak/screens/home_screen.dart';
+import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +11,9 @@ import '../helper/constants.dart';
 import '../providers/main_provider.dart';
 
 class DropDownMenu extends StatelessWidget {
+  final Color? color;
+  final Color? backgroundColor;
+  DropDownMenu({this.color, this.backgroundColor});
   final List<Map<String, dynamic>> _dropDownButtons = [
     {
       "text": "صفحة رئيسية",
@@ -34,6 +40,10 @@ class DropDownMenu extends StatelessWidget {
       "value": "pages",
     },
     {
+      "text": "المدونة",
+      "value": "blogs",
+    },
+    {
       "text": "تواصل معنا",
       "value": "contact_us",
     },
@@ -43,9 +53,12 @@ class DropDownMenu extends StatelessWidget {
     String menuName,
     BuildContext context,
   ) async {
-    if (menuName == "contracts") {
+    if (menuName == "home") {
+      Navigator.of(context).pushNamed(MainScreen.screenName);
+    } else if (menuName == "contracts") {
       showContractPopUp(context);
-    }
+    } else if (menuName == "blogs")
+      Navigator.of(context).pushNamed(BlogsScreen.screenName);
   }
 
   @override
@@ -55,7 +68,7 @@ class DropDownMenu extends StatelessWidget {
         menuName,
         context,
       ),
-      color: accentColorBlue,
+      color: backgroundColor ?? accentColorBlue,
       child: Container(
         margin: EdgeInsets.only(
           right: 2.0.w,
@@ -63,7 +76,7 @@ class DropDownMenu extends StatelessWidget {
         ),
         child: SvgPicture.asset(
           "assets/icons/menu_icon.svg",
-          color: accentColorBlue,
+          color: color ?? accentColorBlue,
           // height: 3.0.h,
           width: 7.0.w,
         ),

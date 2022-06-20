@@ -1,23 +1,17 @@
-import 'dart:developer';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/main_provider.dart';
+import 'package:aqaratak/screens/blogs_screen.dart';
 import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
+import 'package:aqaratak/screens/my_orders_screen.dart';
 import 'package:aqaratak/screens/update_user_profile_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-// import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'creating_property_screen.dart';
-import 'package:dio/dio.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -34,6 +28,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
+        setState(() {
+          loading = true;
+        });
         isCurrentUserLoggedIn = await Provider.of<AuthProvider>(
           context,
           listen: false,
@@ -61,392 +58,228 @@ class _ProfileScreenState extends State<ProfileScreen> {
         color: Color(0xffE9EAEE),
         height: 100.0.h,
         width: 100.0.w,
-        child: FutureBuilder(
-          future:
-              Provider.of<AuthProvider>(context, listen: false).getCachedUser(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
+        child: loading!
+            ? const Center(
                 child: CircularProgressIndicator.adaptive(),
-              );
-            } else if (snapshot.connectionState == ConnectionState.done) {
-              final AuthProvider? auth =
-                  Provider.of<AuthProvider>(context, listen: false);
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 5.0.h,
-                    ),
-                    SizedBox(
-                      height: 20.0.h,
+              )
+            : FutureBuilder(
+                future: Provider.of<AuthProvider>(context, listen: false)
+                    .getCachedUser(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator.adaptive(),
+                    );
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    final AuthProvider? auth =
+                        Provider.of<AuthProvider>(context, listen: false);
+                    return SingleChildScrollView(
                       child: Column(
                         children: [
-                          Expanded(
-                            flex: 3,
-                            child: Container(
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(
-                                  10.0.sp,
-                                ),
-                                child: Container(
-                                  width: 25.0.w,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: accentColorBrown,
-                                  ),
-                                  child: !isCurrentUserLoggedIn! ||
-                                          !authProvider.currentUser!.image
-                                              .toString()
-                                              .toLowerCase()
-                                              .endsWith(".png") ||
-                                          !authProvider.currentUser!.image
-                                              .toString()
-                                              .toLowerCase()
-                                              .endsWith(".jpg") ||
-                                          !authProvider.currentUser!.image
-                                              .toString()
-                                              .toLowerCase()
-                                              .endsWith(".jpeg")
-                                      ? Center(
-                                          child: SvgPicture.asset(
-                                            'assets/images/person_icon.svg',
-                                            color: backgroundColor,
-                                            height: 10.0.w,
-                                            width: 10.0.w,
-                                          ),
-                                        )
-                                      : authProvider
-                                              .currentUser!.image!.isNotEmpty
-                                          ? Image.network(
-                                              authProvider.currentUser!.image,
-                                              errorBuilder: (
-                                                context,
-                                                error,
-                                                stackTrace,
-                                              ) =>
-                                                  Center(
+                          SizedBox(
+                            height: 5.0.h,
+                          ),
+                          SizedBox(
+                            height: 20.0.h,
+                            child: Column(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(
+                                        10.0.sp,
+                                      ),
+                                      child: Container(
+                                        width: 25.0.w,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: accentColorBrown,
+                                        ),
+                                        child: !isCurrentUserLoggedIn!
+                                            ? Center(
                                                 child: SvgPicture.asset(
                                                   'assets/images/person_icon.svg',
                                                   color: backgroundColor,
                                                   height: 10.0.w,
                                                   width: 10.0.w,
                                                 ),
-                                              ),
-                                              fit: BoxFit.cover,
-                                              width: double.infinity,
-                                              height: double.infinity,
-                                            )
-                                          : SvgPicture.asset(
-                                              'assets/images/person_icon.svg',
-                                              color: backgroundColor,
-                                              height: 10.0.w,
-                                              width: 10.0.w,
-                                            ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 1.0.h,
-                          ),
-                          Expanded(
-                            child: Text(
-                              isCurrentUserLoggedIn!
-                                  ? authProvider.currentUser!.name!
-                                  : "Guest",
-                              textAlign: TextAlign.center,
-                              style: GoogleFonts.cairo(
-                                textStyle: TextStyle(
-                                  color: accentColorBrown,
-                                  fontWeight: FontWeight.w800,
-                                  fontStyle: FontStyle.normal,
-                                  fontSize: 15.0.sp,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 1.0.h,
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      width: 90.0.w,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final bool? isUserLoggedIn =
-                              await auth!.isCurrentUserLoggedIn();
-                          if (!isUserLoggedIn!) {
-                            Navigator.of(context).pushNamed(
-                              LoginScreen.screenName,
-                            );
-                            return;
-                          }
-                          Navigator.of(context).pushNamed(
-                            UpdateUserProfileScreen.screenName,
-                          );
-                        },
-                        child: Text(
-                          'تعديل الملف الشخصي',
-                          style: TextStyle(
-                            fontSize: 11.0.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color(0xffb78457)),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0))),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 4.0.h,
-                    ),
-                    SizedBox(
-                      width: 90.0.w,
-                      height: 7.0.h,
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final bool? isUserLoggedIn =
-                              await auth!.isCurrentUserLoggedIn();
-                          if (!isUserLoggedIn!) {
-                            Navigator.of(context).pushNamed(
-                              LoginScreen.screenName,
-                            );
-                            return;
-                          }
-                          Navigator.of(context).pushNamed(
-                            CreatingPropertyScreen.screenName,
-                          );
-                        },
-                        child: Text(
-                          'أضف عقارك',
-                          style: TextStyle(
-                            fontSize: 15.0.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                              const Color(0xffb78457)),
-                          shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0))),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 5.0.h,
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        onTab: () {
-                          showDialog(
-                            context: context,
-                            builder: (ctx) {
-                              return Container(
-                                child: Dialog(
-                                  backgroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(10.0.sp),
-                                  ),
-                                  child: SizedBox(
-                                    width: 90.0.w,
-                                    height: 50.0.h,
-                                    child: Center(
-                                      child: Container(
-                                        padding: EdgeInsets.symmetric(
-                                          vertical: 2.0.h,
-                                        ),
-                                        child: ListView.builder(
-                                          itemBuilder: (context, index) =>
-                                              GestureDetector(
-                                            onTap: () async {
-                                              final String url =
-                                                  Provider.of<MainProvider>(
-                                                              context,
-                                                              listen: false)
-                                                          .contracts_file[index]
-                                                      ['contract_file'];
-
-                                              try {
-                                                if (await canLaunchUrl(
-                                                  Uri(
-                                                    scheme: 'https',
-                                                    host:
-                                                        'aqaratic.digitalfuture.sa',
-                                                    path: url.substring(
-                                                        baseUrl.length),
-                                                  ),
-                                                )) {
-                                                  await launchUrl(
-                                                    Uri(
-                                                      scheme: 'https',
-                                                      host:
-                                                          "aqaratic.digitalfuture.sa",
-                                                      path: url.substring(
-                                                          baseUrl.length),
+                                              )
+                                            : authProvider.currentUser!.image!
+                                                    .isNotEmpty
+                                                ? Container(
+                                                    width: 15.0.w,
+                                                    height: 15.0.w,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(
+                                                          authProvider
+                                                              .currentUser!
+                                                              .image!,
+                                                        ),
+                                                        fit: BoxFit.fill,
+                                                      ),
                                                     ),
-                                                    mode: LaunchMode
-                                                        .externalApplication,
-                                                  );
-                                                }
-                                              } catch (e) {
-                                                print(e);
-                                              }
-                                            },
-                                            child: Container(
-                                              margin: EdgeInsets.symmetric(
-                                                horizontal: 5.0.w,
-                                                vertical: 1.0.h,
-                                              ),
-                                              child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                  horizontal: 2.0.w,
-                                                ),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0.sp),
-                                                  color: accentColorBrown
-                                                      .withOpacity(0.05),
-                                                  border: Border.all(
-                                                    width: 0.5.sp,
-                                                    color: accentColorBrown,
+                                                  )
+                                                : SvgPicture.asset(
+                                                    'assets/images/person_icon.svg',
+                                                    color: backgroundColor,
+                                                    height: 10.0.w,
+                                                    width: 10.0.w,
                                                   ),
-                                                ),
-                                                child: Padding(
-                                                  padding: EdgeInsets.symmetric(
-                                                      vertical: 2.0.h),
-                                                  child: Text(
-                                                    Provider.of<MainProvider>(
-                                                            context,
-                                                            listen: false)
-                                                        .contracts_file[index]
-                                                            ['title_ar']
-                                                        .toString(),
-                                                    textAlign: TextAlign.center,
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                    textDirection:
-                                                        TextDirection.rtl,
-                                                    style: TextStyle(
-                                                      color: accentColorBrown,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                      fontSize: 12.0.sp,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          itemCount: Provider.of<MainProvider>(
-                                                  context,
-                                                  listen: false)
-                                              .contracts_file
-                                              .length,
-                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
+                                SizedBox(
+                                  height: 1.0.h,
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    isCurrentUserLoggedIn!
+                                        ? authProvider.currentUser!.name!
+                                        : "ضيف",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.cairo(
+                                      textStyle: TextStyle(
+                                        color: accentColorBlue,
+                                        fontWeight: FontWeight.w800,
+                                        fontStyle: FontStyle.normal,
+                                        fontSize: 15.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 1.0.h,
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5.0.h,
+                          ),
+                          _ProfileButton(
+                            onTab: () async {
+                              final bool? isUserLoggedIn =
+                                  await auth!.isCurrentUserLoggedIn();
+                              if (!isUserLoggedIn!) {
+                                Navigator.of(context).pushNamed(
+                                  LoginScreen.screenName,
+                                );
+                                return;
+                              }
+                              Navigator.of(context).pushNamed(
+                                UpdateUserProfileScreen.screenName,
                               );
                             },
-                          );
-                        },
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: null,
-                        title: "نماذج العقود",
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/images/person_icon.svg',
+                            title: isCurrentUserLoggedIn!
+                                ? 'تعديل الملف الشخصي'
+                                : "تسجيل دخول",
+                          ),
+                          _ProfileButton(
+                            onTab: () async {
+                              final bool? isUserLoggedIn =
+                                  await auth!.isCurrentUserLoggedIn();
+                              if (!isUserLoggedIn!) {
+                                Navigator.of(context).pushNamed(
+                                  LoginScreen.screenName,
+                                );
+                                return;
+                              }
+                              Navigator.of(context).pushNamed(
+                                CreatingPropertyScreen.screenName,
+                              );
+                            },
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/icons/plus.png',
+                            title: "أضف عقارك",
+                          ),
+                          _ProfileButton(
+                            onTab: () {
+                              Navigator.of(context).pushNamed(
+                                MyOrdersScreen.screenName,
+                              );
+                            },
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/images/requests_icon.svg',
+                            title: "طلباتي",
+                          ),
+                          _ProfileButton(
+                            icon: Icons.arrow_forward_ios,
+                            iconAtStart: Icons.book_outlined,
+                            title: "المدونة",
+                            onTab: () {
+                              Navigator.of(context).pushNamed(
+                                BlogsScreen.screenName,
+                              );
+                            },
+                          ),
+                          _ProfileButton(
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/images/ads_icon.svg',
+                            title: "إعلاناتي",
+                            onTab: () {},
+                          ),
+                          _ProfileButton(
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/images/fav_icon.svg',
+                            title: "المفضلة",
+                            onTab: () {},
+                          ),
+                          _ProfileButton(
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/images/contact_icon.svg',
+                            title: "اتصل بنا",
+                            onTab: () {},
+                          ),
+                          _ProfileButton(
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: 'assets/images/about_icon.svg',
+                            title: "من نحن",
+                            onTab: () {},
+                          ),
+                          _ProfileButton(
+                            icon: Icons.arrow_forward_ios,
+                            iconPath: null,
+                            iconAtStart: !isCurrentUserLoggedIn!
+                                ? Icons.login
+                                : Icons.logout,
+                            title: !isCurrentUserLoggedIn!
+                                ? "تسجيل الدخول"
+                                : "تسجيل الخروج",
+                            onTab: () async {
+                              if (!isCurrentUserLoggedIn!) {
+                                Navigator.of(context)
+                                    .pushNamed(LoginScreen.screenName);
+                                return;
+                              }
+                              await Provider.of<AuthProvider>(context,
+                                      listen: false)
+                                  .logout();
+                              Navigator.of(context).pushNamed(
+                                MainScreen.screenName,
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            height: 15.0.h,
+                          ),
+                        ],
                       ),
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        onTab: () {},
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: 'assets/images/requests_icon.svg',
-                        title: "طلباتي",
+                    );
+                  } else {
+                    return AlertDialog(
+                      content: Text(
+                        'State: ${snapshot.connectionState}',
                       ),
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: 'assets/images/ads_icon.svg',
-                        title: "إعلاناتي",
-                        onTab: () {},
-                      ),
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: 'assets/images/fav_icon.svg',
-                        title: "المفضلة",
-                        onTab: () {},
-                      ),
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: 'assets/images/contact_icon.svg',
-                        title: "اتصل بنا",
-                        onTab: () {},
-                      ),
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: 'assets/images/about_icon.svg',
-                        title: "من نحن",
-                        onTab: () {},
-                      ),
-                    ),
-                    Consumer<AuthProvider>(
-                      builder: (context, value, child) => _ProfileButton(
-                        icon: Icons.arrow_forward_ios,
-                        iconPath: null,
-                        iconAtStart: !isCurrentUserLoggedIn!
-                            ? Icons.login
-                            : Icons.logout,
-                        title: !isCurrentUserLoggedIn!
-                            ? "تسجيل الدخول"
-                            : "تسجيل الخروج",
-                        onTab: () async {
-                          if (!isCurrentUserLoggedIn!) {
-                            Navigator.of(context)
-                                .pushNamed(LoginScreen.screenName);
-                            return;
-                          }
-                          await Provider.of<AuthProvider>(context,
-                                  listen: false)
-                              .logout();
-                          Navigator.of(context).pushNamed(
-                            MainScreen.screenName,
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: 15.0.h,
-                    ),
-                  ],
-                ),
-              );
-            } else {
-              return AlertDialog(
-                content: Text(
-                  'State: ${snapshot.connectionState}',
-                ),
-              );
-            }
-          },
-        ),
+                    );
+                  }
+                },
+              ),
       ),
     );
   }
@@ -456,7 +289,7 @@ class _ProfileButton extends StatelessWidget {
   const _ProfileButton({
     Key? key,
     required this.title,
-    required this.iconPath,
+    this.iconPath,
     required this.icon,
     this.iconAtStart,
     this.onTab,
@@ -489,15 +322,23 @@ class _ProfileButton extends StatelessWidget {
                         ? iconAtStart != null
                             ? Icon(
                                 iconAtStart,
-                                color: accentColorBrown,
+                                color: accentColorBlue,
                                 size: 17.0.sp,
                               )
                             : Container()
-                        : SvgPicture.asset(
-                            iconPath!,
-                            height: 5.0.w,
-                            width: 5.0.w,
-                          ),
+                        : iconPath!.endsWith("svg")
+                            ? SvgPicture.asset(
+                                iconPath!,
+                                height: 5.0.w,
+                                width: 5.0.w,
+                                color: accentColorBlue,
+                              )
+                            : Image.asset(
+                                iconPath!,
+                                height: 5.0.w,
+                                width: 5.0.w,
+                                color: accentColorBlue,
+                              ),
                     SizedBox(
                       width: 7.0.w,
                     ),
@@ -513,7 +354,7 @@ class _ProfileButton extends StatelessWidget {
                     Spacer(),
                     Icon(
                       icon,
-                      color: accentColorBrown,
+                      color: accentColorBlue,
                       size: 15.0.sp,
                     ),
                     SizedBox(

@@ -1,5 +1,7 @@
 import 'package:aqaratak/models/Service.dart';
+import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/services_provider.dart';
+import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/service_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -119,9 +121,19 @@ class ServiceTypeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider authProvider =
+        Provider.of<AuthProvider>(context, listen: false);
     return Consumer<Service>(
       builder: (context, value, child) => GestureDetector(
-        onTap: () {
+        onTap: () async {
+          if (!await authProvider.isCurrentUserLoggedIn()!) {
+            Navigator.pushNamed(
+              context,
+              LoginScreen.screenName,
+            );
+            return;
+          }
+
           showDialog(
             context: context,
             builder: (ctx) {

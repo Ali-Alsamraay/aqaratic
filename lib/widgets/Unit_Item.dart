@@ -8,7 +8,6 @@ import 'package:sizer/sizer.dart';
 import '../screens/unit_details_screen.dart';
 
 class UnitItem extends StatefulWidget {
-
   @override
   State<UnitItem> createState() => _UnitItemState();
 }
@@ -120,7 +119,37 @@ class _UnitItemState extends State<UnitItem> {
                           ),
                         ),
                       ),
-                    )
+                    ),
+                    Consumer<Property>(
+                      builder: (context, value, child) => value.is_featured == 1
+                          ? Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: 15.0.w,
+                                  height: 8.0.w,
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 1.0.w),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5.0.sp),
+                                    color: Colors.redAccent.withOpacity(0.8),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "مميز",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 11.0.sp,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                    ),
                   ],
                 ),
               ),

@@ -73,7 +73,7 @@ class NearestLocationsFields extends StatelessWidget {
                     langKey: "nearest_loc",
                     optionTitle: "location",
                     isListOfvalues: true,
-                    options: propertiesProvider.nearest_locatoins_Objects,
+                    options: propertiesProvider.nearest_locations_Objects,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -198,7 +198,7 @@ class LocationAndDistanceBlock extends StatelessWidget {
                 heightAfterField: 1.0.h,
                 langKey: "nearest_loc",
                 optionTitle: "location",
-                options: propertiesProvider!.nearest_locatoins_Objects,
+                options: propertiesProvider!.nearest_locations_Objects,
               ),
               GestureDetector(
                 onTap: !removable!

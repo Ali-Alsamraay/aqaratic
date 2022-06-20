@@ -1,19 +1,17 @@
-import 'dart:developer';
-
 import 'package:aqaratak/helper/constants.dart';
-import 'package:aqaratak/providers/Properties_provider.dart';
+import 'package:aqaratak/providers/favorite_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import "package:sizer/sizer.dart";
 
-class DropDownInFiltration extends StatefulWidget {
+class DropDownInFavorite extends StatefulWidget {
   final String? title;
   final List<Map<String, dynamic>>? options;
   final String? field_key;
   final bool isEnabled;
   final Color? dropDownColor;
 
-  DropDownInFiltration({
+  DropDownInFavorite({
     this.title,
     this.options,
     required this.field_key,
@@ -22,21 +20,16 @@ class DropDownInFiltration extends StatefulWidget {
   });
 
   @override
-  State<DropDownInFiltration> createState() => _DropDownInFiltrationState();
+  State<DropDownInFavorite> createState() => _DropDownInFavoriteState();
 }
 
-class _DropDownInFiltrationState extends State<DropDownInFiltration> {
+class _DropDownInFavoriteState extends State<DropDownInFavorite> {
   String? currentOptionTitle;
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final PropertiesProvider propertiesProvider =
-        Provider.of<PropertiesProvider>(
+    final FavoritesProvider favoritesProvider = Provider.of<FavoritesProvider>(
       context,
       listen: false,
     );
@@ -45,7 +38,7 @@ class _DropDownInFiltrationState extends State<DropDownInFiltration> {
             children: [
               PopupMenuButton(
                 onSelected: (Map<String, dynamic> selectedValue) {
-                  propertiesProvider.set_filtration_prams(
+                  favoritesProvider.set_favorites_prams(
                     selectedValue['id'].toString(),
                     widget.field_key!,
                   );

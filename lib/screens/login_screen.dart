@@ -1,4 +1,5 @@
 import 'dart:ffi';
+import 'dart:ui';
 
 import 'package:aqaratak/helper/Utils.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
@@ -44,7 +45,6 @@ class _LoginScreenState extends State<LoginScreen> {
         cachedCredentials =
             await Provider.of<AuthProvider>(context, listen: false)
                 .getCachedUser();
-        print(cachedCredentials);
         setState(() {
           showLoader = false;
         });
@@ -67,6 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
         backgroundColor: accentColorBrown,
         child: Icon(
@@ -75,36 +76,44 @@ class _LoginScreenState extends State<LoginScreen> {
         onPressed: () => Navigator.of(context).pop(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      body: Form(
-        key: _formKey,
-        child: WillPopScope(
-          onWillPop: () async => false,
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            child: LoadingOverlay(
-              isLoading: showLoader,
-              child: Material(
-                child: Container(
-                  width: 100.0.w,
-                  height: 100.0.h,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/background.png'),
-                      fit: BoxFit.cover,
-                    ),
+      body: GestureDetector(
+        onTap: () {
+          if (FocusManager.instance.primaryFocus!.hasFocus)
+            FocusManager.instance.primaryFocus!.unfocus();
+        },
+        child: Container(
+          width: 100.0.w,
+          height: 100.0.h,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'assets/images/background.png',
+              ),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Form(
+            key: _formKey,
+            child: WillPopScope(
+              onWillPop: () async => false,
+              child: LoadingOverlay(
+                isLoading: showLoader,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 4.0.w,
                   ),
                   child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 4.0.w,
+                    child: Container(
+                      margin: EdgeInsets.only(
+                        bottom:
+                            MediaQuery.of(context).viewInsets.bottom + 10.0.h,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           SizedBox(
-                            height: 15.0.h,
+                            height: 10.0.h,
                           ),
                           Align(
                             alignment: Alignment.center,
@@ -280,6 +289,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                             ),
                           ),
+                          SizedBox(
+                            height: 7.0.h,
+                          )
                         ],
                       ),
                     ),

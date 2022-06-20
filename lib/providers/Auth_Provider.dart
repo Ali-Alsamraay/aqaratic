@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -43,6 +42,41 @@ class AuthProvider with ChangeNotifier {
       currentUser = User.fromJson(userMap);
       notifyListeners();
       return currentUser;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getUserInfo() async {
+    try {
+      final String? token = await AuthProvider().getUserToken();
+      if (token != null && token != "") {
+        final url = Uri.parse(
+          baseUrl + '/api/v1/mobile/user/profile',
+        );
+
+        // Await the http get response.
+        final response = await http.get(
+          url,
+          headers: {
+            "Content-Type": "application/json; charset=utf-8",
+            "Accept": "application/json",
+            "Authorization": "bearer " + token,
+            "Connection": "keep-alive",
+          },
+        );
+
+        final responseJson =
+            convert.jsonDecode(response.body) as Map<String, dynamic>;
+        if (response.statusCode == 200 && responseJson['user'] != null) {
+          return responseJson;
+        } else {
+          return {};
+        }
+      }
+      else {
+        return {};
+      }
     } catch (e) {
       rethrow;
     }
