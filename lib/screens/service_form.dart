@@ -2,6 +2,7 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/models/Service.dart';
 import 'package:aqaratak/providers/services_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../helper/Utils.dart';
 import '../models/FormValidator.dart';
@@ -11,7 +12,9 @@ import '../widgets/Custom_TextField.dart';
 
 class ServiceForm extends StatefulWidget {
   final int? service_id;
+
   ServiceForm({required this.service_id});
+
   @override
   State<StatefulWidget> createState() {
     return new _ServiceFormState();
@@ -84,7 +87,7 @@ class _ServiceFormState extends State<ServiceForm> {
           onSaveFunc: (value) {
             _serviceData.email = value!.trim();
           },
-          label: "البريد الإلكتروني",
+          label: "email".tr,
           enabledBorderColor: accentColorBlue,
         ),
         SizedBox(
@@ -99,7 +102,7 @@ class _ServiceFormState extends State<ServiceForm> {
           onSaveFunc: (value) {
             _serviceData.first_name = value!.trim();
           },
-          label: "الإسم الأول",
+          label: "first_name".tr,
           enabledBorderColor: accentColorBlue,
         ),
         SizedBox(
@@ -115,7 +118,7 @@ class _ServiceFormState extends State<ServiceForm> {
           onSaveFunc: (value) {
             _serviceData.last_name = value!.trim();
           },
-          label: "الإسم الأخير",
+          label: "last_name".tr,
         ),
         SizedBox(
           height: 2.0.h,
@@ -130,7 +133,7 @@ class _ServiceFormState extends State<ServiceForm> {
           onSaveFunc: (value) {
             _serviceData.phone = value!.trim();
           },
-          label: "رقم الهاتف",
+          label: "phone_number".tr,
         ),
         SizedBox(
           height: 2.0.h,
@@ -145,7 +148,7 @@ class _ServiceFormState extends State<ServiceForm> {
           onSaveFunc: (value) {
             _serviceData.regarding_info = value!.trim();
           },
-          label: "إضافة تفاصيل",
+          label: "add_details".tr,
           linesNumber: 5,
         ),
         SizedBox(
@@ -161,7 +164,7 @@ class _ServiceFormState extends State<ServiceForm> {
                 padding: EdgeInsets.all(7.0.sp),
                 color: accentColorBrown,
                 child: Text(
-                  'إضافة',
+                  'add'.tr,
                   style: TextStyle(color: Colors.white),
                 ),
               ),
@@ -191,14 +194,16 @@ class _ServiceFormState extends State<ServiceForm> {
       if (responseMsg == "succeed_form") {
         await Utils().showPopUp(
           context,
-          "تمت إضافة البيانات بنجاح",
+          "add_successfully".tr,
         );
         Navigator.of(context).pop();
       } else {
-        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+        Utils()
+            .showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } else {
-      await Utils().showPopUp(context, "إدخالات غير صالحة", "تأكد من بياناتك");
+      await Utils()
+          .showPopUp(context, "invalid_entries".tr, "verify_your_data".tr);
     }
   }
 }

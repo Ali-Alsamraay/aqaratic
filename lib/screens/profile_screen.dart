@@ -6,8 +6,11 @@ import 'package:aqaratak/screens/login_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:aqaratak/screens/my_orders_screen.dart';
 import 'package:aqaratak/screens/update_user_profile_screen.dart';
+import 'package:aqaratak/utils/translation/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
@@ -23,6 +26,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   bool? isCurrentUserLoggedIn = false;
   bool? loading = false;
+  GetStorage box = GetStorage();
   @override
   void initState() {
     super.initState();

@@ -1,5 +1,6 @@
 import 'package:aqaratak/providers/Properties_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -47,7 +48,7 @@ class SearchBar extends StatelessWidget {
                   enabledBorder: InputBorder.none,
                   errorBorder: InputBorder.none,
                   disabledBorder: InputBorder.none,
-                  hintText: 'البحث عن',
+                  hintText: 'searching_for'.tr,
                   hintStyle: TextStyle(
                     color: Color(0xffb3bbcb),
                     fontSize: 17.0.sp,

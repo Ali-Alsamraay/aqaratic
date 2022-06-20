@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import 'package:aqaratak/screens/blogs_screen.dart';
 import 'package:aqaratak/screens/home_screen.dart';
 import 'package:aqaratak/screens/main_screen.dart';
+=======
+import 'package:aqaratak/screens/all_properities_screen.dart';
+>>>>>>> 1028f7d494073ab0bda9367222eca63843d6b081
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import "package:sizer/sizer.dart";
 import 'package:url_launcher/url_launcher.dart';
@@ -16,35 +21,39 @@ class DropDownMenu extends StatelessWidget {
   DropDownMenu({this.color, this.backgroundColor});
   final List<Map<String, dynamic>> _dropDownButtons = [
     {
-      "text": "صفحة رئيسية",
+      "text": "home_page".tr,
       "value": "home",
     },
     {
-      "text": "نماذج العقود",
+      "text": "contract_forms".tr,
       "value": "contracts",
     },
     {
-      "text": "العقارات",
+      "text": "properties".tr,
       "value": "properties",
     },
     {
-      "text": "الخدمات",
+      "text": "services".tr,
       "value": "services",
     },
     {
-      "text": "خطة الأسعار",
+      "text": "prices_plan".tr,
       "value": "prices_plan",
     },
     {
-      "text": "الصفحات",
+      "text": "pages".tr,
       "value": "pages",
     },
     {
+<<<<<<< HEAD
       "text": "المدونة",
       "value": "blogs",
     },
     {
       "text": "تواصل معنا",
+=======
+      "text": "contact_us".tr,
+>>>>>>> 1028f7d494073ab0bda9367222eca63843d6b081
       "value": "contact_us",
     },
   ];
@@ -57,8 +66,54 @@ class DropDownMenu extends StatelessWidget {
       Navigator.of(context).pushNamed(MainScreen.screenName);
     } else if (menuName == "contracts") {
       showContractPopUp(context);
+<<<<<<< HEAD
     } else if (menuName == "blogs")
       Navigator.of(context).pushNamed(BlogsScreen.screenName);
+=======
+    }
+    if (menuName == "home") {
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar'),
+      //   ),
+      // );
+    }
+    if (menuName == "properties") {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => AllPropertiesScreen(fromHome: true),
+        ),
+      );
+    }
+    if (menuName == "services") {
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/user/form/service/1'),
+      //   ),
+      // );
+    }
+    if (menuName == "pages") {
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/faq'),
+      //   ),
+      // );
+    }
+    if (menuName == "prices_plan") {
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/pricing-plan'),
+      //   ),
+      // );
+    }
+    if (menuName == "contact_us") {
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => WebViewScreen(urlLink: 'https://aqaratic.digitalfuture.sa/ar/contact-us'),
+      //   ),
+      // );
+    }
+>>>>>>> 1028f7d494073ab0bda9367222eca63843d6b081
   }
 
   @override
@@ -160,7 +215,7 @@ class DropDownMenu extends StatelessWidget {
                           Navigator.pop(context);
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
-                              content: Text("لا يمكن فتح العقد"),
+                              content: Text("contract_cannot_be_opened".tr),
                               duration: Duration(milliseconds: 800),
                             ),
                           );

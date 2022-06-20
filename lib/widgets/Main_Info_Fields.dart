@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/Utils.dart';
@@ -96,7 +97,7 @@ class MainInfoFields extends StatelessWidget {
 
           // purposes
           DropDownBuilder(
-            langKey_fieldTitle: "سبب البيع",
+            langKey_fieldTitle: "reason_for_selling".tr,
             langKey: "purpose",
             heightAfterField: 2.0.h,
             optionTitle: "custom_purpose",

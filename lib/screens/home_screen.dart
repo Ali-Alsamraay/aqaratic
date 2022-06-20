@@ -8,6 +8,7 @@ import 'package:aqaratak/widgets/categories_bar.dart';
 import 'package:aqaratak/widgets/header_title.dart';
 import 'package:aqaratak/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 
@@ -96,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     if (snapshot.hasError) {
                       return Center(
                         child: TitleBuilder(
-                          title: "حدث خطأ غير متوقع",
+                          title: "unexpected_error".tr,
                         ),
                       );
                     }

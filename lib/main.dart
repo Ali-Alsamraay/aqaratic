@@ -15,9 +15,11 @@ import 'package:aqaratak/screens/main_screen.dart';
 import 'package:aqaratak/screens/my_orders_screen.dart';
 import 'package:aqaratak/screens/onBoarding_screen.dart';
 import 'package:aqaratak/screens/update_user_profile_screen.dart';
+import 'package:aqaratak/utils/translation/localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -85,7 +87,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return Sizer(
-      builder: (context, orientation, deviceType) => MaterialApp(
+      builder: (context, orientation, deviceType) => GetMaterialApp(
         routes: {
           MainScreen.screenName: (context) => MainScreen(),
           HomeScreen.screenName: (context) => HomeScreen(),
@@ -107,6 +109,9 @@ class MyApp extends StatelessWidget {
           ),
         ),
         home: showBoardingScreens ? BoardingScreen() : MainScreen(),
+        translations: LocalizationService(),
+        locale: LocalizationService().getCurrentLocale(),
+        fallbackLocale:  Locale('en', 'US'),
       ),
     );
   }

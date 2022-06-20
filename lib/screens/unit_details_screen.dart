@@ -3,12 +3,16 @@ import 'package:aqaratak/models/FormValidator.dart';
 import 'package:aqaratak/models/property.dart';
 import 'package:aqaratak/providers/Auth_Provider.dart';
 import 'package:aqaratak/providers/Properties_provider.dart';
-import 'package:aqaratak/screens/login_screen.dart';
+import 'package:aqaratak/providers/State_Manager_Provider.dart';
 import 'package:aqaratak/widgets/Custom_TextField.dart';
+import 'package:aqaratak/widgets/Custom_TextField_Builder.dart';
+import 'package:aqaratak/widgets/Image_PDF_Video_Fields.dart';
+import 'package:aqaratak/widgets/comment_widget_view.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_share/flutter_share.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:html/dom.dart' show Document;
 import 'package:provider/provider.dart';
@@ -44,6 +48,121 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
       text: description,
       linkUrl: image,
       chooserTitle: 'عقاراتـك',
+    );
+  }
+
+  void showCommentPopUp(
+    BuildContext context,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return Container(
+          child: Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0.sp),
+            ),
+            child: SizedBox(
+              width: 90.0.w,
+              height: 45.0.h,
+              child: Center(
+                child: Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 2.0.h,
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 6.0.w, vertical: 1.h),
+                      child: Column(
+                        children: [
+                          Text('add_new_comment'.tr,
+                              style: TextStyle(
+                                color: accentColorBlue,
+                                fontSize: 15.0.sp,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                              )),
+                          SizedBox(height: 1.h),
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: RatingBar.builder(
+                              initialRating: 3,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: true,
+                              itemCount: 5,
+                              itemSize: 25,
+                              itemPadding:
+                                  EdgeInsets.symmetric(horizontal: 3.0),
+                              itemBuilder: (context, _) => Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                print(rating);
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 1.h),
+                          Container(
+                            height: 160,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: accentColorBlue, width: 2.0)),
+                            child: TextFormField(
+                              textAlign: TextAlign.right,
+                              keyboardType: TextInputType.multiline,
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 11),
+                              decoration: InputDecoration(
+                                hintText: "write_comment_here".tr,
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 10),
+                                border: InputBorder.none,
+                              ),
+                              autofocus: false,
+                            ),
+                          ),
+                          SizedBox(height: 2.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.0.h,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0.sp),
+                                color: accentColorBrown,
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 7.0.w,
+                                  vertical: 0.5.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    "add_comment".tr,
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 15.0.sp,
+                                      fontWeight: FontWeight.w700,
+                                      fontStyle: FontStyle.normal,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -186,22 +305,110 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             horizontal: 7.0.w,
                             vertical: 3.0.h,
                           ),
-                          child: Text(
-                            selectedProperty.title ?? '',
-                            style: TextStyle(
-                              color: Color(0xff0c2757),
-                              fontSize: 15.0.sp,
-                              fontWeight: FontWeight.w700,
-                              fontStyle: FontStyle.normal,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "details_and_features".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        const Divider(),
-                        LabelBuilder(title: "التفاصيل و المميزات"),
-                        Field(
-                          title: "العنوان",
-                          value: selectedProperty.address ?? "لا يوجد",
+                      
+                      Field(
+                        title: "address".tr,
+                        value: selectedProperty.address ?? "there_is_no".tr,
+                      ),
+                      Field(
+                        title: "license_number".tr,
+                        value: authProvider.currentUser == null
+                            ? "there_is_no".tr
+                            : authProvider.currentUser!.authorization_number ??
+                                "there_is_no".tr,
+                      ),
+                      Field(
+                        title: "authorization_number".tr,
+                        value: selectedProperty.authorization_num_of_GA ??
+                            "there_is_no".tr,
+                      ),
+                      Field(
+                        title: "property_type".tr,
+                        value:
+                            selectedProperty.property_type!['slug']!.toString(),
+                      ),
+                      Field(
+                        title: "space".tr,
+                        value: selectedProperty.area!.toString(),
+                      ),
+                      Field(
+                        title: "bedrooms".tr,
+                        value: selectedProperty.number_of_bedroom!.toString(),
+                      ),
+                      Field(
+                        title: "bathrooms".tr,
+                        value: selectedProperty.number_of_bathroom!.toString(),
+                      ),
+                      Field(
+                        title: "rooms".tr,
+                        value: selectedProperty.number_of_room!.toString(),
+                      ),
+                      Field(
+                        title: "units".tr,
+                        value: selectedProperty.number_of_unit!.toString(),
+                      ),
+                      Field(
+                        title: "floors".tr,
+                        value: selectedProperty.number_of_floor!.toString(),
+                      ),
+                      Field(
+                        title: "kitchens".tr,
+                        value: selectedProperty.number_of_kitchen!.toString(),
+                      ),
+                      Field(
+                        title: "parking_place".tr,
+                        value: selectedProperty.number_of_parking!.toString(),
+                      ),
+                      Field(
+                        title: "description".tr,
+                        value: selectedProperty.description ?? "there_is_no".tr,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 2.0.h,
                         ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "means_of_comfort".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),),
                         Field(
                           title: "رقم الترخيص",
                           value: authProvider.currentUser == null
@@ -307,10 +514,42 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                                         fontStyle: FontStyle.normal,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: 3.0.w,
-                                    ),
-                                  ],
+                                  ),
+                                  SizedBox(
+                                    width: 3.0.w,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            itemCount:
+                                selectedProperty.property_aminities!.length,
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 2.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "map".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
                                 ),
                               ),
                               itemCount:
@@ -339,12 +578,49 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                                 ),
                                 zoom: 12,
                               ),
+<<<<<<< HEAD
                               onMapCreated: (GoogleMapController controller) {},
                               markers: {
                                 Marker(
                                   markerId: MarkerId(
                                     selectedProperty.id.toString(),
                                   ),
+=======
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      const Divider(),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 2.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "nearby_locations".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+>>>>>>> 1028f7d494073ab0bda9367222eca63843d6b081
                                 ),
                               },
                             ),
@@ -433,6 +709,7 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                             ),
                           ),
                         ),
+<<<<<<< HEAD
                         SizedBox(
                           height: 3.0.h,
                         ),
@@ -504,6 +781,248 @@ class _UnitDetailsScreenState extends State<UnitDetailsScreen> {
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
+=======
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      const Divider(),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 0.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "engineering_plans".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Container(
+                          padding: EdgeInsets.symmetric(horizontal: 4.0.w),
+                          child: Column(
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        stateManagerProvider.add_image_Block(
+                                          ImageBlock(
+                                            key: UniqueKey(),
+                                          ),
+                                        );
+                                      },
+                                      child: Container(
+                                        margin: EdgeInsets.only(
+                                            bottom: 1.0.h, top: 1.0.h),
+                                        height: 7.0.h,
+                                        decoration: BoxDecoration(
+                                          color: accentColorBlue,
+                                          borderRadius: BorderRadius.circular(
+                                            15.0.sp,
+                                          ),
+                                          border: Border.all(
+                                            width: 1.sp,
+                                            color: accentColorBrown,
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 2.0.w,
+                                  ),
+                                  Expanded(
+                                    flex: 3,
+                                    child: CustomTextField(
+                                      onValidateFunc: (value) {},
+                                      onSaveFunc: (value) {},
+                                      label: 'engineering_plans'.tr,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Consumer<StateManagerProvider>(
+                                builder: (context, value, child) => Column(
+                                  children: [
+                                    ...List.generate(
+                                      value.imagesBlocks.length,
+                                          (index) {
+                                        value.imagesBlocks[index].index = index;
+
+                                        return value.imagesBlocks[index];
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const Divider(),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 7.0.w,
+                          vertical: 0.0.h,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10.0.sp),
+                            color: accentColorBrown,
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 7.0.w,
+                              vertical: 0.5.h,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "reviews".tr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0.sp,
+                                  fontWeight: FontWeight.w700,
+                                  fontStyle: FontStyle.normal,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 1.0.h,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          showCommentPopUp(context);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 7.0.w,
+                            vertical: 0.0.h,
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 3.0.w, vertical: 2.0.w),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10.0.sp),
+                              color: accentColorBlue,
+                            ),
+                            child: Text(
+                              'add_new_comment_plus'.tr,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 11.0.sp,
+                                fontWeight: FontWeight.w700,
+                                fontStyle: FontStyle.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      ListView.builder(
+                          itemCount: 1,
+                          shrinkWrap: true,
+                          physics: NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return CommentWidgetView(
+                                name: 'امجد الخطيب',
+                                image:
+                                    'https://www.incimages.com/uploaded_files/image/1920x1080/getty_481292845_77896.jpg',
+                                date: 'Sep 2021 18',
+                                subject:
+                                    'هذا التعليق مبني على فكرة طرح المثال ليناسب مبدأعرض التعليقات داخل هذا التطبيق',
+                                rate: 4.0);
+                          })
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 0.0,
+              child: Container(
+                width: 100.0.w,
+                height: 10.0.h,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Colors.grey, width: 0.7)),
+                child: SizedBox(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text('${selectedProperty.price} ريال ',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            color: Color(0xffb78457),
+                            fontSize: 15.0.sp,
+                            fontWeight: FontWeight.w700,
+                            fontStyle: FontStyle.normal,
+                          )),
+                      RawMaterialButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return Container(
+                                width: 90.0.w,
+                                height: 60.0.h,
+                                child: Dialog(
+                                  backgroundColor: Colors.transparent,
+                                  child: UserInfo(),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5.0.sp),
+                        ),
+                        fillColor: accentColorBrown,
+                        child: Text(
+                          'request'.tr,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+>>>>>>> 1028f7d494073ab0bda9367222eca63843d6b081
                           ),
                         ),
                         ImInterestedButton(
@@ -712,7 +1231,7 @@ class UserInfo extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "معلومات صاحب الخدمة",
+                          "service_owner_information".tr,
                           style: TextStyle(
                             color: accentColorBlue,
                             fontSize: 15.0.sp,
@@ -727,7 +1246,7 @@ class UserInfo extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           children: [
                             Text(
-                              ":الإسم",
+                              "name_form".tr,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 fontSize: 12.0.sp,
@@ -749,7 +1268,7 @@ class UserInfo extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           children: [
                             Text(
-                              ":الإيميل",
+                              "email_form",
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 fontSize: 12.0.sp,
@@ -771,7 +1290,7 @@ class UserInfo extends StatelessWidget {
                           textDirection: TextDirection.rtl,
                           children: [
                             Text(
-                              ":رقم الهاتف",
+                              "phone_number_form".tr,
                               textAlign: TextAlign.end,
                               style: TextStyle(
                                 fontSize: 12.0.sp,
@@ -799,8 +1318,8 @@ class UserInfo extends StatelessWidget {
                             borderRadius: BorderRadius.circular(5.0.sp),
                           ),
                           fillColor: accentColorBrown,
-                          child: const Text(
-                            'تواصل',
+                          child: Text(
+                            'communication'.tr,
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,

@@ -1,6 +1,8 @@
 import 'dart:developer';
+import 'package:aqaratak/helper/helper.dart';
 import 'package:aqaratak/screens/unit_details_screen.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -17,7 +19,9 @@ class MapsProvider with ChangeNotifier {
   int categoryOnMapIndex = 0;
 
   Set<Marker> get markers => _markers;
+
   Set<Marker> get nearestMarkers => _nearestMarkers;
+
   List<Property> get filteredPropertiesForMap => [..._filteredPropertiesForMap];
 
   void setNavigationMapTabsIndex(int index) {
@@ -55,25 +59,32 @@ class MapsProvider with ChangeNotifier {
         return Marker(
           // This marker id can be anything that uniquely identifies each marker.
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => UnitDetailsScreen(),
-                settings: RouteSettings(
-                  arguments: property.id,
-                ),
-              ),
-            );
+            showUnitDetails(
+                property.id!,
+                property.title!,
+                property.description ?? "there_is_no".tr,
+                property.price!,
+                context);
+            // Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => UnitDetailsScreen(),
+            //     settings: RouteSettings(
+            //       arguments: property.id,
+            //     ),
+            //   ),
+            // );
           },
           markerId: MarkerId(property.id.toString()),
           position: LatLng(
             property.latitude!,
             property.longitude!,
           ),
-          
+
           infoWindow: InfoWindow(
             title: property.title,
             snippet: property.description,
           ),
+
           icon: iconMarker,
         );
       }).toSet(),

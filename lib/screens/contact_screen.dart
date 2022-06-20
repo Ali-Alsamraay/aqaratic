@@ -2,6 +2,7 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:aqaratak/screens/main_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class ContactScreen extends StatelessWidget {
   const ContactScreen({Key? key}) : super(key: key);
@@ -47,11 +48,11 @@ class ContactScreen extends StatelessWidget {
                   const SizedBox(
                     height: 70,
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: EdgeInsets.only(right: 20.0),
-                      child: Text("إتصل بنا",
+                      child: Text("contact_us".tr,
                           style: TextStyle(
                             fontFamily: 'Cairo',
                             color: Color(0xffb78457),
@@ -132,10 +133,10 @@ class ContactScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-                  const Align(
+                  Align(
                     alignment: Alignment.topRight,
                     child: Text(
-                      "تواصل",
+                      "communication".tr,
                       style: TextStyle(
                           color: Color(0xff2e2e2e),
                           fontWeight: FontWeight.w600,
@@ -154,7 +155,7 @@ class ContactScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           filled: true,
-                          hintText: 'الإسم',
+                          hintText: 'name'.tr,
                           hintStyle: const TextStyle(
                               color: const Color(0xffb3bbcb), fontSize: 20),
                         ),
@@ -169,7 +170,7 @@ class ContactScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           filled: true,
-                          hintText: 'البريد الإلكتروني',
+                          hintText: 'email'.tr,
                           hintStyle: const TextStyle(
                               color: Color(0xffb3bbcb), fontSize: 20),
                         ),
@@ -185,7 +186,7 @@ class ContactScreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15.0),
                           ),
                           filled: true,
-                          hintText: 'الرسالة',
+                          hintText: 'message'.tr,
                           hintStyle: const TextStyle(
                               color: const Color(0xffb3bbcb), fontSize: 20),
                         ),
@@ -199,10 +200,10 @@ class ContactScreen extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>  MainScreen()));
+                                builder: (context) => MainScreen()));
                       },
-                      child: const Text(
-                        'ارسل',
+                      child: Text(
+                        'send'.tr,
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold),
                       ),

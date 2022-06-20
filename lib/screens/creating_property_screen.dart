@@ -4,6 +4,7 @@ import 'package:aqaratak/widgets/CheckBoxFields.dart';
 import 'package:aqaratak/widgets/SEO_Fields.dart';
 import 'package:aqaratak/widgets/Title_Builder.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:provider/provider.dart';
 import '../helper/Utils.dart';
@@ -20,6 +21,7 @@ import 'main_screen.dart';
 
 class CreatingPropertyScreen extends StatefulWidget {
   static const String screenName = "Creating-Property-Screen";
+
   CreatingPropertyScreen({Key? key}) : super(key: key);
 
   @override
@@ -113,7 +115,7 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
                 child: isThereError!
                     ? Center(
                         child: TitleBuilder(
-                          title: "حدث خطأ غير متوقع",
+                          title: "unexpected_error".tr,
                         ),
                       )
                     : Provider.of<PropertiesProvider>(context)
@@ -232,7 +234,7 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
                                           ),
                                           color: accentColorBlue,
                                           child: Text(
-                                            'إضافة',
+                                            'add'.tr,
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 12.0.sp,
@@ -407,13 +409,14 @@ class _CreatingPropertyScreenState extends State<CreatingPropertyScreen> {
               .formResponseErrorMsgs,
         );
       } else {
-        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+        Utils()
+            .showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } catch (e) {
       setState(() {
         loading = false;
       });
-      Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+      Utils().showPopUp(context, "problem_happened".tr, responseMsg.toString());
     }
 
     // }

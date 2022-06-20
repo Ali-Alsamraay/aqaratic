@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:aqaratak/helper/Utils.dart';
@@ -10,6 +9,7 @@ import 'package:aqaratak/widgets/Favorite_settings_builder.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -379,7 +379,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey!.currentState!.validate()) {
       if (loadedImageBase64 == null) {
         await utils.showPopUp(
-            context, "صورة الملف الشخصي مطلوبة", "تأكد من بياناتك");
+            context, "profile_picture_is_required".tr, "verify_your_data".tr);
         return;
       }
 
@@ -426,10 +426,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               .registerResponseErrorMsgs,
         );
       } else {
-        Utils().showPopUp(context, "حدثت مشكلة ما", responseMsg.toString());
+        Utils()
+            .showPopUp(context, "problem_happened".tr, responseMsg.toString());
       }
     } else {
-      await Utils().showPopUp(context, "إدخالات غير صالحة", "تأكد من بياناتك");
+      await Utils()
+          .showPopUp(context, "invalid_entries".tr, "verify_your_data".tr);
     }
   }
 }

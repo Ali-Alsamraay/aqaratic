@@ -1,5 +1,6 @@
 import 'package:aqaratak/models/property.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 import '../helper/constants.dart';
@@ -64,14 +65,14 @@ class _UnitItemState extends State<UnitItem> {
                           ),
                           child: value.thumbnail_image == null
                               ? Center(
-                                  child: Text("لا توجد صورة"),
+                                  child: Text("no_picture".tr),
                                 )
                               : value.thumbnail_image!.isNotEmpty
                                   ? FadeInImage.assetNetwork(
                                       imageErrorBuilder:
                                           (context, error, stackTrace) =>
                                               Center(
-                                        child: Text("لا توجد صورة"),
+                                        child: Text("no_picture".tr),
                                       ),
                                       fit: BoxFit.cover,
                                       width: double.infinity,

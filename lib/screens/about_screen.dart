@@ -2,6 +2,7 @@ import 'package:aqaratak/helper/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:get/get.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class _AboutScreenState extends State<AboutScreen> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 20.0),
-                child: Text('من نحن',
+                child: Text('who_are_we'.tr,
                     style: TextStyle(
                       fontFamily: 'Cairo',
                       color: Color(0xffb78457),
@@ -77,7 +78,7 @@ class _AboutScreenState extends State<AboutScreen> {
                         borderRadius: BorderRadius.circular(30)),
                     child: Center(
                         child: Text(
-                      "عقاراتى",
+                      "my_real_estate".tr,
                       style: const TextStyle(
                           color: const Color(0xffb7865a),
                           fontWeight: FontWeight.w600,
@@ -135,12 +136,12 @@ class _AboutScreenState extends State<AboutScreen> {
                   elevation: 0.0,
                   color: Colors.white,
                   child: ExpansionTile(
-                    title: Text('أهدافنا'),
+                    title: Text('our_goals'.tr),
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            'تسعى المنصة العقارية إلى إنشاء سوق عقاري إلكتروني يسهل عمليات البيع والشراء واالستئجار للمنتجات العقارية، عبر تقديم معلومات شاملة عن المدينة والحي باالستعانة بالخرائط وآراء السكان والتوصيات والتقييمات في مختلف مناطق المملكة'),
+                            'our_goals_subject'.tr),
                       ),
                     ],
                   ),
@@ -152,12 +153,12 @@ class _AboutScreenState extends State<AboutScreen> {
                   elevation: 0.0,
                   color: Colors.white,
                   child: ExpansionTile(
-                    title: Text('تطبيق عقاراتي'),
+                    title: Text('aqarati_app'.tr),
                     children: <Widget>[
                       Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                            'تعمل المنصة العقارية على عرض كافة المخططات وبيانات قطع األراضي وأبعادها والبيانات المرتبطة بها، باستخدام البيانات ذات الكفاءة العالية والمهيكلة باستخدام أدوات الذكاء االصطناعي، وتتداخل بشكل مباشر مع حياة السكان في األحياء المختلفة وتتفاعل معهم في عمليات التنقل ومختلف أنشطة حياتهم، من تعليم، أعمال، محالت تجارية وغيرها'),
+                            'aqarati_app_subject'.tr),
                       )
                     ],
                   ),

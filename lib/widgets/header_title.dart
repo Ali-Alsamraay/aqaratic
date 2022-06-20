@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'package:sizer/sizer.dart';
 
@@ -22,7 +23,7 @@ class HeaderTitle extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    "كل ما تبحث",
+                    "whatever_you_are_looking_for".tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -32,7 +33,7 @@ class HeaderTitle extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    "عنه في تطبيق واحد",
+                    "about_it_app".tr,
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
